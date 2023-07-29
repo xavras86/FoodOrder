@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Customers</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<style type=text/css>
+        h2 {
+            background-color: #696969;
+            margin: 10px;
+        }
+        div {
+            color: white;
+            background-color: #C0C0C0;
+            margin: 2px;
+            font-size: 25px;
+        }
+        body {
+            background-color: Azure;
+            text-align: center;
+        }
+</style>
+
+<body>
+
+<div class="container">
+    <div class="page-header" id="banner">
+
+        <br>
+        <a class="btn btn-success btn-lg" th:href="@{/streets}">Streets list</a>
+        <a class="btn btn-primary btn-lg" th:href="@{/restaurants}">Restaurants list</a>
+        <a class="btn btn-info btn-lg" th:href="@{/customers}">Customers list</a>
+        <a class="btn btn-secondary btn-lg" th:href="@{/orders}">Orders list</a>
+        <a class="btn btn-warning btn-lg" th:href="@{/}">Back to home</a>
+        <a class="btn btn-dark btn-lg" th:href="@{/logout}">Logout</a>
+        <br>
+        <h2>Customers: </h2>
+        <table class="table table-striped table-hover">
+            <tr>
+                <th>credentials</th>
+
+            </tr>
+            <tr>
+                <td th:text="${activeCustomer.email}"></td>
+
+            </tr>
+        </table>
+        <table class="table table-striped table-hover">
+            <tr>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr th:each="customer : ${customers}">
+                <td th:text="${customer.name}"></td>
+                <td th:text="${customer.surname}"></td>
+                <td th:text="${customer.phone}"></td>
+                <td th:text="${customer.email}"></td>
+                <td>
+                    <form action="#" th:action="@{customer/show/{email}(email=${customer.email})}" method="GET">
+                        <button type="submit" class="btn btn-info">Show</button>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+        <h2>Add new customer</h2>
+        <form action="#" th:action="@{/customers/add}" th:method="POST" th:object="${customerDTO}">
+            <div class="form-group">
+                Name: <input type="text" th:field="*{name}"/><br>
+                Surname: <input type="text" th:field="*{surname}"/><br>
+                Phone: <input type="text" th:field="*{phone}"/><br>
+                Email: <input type="text" th:field="*{email}"/><br>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create customer" name="button"/>
+            </div>
+        </form>
+        <hr/>
+
+</div>
+
+
+<footer th:fragment="footer" class="text-center">&copy; 2023 FoodOrder</footer>
+</body>
+</html>
