@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class MenuItemDTO {
 
+   private Integer menuItemId;
    private String name;
    private BigDecimal price;
    private String category;

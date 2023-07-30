@@ -23,7 +23,6 @@ public class OrderController {
     public static final String PLACE_ORDER = "/order/add";
     private final OrderService orderService;
     private  final OrderMapper orderMapper;
-    private  final CustomerMapper customerMapper;
 
 
     @GetMapping(ORDERS)

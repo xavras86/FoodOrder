@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Data
 @ToString(of = {"name", "price", "category", "description"})
 public class MenuItem {
-
+    Integer menuItemId;
     String name;
     BigDecimal price;
     String category;

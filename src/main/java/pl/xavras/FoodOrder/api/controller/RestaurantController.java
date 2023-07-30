@@ -5,14 +5,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import pl.xavras.FoodOrder.api.dto.MenuItemDTO;
+import pl.xavras.FoodOrder.api.dto.MenuItemOrderDTO;
 import pl.xavras.FoodOrder.api.dto.RestaurantDTO;
-import pl.xavras.FoodOrder.api.dto.mapper.AddressMapper;
-import pl.xavras.FoodOrder.api.dto.mapper.MenuItemMapper;
-import pl.xavras.FoodOrder.api.dto.mapper.OwnerMapper;
-import pl.xavras.FoodOrder.api.dto.mapper.RestaurantMapper;
+import pl.xavras.FoodOrder.api.dto.mapper.*;
 import pl.xavras.FoodOrder.business.RestaurantService;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +28,7 @@ public class RestaurantController {
     public static final String RESTAURANT = "/restaurants";
     public static final String RESTAURANTS_BY_STREET = "/restaurants/street/{streetName}";
     private static final String RESTAURANT_BY_NAME = "/restaurants/show/{restaurantName}";
+    private static final String RESTAURANT_BY_NAME_ORDER_MEAL = "/restaurants/order";
 
     private final RestaurantService restaurantService;
     private final RestaurantMapper restaurantMapper;
@@ -32,7 +36,7 @@ public class RestaurantController {
     private final AddressMapper addressMapper;
     private final OwnerMapper ownerMapper;
 
-
+    private final MenuItemOrderMapper menuItemOrderMapper;
 
 
     @GetMapping(RESTAURANT)
@@ -68,9 +72,28 @@ public class RestaurantController {
         model.addAttribute("address", address);
         model.addAttribute("owner", owner);
         model.addAttribute("menuItems", menuItems);
+        model.addAttribute("menuItemOrder", new ArrayList<MenuItemOrderDTO>());
 
         return "restaurantDetails";
     }
 
+    @PostMapping(RESTAURANT_BY_NAME_ORDER_MEAL)
+    public String addMenuItems(@ModelAttribute("menuItemOrders") LinkedList<MenuItemOrderDTO> menuItemOrders) {
+
+        for (MenuItemOrderDTO menuItemOrder : menuItemOrders) {
+            MenuItemDTO menuItem = menuItemOrder.getMenuItem();
+            int quantity = menuItemOrder.getQuantity();
+            // Tutaj możesz wykonać odpowiednie akcje z zamówieniem (np. zapis do bazy danych)
+            // Przykładowa akcja:
+            System.out.println("Zamówienie: " + menuItem.getName() + ", ilość: " + quantity);
+        }
+
+
+        return "restaurantsByStreet";
+    }
+
 
 }
+
+
+
