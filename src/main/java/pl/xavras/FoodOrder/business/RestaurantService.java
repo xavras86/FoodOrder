@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.xavras.FoodOrder.business.dao.RestaurantDAO;
+import pl.xavras.FoodOrder.domain.Address;
+import pl.xavras.FoodOrder.domain.Owner;
 import pl.xavras.FoodOrder.domain.Restaurant;
 
 import java.util.List;
@@ -25,7 +27,14 @@ public class RestaurantService {
         return restaurantDAO.findRestaurantsByStreetName(streetName);
     }
 
-    public Optional<Restaurant> findByName(String restaurantName) {
-        return restaurantDAO.findByName(restaurantName);
+    public Restaurant findByName(String restaurantName) {
+       return restaurantDAO.findByName(restaurantName)
+                .orElseThrow(() -> new RuntimeException("Restaurant with name [%s] doest not exists"
+                        .formatted(restaurantName)));
     }
+
+    public Set<Restaurant> findByOwnerEmail(String ownerEmail){
+        return restaurantDAO.findRestaurantsByOwner(ownerEmail);
+    }
+
 }

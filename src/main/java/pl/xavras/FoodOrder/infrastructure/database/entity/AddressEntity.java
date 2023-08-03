@@ -12,6 +12,8 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Getter
+@Setter
 @Table(name = "address")
 public class AddressEntity {
 
@@ -32,7 +34,7 @@ public class AddressEntity {
     @Column(name = "building_number")
     private String buildingNumber;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "address")
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "address",cascade = CascadeType.ALL)
     private RestaurantEntity restaurant;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "address")

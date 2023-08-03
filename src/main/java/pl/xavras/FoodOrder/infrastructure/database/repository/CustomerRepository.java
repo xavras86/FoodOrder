@@ -8,10 +8,13 @@ import pl.xavras.FoodOrder.domain.Customer;
 import pl.xavras.FoodOrder.infrastructure.database.entity.CustomerEntity;
 import pl.xavras.FoodOrder.infrastructure.database.repository.jpa.CustomerJpaRepository;
 import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.CustomerEntityMapper;
+import pl.xavras.FoodOrder.infrastructure.security.RoleEntity;
+import pl.xavras.FoodOrder.infrastructure.security.UserEntity;
 import pl.xavras.FoodOrder.infrastructure.security.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 @AllArgsConstructor
@@ -47,7 +50,10 @@ public class CustomerRepository implements CustomerDAO {
     @Override
     public Customer findLoggedCustomer(){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
         var loggedEmail = userRepository.findByUserName(username).getEmail();
+
+
         return customerJpaRepository.findByEmail(loggedEmail)
                 .map(customerEntityMapper::mapFromEntity)
                 .orElseThrow(() -> new RuntimeException("something went terribly wrong with security :( no customer related to current user email [%s] "

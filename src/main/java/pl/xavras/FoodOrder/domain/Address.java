@@ -1,14 +1,12 @@
 package pl.xavras.FoodOrder.domain;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Value;
-import lombok.With;
+import lombok.*;
 
 @With
 @Value
 @Builder
-@Data
+@EqualsAndHashCode
+@ToString
 public class Address {
 
     String country;

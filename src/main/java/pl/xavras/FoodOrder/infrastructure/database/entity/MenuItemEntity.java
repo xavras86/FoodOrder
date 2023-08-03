@@ -38,7 +38,7 @@ public class MenuItemEntity {
     @JoinColumn(name = "restaurant_id")
     private RestaurantEntity restaurant;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "menuItem")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "menuItem", cascade = CascadeType.ALL)
     private Set<MenuItemOrderEntity> menuItemOrders;
 
 

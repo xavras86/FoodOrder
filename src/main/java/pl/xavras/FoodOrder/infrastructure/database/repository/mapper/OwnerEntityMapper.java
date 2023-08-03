@@ -11,4 +11,6 @@ public interface OwnerEntityMapper {
 
      Owner mapFromEntity(OwnerEntity entity);
 
+     OwnerEntity mapToEntity(Owner owner);
+
 }

@@ -42,6 +42,7 @@
                 <th>Name</th>
                 <th>Phone</th>
                 <th>Email</th>
+
                 <th></th>
                 <th></th>
             </tr>
@@ -49,8 +50,9 @@
                 <td th:text="${restaurant.name}"></td>
                 <td th:text="${restaurant.phone}"></td>
                 <td th:text="${restaurant.email}"></td>
+
                 <td>
-                    <form action="#" th:action="@{restaurants/show/{restaurantName}(restaurantName=${restaurant.name})}" method="GET">
+                    <form action="#" th:action="@{restaurants/{restaurantName}(restaurantName=${restaurant.name})}" method="GET">
                         <button type="submit" class="btn btn-info">Show</button>
                     </form>
                 </td>

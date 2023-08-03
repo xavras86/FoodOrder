@@ -11,7 +11,7 @@ import pl.xavras.FoodOrder.infrastructure.database.entity.RestaurantStreetEntity
 public interface RestaurantStreetEntityMapper {
 
 
-    @Mapping(target = "restaurantStreet.restaurant", ignore = true)
+    @Mapping(target = "restaurantStreet.restaurant", ignore = true) //?
     RestaurantStreet mapFromEntity(RestaurantStreetEntity entity);
 
 }

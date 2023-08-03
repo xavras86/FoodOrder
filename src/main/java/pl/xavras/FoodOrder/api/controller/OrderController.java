@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import pl.xavras.FoodOrder.api.dto.CustomerAddressOrderDTO;
 import pl.xavras.FoodOrder.api.dto.mapper.CustomerMapper;
 import pl.xavras.FoodOrder.api.dto.mapper.OrderMapper;
+import pl.xavras.FoodOrder.business.CustomerService;
 import pl.xavras.FoodOrder.business.OrderService;
 import pl.xavras.FoodOrder.domain.Order;
+
+import java.util.Set;
 
 @Controller
 @AllArgsConstructor
@@ -24,28 +27,32 @@ public class OrderController {
     private final OrderService orderService;
     private  final OrderMapper orderMapper;
 
+    private final CustomerService customerService;
+
 
     @GetMapping(ORDERS)
     public String orders(Model model) {
-        var allOrders = orderService.findAll().stream().map(orderMapper::mapToDTO).toList();
 
-        model.addAttribute("orders", allOrders);
+        String activeCustomerEmail = customerService.activeCustomer().getEmail();
+
+//        var allByCustomerOrders = orderService.findByCustomerEmail(activeCustomerEmail)
+//                .stream().map(orderMapper::mapToDTO).toList();
+
+        Set<Order> byCustomerEmail = orderService.findByCustomerEmail(activeCustomerEmail);
+
+        
+
+        //todo zmienic tak zeby bylo zalezne od DTO a nie obiektu domenowego
+
+
+//        model.addAttribute("orders", allByCustomerOrders);
+        model.addAttribute("orders", byCustomerEmail);
         model.addAttribute("orderDataDTO", new CustomerAddressOrderDTO());
 
-        return "orders";
+        return "customerOrders";
     }
 
 
-    @PostMapping(value = PLACE_ORDER)
-    public String placeOrder(
-            @Valid @ModelAttribute("orderDataDTO") CustomerAddressOrderDTO customerAddressOrderDTO,
-            Model model
-    ) {
-        Order order = orderMapper.mapFromDTO(customerAddressOrderDTO);
 
-        orderService.placeOrder(order);
-
-        return "order_placed";
-    }
 }
 

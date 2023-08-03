@@ -6,8 +6,7 @@ import lombok.*;
 @With
 @Value
 @Builder
-@EqualsAndHashCode(of = "menuItemOrderId")
-@ToString(of = {"menuItemOrdersId", "quantity"})
+@Data
 public class MenuItemOrder {
 
     Integer menuItemOrderId;

@@ -18,7 +18,7 @@ public interface StreetEntityMapper {
 //    Street mapFromEntity(StreetEntity entity);
 
 
-    @Mapping(target = "restaurant.address", ignore = true)
+//    @Mapping(target = "restaurant.address", ignore = true)
     @Mapping(source = "restaurantStreets", target = "restaurantStreets", qualifiedByName = "mapRestaurantsStreets")
     Street mapFromEntity(StreetEntity entity);
 

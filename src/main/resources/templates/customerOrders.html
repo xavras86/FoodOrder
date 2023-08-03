@@ -43,7 +43,7 @@
                 <th>Recieved:</th>
                 <th>Completed:</th>
                 <th>Total cost:</th>
-                <th>Customer email:</th>
+                <th>Menu items:</th>
 
 
                 <th></th>
@@ -54,13 +54,27 @@
                 <td th:text="${order.receivedDateTime}"></td>
                 <td th:text="${order.completedDateTime}"></td>
                 <td th:text="${order.totalValue}"></td>
-                <td th:text="${order.email}"></td>
-
                 <td>
-<!--                    <form action="#" th:action="@{customer/show/{login}(login=${customer.login})}" method="GET">-->
-<!--                        <button type="submit" class="btn btn-info">Show</button>-->
-<!--                    </form>-->
+                    <p>Menu Item</p>
+                    <table class="table">
+                        <thead class="table-hover">
+                        <tr>
+                            <th>name</th>
+                            <th>quantity</th>
+                            <th>price[szt]</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="menuItem : ${order.menuItemOrders}">
+                            <td th:text="${menuItem.menuItem.name}"></td>
+                            <td th:text="${menuItem.quantity}"></td>
+                            <td th:text="${menuItem.menuItem.price}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </td>
+
+
             </tr>
         </table>
 </div>

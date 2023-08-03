@@ -32,12 +32,8 @@ public class AddressRepository implements AddressDAO {
     @Override
     public Address saveAddress(Address address) {
         AddressEntity toSave = addressEntityMapper.mapToEntity(address);
-        System.out.println("z encji do zapisania: "+toSave);
         AddressEntity saved = addressJpaRepository.saveAndFlush(toSave);
-        System.out.println("z encji po zapisaniu: "+saved);
-        Address address1 = addressEntityMapper.mapFromEntity(saved);
-        System.out.println("z z obiektu domenowego po mapowaniu: "+address1);
-        return  address1;
+        return addressEntityMapper.mapFromEntity(saved);
 
     }
 

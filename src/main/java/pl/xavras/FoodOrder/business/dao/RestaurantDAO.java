@@ -1,5 +1,6 @@
 package pl.xavras.FoodOrder.business.dao;
 
+import pl.xavras.FoodOrder.domain.Owner;
 import pl.xavras.FoodOrder.domain.Restaurant;
 
 import java.util.List;
@@ -14,4 +15,6 @@ public interface RestaurantDAO {
 
     Set<Restaurant> findRestaurantsByStreetName(String streetName);
 
+
+    Set<Restaurant> findRestaurantsByOwner(String ownerEmail);
 }

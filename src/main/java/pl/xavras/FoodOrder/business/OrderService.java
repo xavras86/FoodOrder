@@ -31,7 +31,6 @@ public class OrderService {
 
     public Set<Order> findByCustomerEmail(String email) {
         return orderDAO.findOrdersByCustomerEmail(email);
-        //todo pusty set ?
     }
 
     public Optional<Order> findByOrderNumber(String orderNumber) {
@@ -43,16 +42,11 @@ public class OrderService {
     }
 
 
-    public void placeOrder(Order order) {
-
+    public Order placeOrder(Order order, Set<MenuItemOrder> menuItemOrders) {
         Address deliveryAddress = order.getAddress();
-        Set<MenuItemOrder> menuItemOrders = new HashSet<>(); //todo dodac liste pozycji
-
-
         Order orderToPlace = buildOrder( deliveryAddress, menuItemOrders);
-        orderDAO.saveOrder(orderToPlace);
+        return orderDAO.saveOrder(orderToPlace);
     }
-
 
     private Order buildOrder(Address address,
                              Set<MenuItemOrder> menuItemOrders
@@ -86,7 +80,7 @@ public class OrderService {
     private String generateOrderNumber(OffsetDateTime when) {
         return "%s.%s.%s-%s.%s.%s.%s".formatted(
                 when.getYear(),
-                when.getMonth().ordinal(),
+                when.getMonth().getValue(),
                 when.getDayOfMonth(),
                 when.getHour(),
                 when.getMinute(),

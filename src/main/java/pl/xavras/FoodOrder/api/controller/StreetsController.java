@@ -11,11 +11,12 @@ import pl.xavras.FoodOrder.business.StreetService;
 @Controller
 @AllArgsConstructor
 @Slf4j
-public class StreetController {
+public class StreetsController {
 
     public static final String STREETS = "/streets";
     private final StreetService streetService;
     private final StreetMapper streetMapper;
+
 
     @GetMapping(STREETS)
     public String streets(Model model) {
@@ -24,21 +25,9 @@ public class StreetController {
 
         model.addAttribute("streets", allStreets);
 
-//        log.info("streets: " + allStreets);
-
         return "streets";
     }
-
-
-
-//    @GetMapping(STREETS_BY_RESTAURANTS)
-//    public String showStreetsByRestaurant(@PathVariable String restaurantName, Model model) {
-//        var streetsSet = streetService.findStreetsByRestaurantName(restaurantName).stream()
-//                .map(streetMapper::map).collect(Collectors.toSet());
-//        model.addAttribute("streets", streetsSet);
-//        return "streetsByRestaurant";
-//    }
-
-
 }
+
+
 
