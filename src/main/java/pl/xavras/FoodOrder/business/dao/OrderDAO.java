@@ -1,5 +1,6 @@
 package pl.xavras.FoodOrder.business.dao;
 
+import pl.xavras.FoodOrder.domain.MenuItemOrder;
 import pl.xavras.FoodOrder.domain.Order;
 
 import java.util.List;
@@ -14,7 +15,11 @@ public interface OrderDAO {
 
     Optional<Order> findByOrderNumber(String orderNumber);
 
-    Order saveOrder(Order order);
+    Order saveOrder(Order order, Set<MenuItemOrder> menuItemOrders);
+
+    void cancelOrder(Order order);
+
+
 
 
 

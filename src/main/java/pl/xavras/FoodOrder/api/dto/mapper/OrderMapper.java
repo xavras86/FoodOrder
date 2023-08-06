@@ -28,8 +28,8 @@ public interface OrderMapper extends OffsetDateTimeMapper {
                 .buildingNumber(order.getAddress().getBuildingNumber())
                 .orderNumber(order.getOrderNumber())
                 .totalValue(order.getTotalValue())
-                .isCancelled(order.getIsCancelled())
-                .isCompleted(order.getIsCompleted())
+                .isCancelled(order.getCancelled())
+                .isCompleted(order.getCompleted())
                 .receivedDateTime(mapOffsetDateTimeToString(order.getReceivedDateTime()))
                 .completedDateTime(mapOffsetDateTimeToString(order.getCompletedDateTime()))
                 .build();

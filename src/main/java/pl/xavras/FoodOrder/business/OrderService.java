@@ -11,7 +11,9 @@ import pl.xavras.FoodOrder.domain.Order;
 import pl.xavras.FoodOrder.domain.exception.NotFoundException;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 @Service
@@ -20,7 +22,7 @@ import java.util.*;
 public class OrderService {
 
     private final OrderDAO orderDAO;
-
+    private static final long MAX_CANCEL_SECONDS = 1200;
 
     private final CustomerService customerService;
     private final AddressService addressService;
@@ -42,25 +44,44 @@ public class OrderService {
     }
 
 
+    public void cancelOrder(Order order) {
+        if(order.getCancelled() && !isCancellable(order)){
+            return;
+        }
+        orderDAO.cancelOrder(order);
+    }
+
+    public Boolean isCancellable(Order order) {
+
+        Duration between = Duration.between(order.getReceivedDateTime(), OffsetDateTime.now());
+        long seconds = between.getSeconds();
+
+        boolean b = Duration.between(order.getReceivedDateTime(), OffsetDateTime.now()).toSeconds() <= MAX_CANCEL_SECONDS;
+
+        return b;
+
+
+    }
+
     public Order placeOrder(Order order, Set<MenuItemOrder> menuItemOrders) {
         Address deliveryAddress = order.getAddress();
-        Order orderToPlace = buildOrder( deliveryAddress, menuItemOrders);
-        return orderDAO.saveOrder(orderToPlace);
+
+        Order orderToPlace = buildOrder(deliveryAddress, menuItemOrders);
+        return orderDAO.saveOrder(orderToPlace, menuItemOrders);
     }
 
     private Order buildOrder(Address address,
                              Set<MenuItemOrder> menuItemOrders
-                             //todo powinno być zalezne od restauracji - zamowienie tylko z jednej restauracji, czy tzeba tutaj uwzglednic ?
     ) {
         OffsetDateTime whenCreated = OffsetDateTime.now();
         return Order.builder()
                 .orderNumber(generateOrderNumber(whenCreated))
                 .receivedDateTime(whenCreated)
-                .completedDateTime(null) //todo dodac date realizacji
                 .totalValue(calculateTotalOrderValue(menuItemOrders))
                 .address(address)
+                .cancelled(false)
+                .completed(false)
                 .customer(customerService.activeCustomer())
-                .menuItemOrders(menuItemOrders)
                 .build();
     }
 
@@ -88,8 +109,4 @@ public class OrderService {
                 (new Random().nextInt(90) + 10)
         );
     }
-
-
-
-
 }

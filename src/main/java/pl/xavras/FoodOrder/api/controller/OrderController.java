@@ -1,58 +1,75 @@
 package pl.xavras.FoodOrder.api.controller;
 
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import pl.xavras.FoodOrder.api.dto.CustomerAddressOrderDTO;
-import pl.xavras.FoodOrder.api.dto.mapper.CustomerMapper;
 import pl.xavras.FoodOrder.api.dto.mapper.OrderMapper;
 import pl.xavras.FoodOrder.business.CustomerService;
 import pl.xavras.FoodOrder.business.OrderService;
 import pl.xavras.FoodOrder.domain.Order;
+import pl.xavras.FoodOrder.domain.exception.NotFoundException;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 @AllArgsConstructor
 @Slf4j
 public class OrderController {
 
-    public static final String ORDERS = "/orders";
-    public static final String PLACE_ORDER = "/order/add";
-    private final OrderService orderService;
-    private  final OrderMapper orderMapper;
 
+    public static final String ORDERS = "/orders";
+    public static final String ORDERS_CANCEL = "/orders/cancel/{orderNumber}";
+    private final OrderService orderService;
     private final CustomerService customerService;
 
 
     @GetMapping(ORDERS)
     public String orders(Model model) {
-
         String activeCustomerEmail = customerService.activeCustomer().getEmail();
+        Set<Order> allCustomerOrders = orderService.findByCustomerEmail(activeCustomerEmail);
 
-//        var allByCustomerOrders = orderService.findByCustomerEmail(activeCustomerEmail)
-//                .stream().map(orderMapper::mapToDTO).toList();
+        Set<Order> cancelledOrders = allCustomerOrders.stream()
+                .filter(a -> a.getCancelled())
+                .collect(Collectors.toSet());
 
-        Set<Order> byCustomerEmail = orderService.findByCustomerEmail(activeCustomerEmail);
+        Set<Order> completedOrders = allCustomerOrders.stream()
+                .filter(a -> a.getCompleted())
+                .collect(Collectors.toSet());
 
-        
+        Set<Order> activeOrders = allCustomerOrders.stream()
+                .filter(a -> (!a.getCancelled() && !a.getCompleted()))
+                .collect(Collectors.toSet());
 
-        //todo zmienic tak zeby bylo zalezne od DTO a nie obiektu domenowego
 
 
-//        model.addAttribute("orders", allByCustomerOrders);
-        model.addAttribute("orders", byCustomerEmail);
+
+
+        model.addAttribute("orders", allCustomerOrders);
+        model.addAttribute("completedOrders", completedOrders);
+        model.addAttribute("cancelledOrders", cancelledOrders);
+        model.addAttribute("activeOrders", activeOrders);
         model.addAttribute("orderDataDTO", new CustomerAddressOrderDTO());
+        model.addAttribute("orderService", orderService);
 
-        return "customerOrders";
+        return "customer-orders";
     }
+    @PutMapping(ORDERS_CANCEL)
+    public String cancelOrder(@PathVariable String orderNumber) {
+        Order orderToCancel = orderService.findByOrderNumber(orderNumber)
+                .orElseThrow(() -> new NotFoundException("Could not find order with orderNumber: " + orderNumber));
 
+        if (!orderToCancel.getCancelled() && orderService.isCancellable(orderToCancel)) {
+            orderService.cancelOrder(orderToCancel);
+        }
 
-
+        return "redirect:/orders";
+    }
 }
 

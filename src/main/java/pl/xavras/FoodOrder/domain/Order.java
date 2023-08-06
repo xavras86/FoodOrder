@@ -18,8 +18,8 @@ public class Order {
     String orderNumber;
     OffsetDateTime receivedDateTime;
     OffsetDateTime completedDateTime;
-    Boolean isCancelled;
-    Boolean isCompleted;
+    Boolean cancelled;
+    Boolean completed;
     BigDecimal totalValue;
     Customer customer;
     Address address;

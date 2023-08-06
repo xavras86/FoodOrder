@@ -32,11 +32,11 @@ public class OrderEntity {
     @Column(name = "completed_date_time")
     private OffsetDateTime completedDateTime;
 
-    @Column(name = "is_cancelled")
-    private Boolean isCancelled;
+    @Column(name = "cancelled",columnDefinition = "boolean default false")
+    private Boolean cancelled;
 
-    @Column(name = "is_completed")
-    private Boolean isCompleted;
+    @Column(name = "completed",columnDefinition = "boolean default false")
+    private Boolean completed;
 
     @Column(name = "total_value")
     private BigDecimal totalValue;

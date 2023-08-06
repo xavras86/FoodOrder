@@ -1,24 +1,28 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Menu</title>
+  <title>Lista zamówień</title>
 </head>
 <body>
-<h1>Menu</h1>
-
-<form th:action="@{/order}" method="post" th:object="${menuItemOrderDTOs}">
-  <table>
-    <tr th:each="menuItemOrderDTO, itemStatus : ${menuItemOrderDTOs}">
-      <td th:text="${menuItemOrderDTO.menuItem.name}"></td>
-      <td th:text="${menuItemOrderDTO.menuItem.price}"></td>
-      <td>
-        <input type="number" th:field="*{[__${itemStatus.index}__].quantity}" min="0" />
-        <!-- Ukryte pole dla przekazania ID -->
-        <input type="hidden" th:field="*{[__${itemStatus.index}__].menuItem.id}" th:value="${menuItemOrderDTO.menuItem.id}" />
-      </td>
-    </tr>
-  </table>
-  <button type="submit">Zamów</button>
-</form>
+<h1>Lista zamówień</h1>
+<table>
+  <tr>
+    <th>Data otrzymania zamówienia</th>
+    <th>Status</th>
+    <th>Anuluj zamówienie</th>
+  </tr>
+  <tr th:each="order, index : ${orders}">
+    <td th:text="${order.receivedDateTime}">Received Date</td>
+    <td th:text="${order.cancelled} ? 'Anulowane' : 'Aktywne'">Status</td>
+    <td th:if="${!order.cancelled}" th:unless="${#dates.createNow().isAfter(order.receivedDateTime.plusSeconds(1200))}">
+      <form th:action="@{/orders/cancel/{index}(index=${index})}" method="post">
+        <button type="submit">Anuluj</button>
+      </form>
+    </td>
+    <td th:unless="${!order.cancelled}">
+      <span>Możliwość anulowania wygasła</span>
+    </td>
+  </tr>
+</table>
 </body>
 </html>
