@@ -64,7 +64,7 @@
                 <td th:if="${!order.cancelled}" th:unless="${!orderService.isCancellable(order)}">
                     <form th:action="@{/orders/cancel/{orderNumber}(orderNumber=${order.orderNumber})}"
                           th:method="PUT">
-                        <button type="submit">Anuluj</button>
+                        <button type="submit" onclick="return confirm('Are you sure you want to cancel this order?')">Anuluj</button>
                     </form>
                 </td>
                 <td th:if="${!orderService.isCancellable(order)}">
