@@ -16,7 +16,4 @@ public class MenuItemOrderDTO {
     private MenuItemDTO menuItem;
 
 
-
-    //   private RestaurantDTO restaurant;
-
 }

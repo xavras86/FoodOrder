@@ -8,19 +8,21 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <style type=text/css>
-        h2 {
-            background-color: #696969;
+        h1 {
+            justify-content:center;
+            display: flex;
             margin: 10px;
         }
-        div {
-            color: white;
-            background-color: #C0C0C0;
-            margin: 2px;
-            font-size: 25px;
-        }
         body {
+            margin: 10px;
             background-color: Azure;
             text-align: center;
+            font-size: 20px;
+            margin: 10px;
+        }
+        form-group {
+            justify-content:center;
+            display: flex;
         }
 </style>
 
@@ -34,7 +36,7 @@
         <a class="btn btn-success btn-lg" th:href="@{/streets}">Restaurants by delivery street </a>
         <a class="btn btn-secondary btn-lg" th:href="@{/orders}">Your orders</a>
         <a class="btn btn-dark btn-lg" th:href="@{/logout}">Logout</a>
-        <h2>CUSTOMER PANEL:</h2>
+        <h1>CUSTOMER PANEL:</h1>
         <br>
 
     </div>

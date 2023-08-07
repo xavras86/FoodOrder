@@ -4,17 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import pl.xavras.FoodOrder.api.dto.CustomerAddressOrderDTO;
-import pl.xavras.FoodOrder.api.dto.mapper.OrderMapper;
 import pl.xavras.FoodOrder.business.CustomerService;
 import pl.xavras.FoodOrder.business.OrderService;
 import pl.xavras.FoodOrder.domain.Order;
 import pl.xavras.FoodOrder.domain.exception.NotFoundException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -48,18 +46,16 @@ public class OrderController {
                 .collect(Collectors.toSet());
 
 
-
-
-
-        model.addAttribute("orders", allCustomerOrders);
+//        model.addAttribute("orders", allCustomerOrders);
         model.addAttribute("completedOrders", completedOrders);
         model.addAttribute("cancelledOrders", cancelledOrders);
         model.addAttribute("activeOrders", activeOrders);
-        model.addAttribute("orderDataDTO", new CustomerAddressOrderDTO());
+//        model.addAttribute("orderDataDTO", new CustomerAddressOrderDTO());
         model.addAttribute("orderService", orderService);
 
         return "customer-orders";
     }
+
     @PutMapping(ORDERS_CANCEL)
     public String cancelOrder(@PathVariable String orderNumber) {
         Order orderToCancel = orderService.findByOrderNumber(orderNumber)

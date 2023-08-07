@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import pl.xavras.FoodOrder.api.dto.*;
+import pl.xavras.FoodOrder.api.dto.CustomerAddressOrderDTO;
+import pl.xavras.FoodOrder.api.dto.MenuItemDTO;
+import pl.xavras.FoodOrder.api.dto.MenuItemOrderDTO;
+import pl.xavras.FoodOrder.api.dto.MenuItemOrdersDTO;
 import pl.xavras.FoodOrder.api.dto.mapper.*;
-import pl.xavras.FoodOrder.business.CustomerService;
 import pl.xavras.FoodOrder.business.OrderService;
 import pl.xavras.FoodOrder.business.RestaurantService;
 import pl.xavras.FoodOrder.domain.MenuItemOrder;
@@ -31,7 +33,7 @@ public class RestaurantOrderController {
 
     public static final String RESTAURANTS_BY_STREET = "/restaurants/street/{street}";
     private static final String RESTAURANT_BY_NAME = "/restaurants/{restaurantName}";
-    private static final String RESTAURANT_ADDITEMS = "/restaurants/addItems";
+    private static final String RESTAURANT_ADD_ITEMS = "/restaurants/addItems";
     private final RestaurantService restaurantService;
     private final OrderService orderService;
     private final RestaurantMapper restaurantMapper;
@@ -40,7 +42,6 @@ public class RestaurantOrderController {
     private final MenuItemOrderMapper menuItemOrderMapper;
     private final MenuItemMapper menuItemMapper;
     private final OrderMapper orderMapper;
-
 
 
     @GetMapping("/address")
@@ -88,7 +89,8 @@ public class RestaurantOrderController {
 
         return "restaurant-menu";
     }
-    @PostMapping(RESTAURANT_ADDITEMS)
+
+    @PostMapping(RESTAURANT_ADD_ITEMS)
     public String addMenuItems(@ModelAttribute MenuItemOrdersDTO menuItemOrdersDTO,
                                HttpSession session) {
 
