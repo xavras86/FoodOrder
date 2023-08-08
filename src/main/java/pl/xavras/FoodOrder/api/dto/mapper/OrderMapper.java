@@ -41,12 +41,6 @@ public interface OrderMapper extends OffsetDateTimeMapper {
     default Order mapFromDTO(CustomerAddressOrderDTO dto) {
 
         return Order.builder()
-//                .customer(Customer.builder()
-//                        .name(dto.getName())
-//                        .surname(dto.getSurname())
-//                        .phone(dto.getPhone())
-//                        .email(dto.getEmail())
-//                        .build())
                 .address(Address.builder()
                         .country(dto.getCountry())
                         .city(dto.getCity())

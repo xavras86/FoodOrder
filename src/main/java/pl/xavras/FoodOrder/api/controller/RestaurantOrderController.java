@@ -3,6 +3,7 @@ package pl.xavras.FoodOrder.api.controller;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,10 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import pl.xavras.FoodOrder.api.dto.CustomerAddressOrderDTO;
-import pl.xavras.FoodOrder.api.dto.MenuItemDTO;
-import pl.xavras.FoodOrder.api.dto.MenuItemOrderDTO;
-import pl.xavras.FoodOrder.api.dto.MenuItemOrdersDTO;
+import pl.xavras.FoodOrder.api.dto.*;
 import pl.xavras.FoodOrder.api.dto.mapper.*;
 import pl.xavras.FoodOrder.business.OrderService;
 import pl.xavras.FoodOrder.business.RestaurantService;
@@ -71,17 +69,18 @@ public class RestaurantOrderController {
     }
 
     @GetMapping(RESTAURANT_BY_NAME)
-    public String showRestaurantMenu(@PathVariable String restaurantName, Model model) {
+    public String showRestaurantMenu(@PathVariable String restaurantName,
+                                     Model model,
+                                     HttpSession session) {
         var restaurant = getRestaurant(restaurantName);
         var address = addressMapper.map(restaurant.getAddress());
         var owner = ownerMapper.map(restaurant.getOwner());
-        var restaurantDetails = restaurantMapper.map(restaurant);
         var menuItems = new ArrayList<>(getMenuItemDTOs(restaurant));
         MenuItemOrdersDTO menuItemOrdersDTO = new MenuItemOrdersDTO(menuItems.stream()
                 .map(a -> new MenuItemOrderDTO(0, a))
                 .toList());
-
-        model.addAttribute("restaurant", restaurantDetails);
+        session.setAttribute("restaurant", restaurantName);
+        model.addAttribute("restaurant", restaurant);
         model.addAttribute("address", address);
         model.addAttribute("owner", owner);
         model.addAttribute("menuItems", menuItems);
@@ -103,7 +102,10 @@ public class RestaurantOrderController {
         CustomerAddressOrderDTO orderAddressData = (CustomerAddressOrderDTO) session.getAttribute("addressDTO");
 
         Order order = orderMapper.mapFromDTO(orderAddressData);
-        Order placedOrder = orderService.placeOrder(order, menuItemOrdersToOrder);
+
+        String restaurantName = (String) session.getAttribute("restaurant");
+
+        Order placedOrder = orderService.placeOrder(order, restaurantName, menuItemOrdersToOrder);
 
         CustomerAddressOrderDTO placed = orderMapper.mapToDTO(placedOrder);
 

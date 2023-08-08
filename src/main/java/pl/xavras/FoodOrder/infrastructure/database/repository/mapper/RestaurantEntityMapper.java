@@ -21,6 +21,9 @@ public interface RestaurantEntityMapper {
     @Mapping(source = "menuItems", target = "menuItems", qualifiedByName = "mapMenuItems")
     Restaurant mapFromEntity (RestaurantEntity entity);
 
+    @Mapping(target = "restaurantStreets", ignore = true)
+    RestaurantEntity mapToEntity (Restaurant restaurant);
+
     @Mapping(target = "restaurant", ignore = true)
     @Named("mapRestaurantStreets")
     default Set<RestaurantStreet> mapRestaurantStreets(Set<RestaurantStreetEntity> entities) {

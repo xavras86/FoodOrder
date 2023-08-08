@@ -25,37 +25,63 @@
             justify-content:center;
             display: flex;
         }
+        table {
+            justify-content:center;
+            display: flex;
+            margin: 10px;
+            background-color: Azure;
+            text-align: center;
+            font-size: 20px;
+            margin: 10px;
+        }
 </style>
 
 <body>
 <h1>Thank You for Your Order!</h1>
 
-<h1>Delivery Address:</h1>
+<div class="container">
+    <p><strong>OrderNumber:</strong> <span th:text="${orderDetails.orderNumber}"></span></p>
+    <p><strong>Time of Order:</strong> <span th:text="${orderDetails.receivedDateTime}"></span></p>
+    <p><strong>Country:</strong> <span th:text="${orderDetails.country}"></span></p>
+    <p><strong>City:</strong> <span th:text="${orderDetails.city}"></span></p>
+    <p><strong>Street:</strong> <span th:text="${orderDetails.street}"></span></p>
+    <p><strong>Building No.:</strong> <span th:text="${orderDetails.buildingNumber}"></span></p>
 
-<p><strong>OrderNumber:</strong> <span th:text="${orderDetails.orderNumber}"></span></p>
-<p><strong>Time of Order:</strong> <span th:text="${orderDetails.receivedDateTime}"></span></p>
-<p><strong>Country:</strong> <span th:text="${orderDetails.country}"></span></p>
-<p><strong>City:</strong> <span th:text="${orderDetails.city}"></span></p>
-<p><strong>Street:</strong> <span th:text="${orderDetails.street}"></span></p>
-<p><strong>Building Number:</strong> <span th:text="${orderDetails.buildingNumber}"></span></p>
+
+    <h2>Ordered Menu Items:</h2>
+    <table class="table-hover">
+        <tr>
+            <th>Nazwa</th>
+            <th>Cena</th>
+            <th>Ilość</th>
+
+        </tr>
+        <tr th:each="menuItemOrder : ${menuItemOrders}">
+            <td th:text="${menuItemOrder.menuItem.name}"></td>
+            <td th:text="${menuItemOrder.menuItem.price}"></td>
+            <td th:text="${menuItemOrder.quantity}"></td>
+            <td>
+
+    </table>
 
 
-<h2>Ordered Menu Items:</h2>
-<ul>
-    <li th:each="menuItemOrder : ${menuItemOrders}">
-        <strong th:text="${menuItemOrder.menuItem.name}"></strong>
-        <strong th:text="${menuItemOrder.menuItem.price}"></strong>
-        <span>Quantity: <span th:text="${menuItemOrder.quantity}"></span></span>
-    </li>
-</ul>
+<!--    <ul>-->
+<!--        <li th:each="menuItemOrder : ${menuItemOrders}">-->
+<!--            <p><strong th:text="${menuItemOrder.menuItem.name}"></strong></p>-->
+<!--            <p><strong th:text="${menuItemOrder.menuItem.price}"></strong>-->
+<!--            <p><strong> Quantity:</strong> <strong th:text="${menuItemOrder.quantity}"></strong></p>-->
+<!--        </li>-->
+<!--    </ul>-->
 
-<h2>Total value:</h2>
+    <h2>Total value:</h2>
 
-<p><strong>Total value:</strong> <span th:text="${orderDetails.totalValue}"></span></p>
+    <p><strong>Total value:</strong> <span th:text="${orderDetails.totalValue}"></span></p>
 
-<p>
-    <a th:href="@{/}" class="btn btn-primary" role="button">Back to the main page</a>
-</p>
-<br
+    <p>
+        <a th:href="@{/}" class="btn btn-primary" role="button">Back to the main page</a>
+    </p>
+    <br>
+    </div>
+    <footer th:fragment="footer" class="text-center">&copy; 2023 FoodOrder</footer>
 </body>
 </html>

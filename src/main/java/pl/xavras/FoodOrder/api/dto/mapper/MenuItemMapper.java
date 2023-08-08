@@ -7,9 +7,11 @@ import pl.xavras.FoodOrder.domain.MenuItem;
 
 import java.util.Set;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface MenuItemMapper {
 
     MenuItemDTO map(MenuItem menuItem);
     Set<MenuItemDTO> map(Set<MenuItem> menuItem);
+
+    MenuItem map(MenuItemDTO menuItemDTO);
 }

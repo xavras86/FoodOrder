@@ -23,5 +23,6 @@ public class Order {
     BigDecimal totalValue;
     Customer customer;
     Address address;
+    Restaurant restaurant;
     Set<MenuItemOrder> menuItemOrders;
 }

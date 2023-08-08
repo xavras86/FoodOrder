@@ -27,15 +27,15 @@
 </style>
 
 <body>
-<div class="container">
-    <br>
-    <a class="btn btn-success btn-lg" th:href="@{/address}">Order some food</a>
-    <a class="btn btn-primary btn-lg" th:href="@{/restaurants}">All restaurants</a>
-    <a class="btn btn-success btn-lg" th:href="@{/streets}">Restaurants by delivery street </a>
-    <a class="btn btn-secondary btn-lg" th:href="@{/orders}">Your orders</a>
-    <a class="btn btn-warning btn-lg" th:href="@{/customer}">Back to main page</a>
-    <a class="btn btn-dark btn-lg" th:href="@{/logout}">Logout</a>
-    <br>
+    <div class="container">
+        <div class="page-header" id="banner">
+            <br>
+            <a class="btn btn-success btn-lg" th:href="@{/restaurants-owner}">Your restaurants</a>
+            <a class="btn btn-secondary btn-lg" th:href="@{/orders-owner}">Your orders</a>
+            <a class="btn btn-warning btn-lg" th:href="@{/}">Back to home</a>
+            <a class="btn btn-dark btn-lg" th:href="@{/logout}">Logout</a>
+            <br>
+        </div>
 
 
 
@@ -62,36 +62,40 @@
         </tr>
     </table>
 
-    <form th:action="@{/restaurants/addItems}" th:object="${menuItemOrdersDTO}" method="post">
+<!--    <form th:action="@{/restaurants/addItems}" th:object="${menuItemOrdersDTO}" method="post">-->
+    <form>
 
         <table class="table-bordered">
             <tr>
                 <th>Nazwa</th>
                 <th>Cena</th>
                 <th>Opis</th>
-                <th>Ilość</th>
+
             </tr>
-            <tr th:each="menuItem, iterStat : ${menuItems}">
+            <tr th:each="menuItem : ${menuItems}">
                 <td th:text="${menuItem.name}"></td>
                 <td th:text="${menuItem.price}"></td>
                 <td th:text="${menuItem.description}"></td>
                 <td>
-                    <input type="number" th:field="*{orders[__${iterStat.index}__].quantity}" min="0"/>
-                    <input type="hidden" th:field="*{orders[__${iterStat.index}__].menuItem.menuItemId}"
-                           th:value="${menuItem.menuItemId}"/>
-                    <input type="hidden" th:field="*{orders[__${iterStat.index}__].menuItem.name}"
-                           th:value="${menuItem.name}"/>
-                    <input type="hidden" th:field="*{orders[__${iterStat.index}__].menuItem.price}"
-                           th:value="${menuItem.price}"/>
-                    <input type="hidden" th:field="*{orders[__${iterStat.index}__].menuItem.description}"
-                           th:value="${menuItem.description}"/>
-                    <input type="hidden" th:field="*{orders[__${iterStat.index}__].menuItem.category}"
-                           th:value="${menuItem.category}"/>
-                <td>
-            </tr>
+
         </table>
-        <input type="submit" class="btn btn-primary" value="Order"/>
+
     </form>
+
+        <h2>Add new position to your menu:</h2>
+        <form action="#" th:action="@{/restaurants/owner-add}" th:method="POST" th:object="${newMenuItem}">
+            <div class="form-group">
+                <input type="hidden" name="restaurantName" th:value="${restaurant.name}"/>
+                Name: <input type="text" th:field="*{name}"/><br>
+                Price: <input type="text" th:field="*{price}"/><br>
+                Category: <input type="text" th:field="*{category}"/><br>
+                Description: <input type="text" th:field="*{description}"/><br>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Add to menu" name="button"/>
+            </div>
+        </form>
 
 
 </div>

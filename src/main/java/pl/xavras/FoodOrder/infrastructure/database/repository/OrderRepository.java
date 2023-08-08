@@ -3,20 +3,26 @@ package pl.xavras.FoodOrder.infrastructure.database.repository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-import pl.xavras.FoodOrder.api.dto.mapper.MenuItemOrderMapper;
 import pl.xavras.FoodOrder.business.dao.OrderDAO;
 import pl.xavras.FoodOrder.domain.MenuItemOrder;
 import pl.xavras.FoodOrder.domain.Order;
+import pl.xavras.FoodOrder.domain.Restaurant;
 import pl.xavras.FoodOrder.infrastructure.database.entity.MenuItemOrderEntity;
 import pl.xavras.FoodOrder.infrastructure.database.entity.OrderEntity;
+import pl.xavras.FoodOrder.infrastructure.database.entity.RestaurantEntity;
 import pl.xavras.FoodOrder.infrastructure.database.repository.jpa.OrderJpaRepository;
+import pl.xavras.FoodOrder.infrastructure.database.repository.jpa.RestaurantJpaRepository;
 import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.MenuItemOrderEntityMapper;
 import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.OrderEntityMapper;
+import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.RestaurantEntityMapper;
 
+import java.time.OffsetDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Repository
@@ -27,6 +33,8 @@ public class OrderRepository implements OrderDAO {
     private final OrderEntityMapper orderEntityMapper;
 
     private final MenuItemOrderEntityMapper menuItemOrderEntityMapper;
+    private final RestaurantEntityMapper restaurantEntityMapper;
+    private final RestaurantJpaRepository restaurantJpaRepository;
 
 
     @Override
@@ -48,11 +56,23 @@ public class OrderRepository implements OrderDAO {
                 .map(orderEntityMapper::mapFromEntity);
     }
 
+    @Override
+    public Set<Order> findOrdersByOwnerEmail(String ownerEmail) {
+        return orderJpaRepository.findByOwnerEmail(ownerEmail).stream()
+                .map(orderEntityMapper::mapFromEntity)
+                .collect(Collectors.toSet());
+    }
+
 
     @Override
-    public Order saveOrder(Order order, Set<MenuItemOrder> menuItemOrders) {
+    public Order saveOrder(Order order, String restaurantName, Set<MenuItemOrder> menuItemOrders) {
 
         OrderEntity toSave = orderEntityMapper.mapToEntity(order);
+        RestaurantEntity restaurant = restaurantJpaRepository.findByName(restaurantName)
+                .orElseThrow(() -> new RuntimeException("Could not find restaurant with name: [%s]"
+                .formatted(restaurantName)));
+
+        toSave.setRestaurant(restaurant);
         Set<MenuItemOrderEntity> menuItemOrderEntities = menuItemOrderEntityMapper.mapToEntity(menuItemOrders);
         menuItemOrderEntities.forEach(a -> a.setOrder(toSave));
         toSave.setMenuItemOrders(menuItemOrderEntities);
@@ -66,6 +86,16 @@ public class OrderRepository implements OrderDAO {
                 .orElseThrow(() -> new RuntimeException("Could not find order with orderNumber: [%s]"
                 .formatted(order.getOrderNumber())));
         orderEntity.setCancelled(true);
+        orderJpaRepository.save(orderEntity);
+    }
+
+    @Override
+    public void completeOrder(Order order) {
+        OrderEntity orderEntity = orderJpaRepository.findByOrderNumber(order.getOrderNumber())
+                .orElseThrow(() -> new RuntimeException("Could not find order with orderNumber: [%s]"
+                        .formatted(order.getOrderNumber())));
+        orderEntity.setCompleted(true);
+        orderEntity.setCompletedDateTime(OffsetDateTime.now());
         orderJpaRepository.save(orderEntity);
     }
 

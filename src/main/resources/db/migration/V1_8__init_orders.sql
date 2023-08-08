@@ -9,6 +9,7 @@ create TABLE orders
     total_value                 NUMERIC(8, 2)   NOT NULL,
     customer_id                 INT             NOT NULL,
     address_id                  INT             NOT NULL,
+    restaurant_id               INT             NOT NULL,
     PRIMARY KEY (orders_id),
     UNIQUE (orders_number),
     CONSTRAINT fk_orders_customer
@@ -16,6 +17,8 @@ create TABLE orders
             REFERENCES customer (customer_id),
     CONSTRAINT fk_orders_address
         FOREIGN KEY (address_id)
-            REFERENCES address (address_id)
-
+            REFERENCES address (address_id),
+    CONSTRAINT fk_orders_restaurant
+        FOREIGN KEY (restaurant_id)
+            REFERENCES restaurant (restaurant_id)
 );

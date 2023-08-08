@@ -15,9 +15,13 @@ public interface OrderDAO {
 
     Optional<Order> findByOrderNumber(String orderNumber);
 
-    Order saveOrder(Order order, Set<MenuItemOrder> menuItemOrders);
+    Set<Order> findOrdersByOwnerEmail(String ownerEmail);
+
+    Order saveOrder(Order order, String restaurantName, Set<MenuItemOrder> menuItemOrders);
 
     void cancelOrder(Order order);
+
+    void completeOrder(Order order);
 
 
 

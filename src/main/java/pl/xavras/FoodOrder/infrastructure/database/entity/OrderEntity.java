@@ -49,6 +49,10 @@ public class OrderEntity {
     @JoinColumn(name = "address_id")
     private AddressEntity address;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "restaurant_id")
+    private RestaurantEntity restaurant;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "order", cascade = CascadeType.ALL)
     private Set<MenuItemOrderEntity> menuItemOrders;
 

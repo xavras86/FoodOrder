@@ -50,10 +50,7 @@ public class CustomerRepository implements CustomerDAO {
     @Override
     public Customer findLoggedCustomer(){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-
         var loggedEmail = userRepository.findByUserName(username).getEmail();
-
-
         return customerJpaRepository.findByEmail(loggedEmail)
                 .map(customerEntityMapper::mapFromEntity)
                 .orElseThrow(() -> new RuntimeException("something went terribly wrong with security :( no customer related to current user email [%s] "

@@ -32,11 +32,9 @@
 <div class="container">
     <div class="page-header" id="banner">
         <br>
-        <a class="btn btn-success btn-lg" th:href="@{/address}">Order some food</a>
-        <a class="btn btn-primary btn-lg" th:href="@{/restaurants}">All restaurants</a>
-        <a class="btn btn-success btn-lg" th:href="@{/streets}">Restaurants by delivery street </a>
-        <a class="btn btn-secondary btn-lg" th:href="@{/orders}">Your orders</a>
-        <a class="btn btn-warning btn-lg" th:href="@{/}">Back to main page</a>
+        <a class="btn btn-success btn-lg" th:href="@{/restaurants-owner}">Your restaurants</a>
+        <a class="btn btn-secondary btn-lg" th:href="@{/orders-owner}">Your orders</a>
+        <a class="btn btn-warning btn-lg" th:href="@{/}">Back to home</a>
         <a class="btn btn-dark btn-lg" th:href="@{/logout}">Logout</a>
         <br>
     </div>
@@ -48,7 +46,8 @@
             <thead>
             <tr>
                 <th>Order Number</th>
-                <th>Received Date/Time</th>
+                <th>Received </th>
+                <th>Completed </th>
                 <th>Status</th>
                 <th>Action</th>
                 <th>Menu Items</th>
@@ -59,6 +58,8 @@
             <tr th:each="order : ${activeOrders}" th:if="${not #lists.isEmpty(activeOrders)}">
                 <td th:text="${order.orderNumber}"></td>
                 <td th:text="${order.receivedDateTime}"></td>
+                <td th:text="${order.completedDateTime}"></td>
+
                 <td>
                     <table class="table table-sm">
                         <thead>
@@ -78,17 +79,14 @@
                     </table>
                 </td>
                 <td th:text="${order.totalValue}"></td>
-                <td th:text="${order.cancelled ? 'Cancelled' : 'Active'}"></td>
-                <td th:if="${!order.cancelled}" th:unless="${!orderService.isCancellable(order)}">
-                    <form th:action="@{/orders/cancel/{orderNumber}(orderNumber=${order.orderNumber})}"
+                <td th:text="${order.completed ? 'Completed' : 'In preparation'}"></td>
+                <td th:if="${!order.completed}">
+                    <form th:action="@{/orders/complete/{orderNumber}(orderNumber=${order.orderNumber})}"
                           th:method="PUT">
-                        <button type="submit" class="btn btn-warning" onclick="return confirm('Are you sure you want to cancel this order?')">
-                            Anuluj
+                        <button type="submit" class="btn btn-success" onclick="return confirm('Are you sure the order has been completed?')">
+                            Complete
                         </button>
                     </form>
-                </td>
-                <td th:if="${!orderService.isCancellable(order)}">
-                    <span>Możliwość anulowania wygasła</span>
                 </td>
             </tr>
             </tbody>

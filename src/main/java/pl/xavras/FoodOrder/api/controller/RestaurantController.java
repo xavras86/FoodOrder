@@ -48,15 +48,6 @@ public class RestaurantController {
         return "restaurants";
     }
 
-    @GetMapping(value = RESTAURANT_BY_OWNER)
-    public String showRestaurantsByOwner(Model model) {
-
-        String email = ownerService.activeOwner().getEmail();
-        Set<Restaurant> restaurantByOwner = restaurantService.findByOwnerEmail(email);
-        model.addAttribute("ownerEmail", email);
-        model.addAttribute("restaurantByOwner", restaurantByOwner);
-        return "restaurants-by-owner";
-    }
 }
 
 

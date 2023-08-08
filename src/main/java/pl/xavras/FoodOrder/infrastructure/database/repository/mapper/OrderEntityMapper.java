@@ -19,22 +19,23 @@ public interface OrderEntityMapper {
 
 
      @Mapping(source = "menuItemOrders", target = "menuItemOrders", qualifiedByName = "mapMenuItemOrders")
+     @Mapping(target = "restaurant.restaurantStreets", ignore = true)
      Order mapFromEntity(OrderEntity entity);
+
+     OrderEntity mapToEntity(Order order);
 
      @Mapping(target = "order", ignore = true)
      @Named("mapMenuItemOrders")
      default Set<MenuItemOrder> mapMenuItemOrders(Set<MenuItemOrderEntity> entities) {
-          return entities.stream().map(this::mapFromEntity).collect(Collectors.toSet());
+          return entities.stream().map(this::mapMenuItemOrderFromEntity).collect(Collectors.toSet());
      }
 
      @Mapping(target = "order", ignore = true)
-     MenuItemOrder mapFromEntity(MenuItemOrderEntity entity);
+     MenuItemOrder mapMenuItemOrderFromEntity(MenuItemOrderEntity entity);
 
      @Mapping(target = "restaurant", ignore = true)
      MenuItem mapFromEntity(MenuItemEntity entity);
 
 
 
-//     @Mapping(target = "menuItemOrders", ignore = true)
-     OrderEntity mapToEntity(Order order);
 }

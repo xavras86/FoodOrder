@@ -8,9 +8,10 @@ import java.util.Set;
 @Value
 @Builder
 @EqualsAndHashCode(of = "email")
-@ToString(of = {"name", "phone", "email"})
+@ToString(of = {"restaurantId","name", "phone", "email"})
 public class Restaurant {
 
+    Integer restaurantId;
     String name;
     String phone;
     String email;
@@ -18,6 +19,7 @@ public class Restaurant {
     Owner owner;
     Set<RestaurantStreet> restaurantStreets;
     Set<MenuItem> menuItems;
+
 
 
 }

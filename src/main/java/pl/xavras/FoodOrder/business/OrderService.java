@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.xavras.FoodOrder.business.dao.OrderDAO;
 import pl.xavras.FoodOrder.domain.Address;
-import pl.xavras.FoodOrder.domain.Customer;
 import pl.xavras.FoodOrder.domain.MenuItemOrder;
 import pl.xavras.FoodOrder.domain.Order;
 import pl.xavras.FoodOrder.domain.exception.NotFoundException;
@@ -13,7 +12,6 @@ import pl.xavras.FoodOrder.domain.exception.NotFoundException;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.OffsetDateTime;
-import java.time.ZonedDateTime;
 import java.util.*;
 
 @Service
@@ -21,11 +19,10 @@ import java.util.*;
 @Slf4j
 public class OrderService {
 
-    private final OrderDAO orderDAO;
     private static final long MAX_CANCEL_SECONDS = 1200;
-
+    private final OrderDAO orderDAO;
     private final CustomerService customerService;
-    private final AddressService addressService;
+
 
     public List<Order> findAll() {
         return orderDAO.findAll();
@@ -35,6 +32,10 @@ public class OrderService {
         return orderDAO.findOrdersByCustomerEmail(email);
     }
 
+    public Set<Order> findByOwnerEmail(String ownerEmail) {
+        return orderDAO.findOrdersByOwnerEmail(ownerEmail);
+    }
+
     public Optional<Order> findByOrderNumber(String orderNumber) {
         Optional<Order> byOrderNumber = orderDAO.findByOrderNumber(orderNumber);
         if (byOrderNumber.isEmpty()) {
@@ -42,32 +43,31 @@ public class OrderService {
         }
         return byOrderNumber;
     }
-
+    public void completeOrder(Order orderToComplete) {
+        if ((orderToComplete.getCompleted() && Objects.nonNull(orderToComplete.getCompletedDateTime()))
+                || orderToComplete.getCancelled()) {
+            return;
+        }
+        orderDAO.completeOrder(orderToComplete);
+    }
 
     public void cancelOrder(Order order) {
-        if(order.getCancelled() && !isCancellable(order)){
+        if (order.getCancelled() && !isCancellable(order)) {
             return;
         }
         orderDAO.cancelOrder(order);
     }
 
     public Boolean isCancellable(Order order) {
-
-        Duration between = Duration.between(order.getReceivedDateTime(), OffsetDateTime.now());
-        long seconds = between.getSeconds();
-
-        boolean b = Duration.between(order.getReceivedDateTime(), OffsetDateTime.now()).toSeconds() <= MAX_CANCEL_SECONDS;
-
-        return b;
-
-
+        return Duration.between(order.getReceivedDateTime(), OffsetDateTime.now()).toSeconds() <= MAX_CANCEL_SECONDS;
     }
 
-    public Order placeOrder(Order order, Set<MenuItemOrder> menuItemOrders) {
+
+    public Order placeOrder(Order order, String restaurantName, Set<MenuItemOrder> menuItemOrders) {
         Address deliveryAddress = order.getAddress();
 
         Order orderToPlace = buildOrder(deliveryAddress, menuItemOrders);
-        return orderDAO.saveOrder(orderToPlace, menuItemOrders);
+        return orderDAO.saveOrder(orderToPlace, restaurantName, menuItemOrders);
     }
 
     private Order buildOrder(Address address,
@@ -109,4 +109,6 @@ public class OrderService {
                 (new Random().nextInt(90) + 10)
         );
     }
+
+
 }
