@@ -11,6 +11,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 import pl.xavras.FoodOrder.api.dto.MenuItemDTO;
@@ -25,6 +26,7 @@ import pl.xavras.FoodOrder.business.RestaurantService;
 import pl.xavras.FoodOrder.domain.MenuItem;
 import pl.xavras.FoodOrder.domain.Restaurant;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -101,10 +103,19 @@ public class OwnerRestaurantController {
     public String editMenuItem(
             @ModelAttribute("newMenuItem") MenuItemDTO menuItemDTO,
             @RequestParam("restaurantName") String restaurantName,
+            @RequestParam("imageFile") MultipartFile imageFile,
             RedirectAttributes redirectAttributes
-    ) {
+    ) throws IOException {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
+
+
+
+            byte[] imageBytes = imageFile.getBytes();
+            menuItemDTO.setImage(imageBytes);
+
         MenuItem menuItemToSave = menuItemMapper.map(menuItemDTO).withAvailable(true);
+
+
         menuItemService.saveMenuItem(menuItemToSave, restaurant);
 
         redirectAttributes.addAttribute("restaurantName", restaurant.getName());
@@ -117,6 +128,7 @@ public class OwnerRestaurantController {
                                RedirectAttributes redirectAttributes) {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
         MenuItem menuItemToEdit = menuItemService.findById(menuItemId);
+
 
         menuItemService.changeAvailability(menuItemToEdit);
 

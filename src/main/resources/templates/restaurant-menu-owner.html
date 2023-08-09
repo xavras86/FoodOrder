@@ -25,8 +25,6 @@
             justify-content:center;
             display: flex;
         }
-
-
 </style>
 
 <body>
@@ -53,7 +51,6 @@
             <th>Owner Surname</th>
         </tr>
         <tr>
-
             <td th:text="${restaurant.phone}"></td>
             <td th:text="${restaurant.email}"></td>
             <td th:text="${address.city}"></td>
@@ -66,41 +63,30 @@
 
     <table class="table-bordered mx-auto">
         <tr>
-            <th><a th:href="@{'/restaurants/owner/' + ${restaurant.name} + '?sortField=menuItemId&sortDirection=' + (${sortField == 'menuItemId' && sortDirection == 'asc' ? 'desc' : 'asc'}) + '&page=' + ${menuItemsPage.number} + '&size=' + ${size}}">ID</a>
             <th><a th:href="@{'/restaurants/owner/' + ${restaurant.name} + '?sortField=name&sortDirection=' + (${sortField == 'name' && sortDirection == 'asc' ? 'desc' : 'asc'}) + '&page=' + ${menuItemsPage.number} + '&size=' + ${size}}">Name</a></th>
-            <th>Cena</th>
-            <th>Opis</th>
-            <th>Dostępny w menu</th>
+            <th><a th:href="@{'/restaurants/owner/' + ${restaurant.name} + '?sortField=price&sortDirection=' + (${sortField == 'price' && sortDirection == 'asc' ? 'desc' : 'asc'}) + '&page=' + ${menuItemsPage.number} + '&size=' + ${size}}">Price</a></th>
+            <th><a th:href="@{'/restaurants/owner/' + ${restaurant.name} + '?sortField=category&sortDirection=' + (${sortField == 'category' && sortDirection == 'asc' ? 'desc' : 'asc'}) + '&page=' + ${menuItemsPage.number} + '&size=' + ${size}}">Category</a></th>
+            <th>Description</th>
+            <th>Availability</th>
         </tr>
 
         <tr th:each="menuItem : ${menuItemsPage.content}">
-            <td th:text="${menuItem.menuItemId}"></td>
-            <td th:text="${menuItem.name}"></td>
-            <td th:text="${menuItem.price}"></td>
-            <td th:text="${menuItem.description}"></td>
 
-            <td th:text="${menuItem.available ? 'In Menu' : 'Removed'}"></td>
-            <td th:text="${menuItem.available}"></td>
+            <td th:text="${menuItem.name}" class="text-left"></td>
+            <td th:text="${menuItem.price}" class="text-left"></td>
+            <td th:text="${menuItem.category}" class="text-left"></td>
+            <td th:text="${menuItem.description}" class="text-left"></td>
+            <td th:class="${menuItem.available ? 'text-success' : 'text-danger'}" th:text="${menuItem.available ? 'In Menu' : 'Removed'}"></td>
             <td>
                 <form th:action="@{/restaurants/owner-edit/{menuItemId}(menuItemId=${menuItem.menuItemId})}"
                       th:method="PUT">
-                    <button type="submit" th:class="${menuItem.available} ? 'btn btn-success' : 'btn btn-danger'">
+                    <button type="submit" th:class="${menuItem.available} ? 'btn btn-danger' : 'btn btn-success'">
                         <span th:text="${menuItem.available ? 'Remove' : 'Restore'}"></span>
                     </button>
                     <input type="hidden" name="restaurantName" th:value="${restaurant.name}"/>
                 </form>
             </td>
     </table>
-
-<!--    <div class="pagination justify-content-center">-->
-<!--        <a th:if="${menuItemsPage.hasPrevious}" th:href="@{'/restaurants/owner/' + ${restaurant.name}(sortField=${sortField}, sortDirection=${sortDirection}, page=${menuItemsPage.number - 1})}">Previous</a>-->
-<!--        <span th:if="${!menuItemsPage.hasPrevious}">Previous</span>-->
-
-<!--        <span th:text="${menuItemsPage.number + 1}"></span>-->
-
-<!--        <a th:if="${menuItemsPage.hasNext}" th:href="@{'/restaurants/owner/' + ${restaurant.name}(sortField=${sortField}, sortDirection=${sortDirection}, page=${menuItemsPage.number + 1})}">Next</a>-->
-<!--        <span th:if="${!menuItemsPage.hasNext}">Next</span>-->
-<!--    </div>-->
 
     <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
@@ -138,58 +124,26 @@
         </ul>
     </nav>
 
-<!--    <nav aria-label="Page navigation example">-->
-<!--        <ul class="pagination justify-content-center">-->
-
-<!--            <li class="page-item">-->
-<!--                <a class="page-link" th:if="${menuItemsPage.hasPrevious}"-->
-<!--                   th:href="@{'/restaurants/owner/' + ${restaurant.name}(sortField=${sortField}, sortDirection=${sortDirection}, page=${menuItemsPage.number - 1})}">-->
-<!--                    Previous-->
-<!--                </a>-->
-<!--                <span class="page-link" th:if="${!menuItemsPage.hasPrevious}">Previous</span>-->
-<!--            </li>-->
-
-<!--            <li class="page-item"><span>&nbsp;</span></li>-->
-
-<!--            <li class="page-item" th:each="number : ${#numbers.sequence(1, menuItemsPage.totalPages)}">-->
-<!--                <a class="page-link" th:href="@{'/restaurants/owner/' + ${restaurant.name}(sortField=${sortField}, sortDirection=${sortDirection}, page=${number})}" th:text="${number}"></a>-->
-<!--            </li>-->
-
-<!--            <li class="page-item"><span>&nbsp;</span></li>-->
-
-<!--            <li class="page-item">-->
-<!--                <a class="page-link" th:if="${menuItemsPage.hasNext}"-->
-<!--                   th:href="@{'/restaurants/owner/' + ${restaurant.name}(sortField=${sortField}, sortDirection=${sortDirection}, page=${menuItemsPage.number + 1})}">-->
-<!--                    Next-->
-<!--                </a>-->
-<!--                <span class="page-link" th:if="${!menuItemsPage.hasNext}">Next</span>-->
-<!--            </li>-->
-
-<!--        </ul>-->
-<!--    </nav>-->
-
-
-
     <h2>Add new position to your menu:</h2>
-    <form action="#" th:action="@{/restaurants/owner-add}" th:method="POST" th:object="${newMenuItem}">
+    <form action="#" th:action="@{/restaurants/owner-add}" th:method="POST" th:object="${newMenuItem}" enctype="multipart/form-data">
         <div class="form-group">
             <input type="hidden" name="restaurantName" th:value="${restaurant.name}"/>
             Name: <input type="text" th:field="*{name}"/><br>
             Price: <input type="text" th:field="*{price}"/><br>
-            Category: <input type="text" th:field="*{category}"/><br>
-            Description: <input type="text" th:field="*{description}"/><br>
+            Category:
+            <select th:field="*{category}">
+                <option th:each="category : ${T(pl.xavras.FoodOrder.infrastructure.database.entity.MealCategory).values()}"
+                        th:value="${category}" th:text="${category}"></option>
+            </select><br>
+            Description: <textarea th:field="*{description}" cols="40" rows="6"></textarea><br>
+            Image: <input type="file" name="imageFile" accept="image/*"/><br>
         </div>
 
         <div class="form-group">
             <input type="submit" value="Add to menu" name="button"/>
         </div>
     </form>
-
-
-
-
 </div>
-
 
 <footer th:fragment="footer" class="text-center">&copy; 2023 FoodOrder</footer>
 </body>

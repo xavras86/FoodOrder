@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import java.math.BigDecimal;
 import java.util.Set;
@@ -28,9 +29,9 @@ public class MenuItemEntity {
     @Column(name = "price")
     private BigDecimal price;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "category")
-    private String category; //todo zrobic enum z kategoriami
-
+    private MealCategory category;
 
     @Column(name = "description")
     private String description;
@@ -38,13 +39,14 @@ public class MenuItemEntity {
     @Column(name = "available",columnDefinition = "boolean default true")
     private Boolean available;
 
+    @Column(name = "image", columnDefinition = "bytea")
+    private byte[] image;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
     private RestaurantEntity restaurant;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "menuItem", cascade = CascadeType.ALL)
     private Set<MenuItemOrderEntity> menuItemOrders;
-
-
 
 }

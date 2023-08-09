@@ -7,6 +7,7 @@ create TABLE menu_item
     description         TEXT            NOT NULL,
     available           BOOL            DEFAULT TRUE,
     restaurant_id       INT             NOT NULL,
+    image               BYTEA,
     PRIMARY KEY (menu_item_id),
     CONSTRAINT fk_menuItem_restaurant
         FOREIGN KEY (restaurant_id)

@@ -69,12 +69,14 @@
                 <th>Nazwa</th>
                 <th>Cena</th>
                 <th>Opis</th>
+                <th>Kategoria</th>
                 <th>Ilość</th>
             </tr>
             <tr th:each="menuItem, iterStat : ${menuItems}">
                 <td th:text="${menuItem.name}"></td>
                 <td th:text="${menuItem.price}"></td>
                 <td th:text="${menuItem.description}"></td>
+                <td th:text="${menuItem.category}"></td>
                 <td>
                     <input type="number" th:field="*{orders[__${iterStat.index}__].quantity}" min="0"/>
                     <input type="hidden" th:field="*{orders[__${iterStat.index}__].menuItem.menuItemId}"
@@ -83,14 +85,18 @@
                            th:value="${menuItem.name}"/>
                     <input type="hidden" th:field="*{orders[__${iterStat.index}__].menuItem.price}"
                            th:value="${menuItem.price}"/>
-                    <input type="hidden" th:field="*{orders[__${iterStat.index}__].menuItem.description}"
-                           th:value="${menuItem.description}"/>
                     <input type="hidden" th:field="*{orders[__${iterStat.index}__].menuItem.category}"
                            th:value="${menuItem.category}"/>
+                    <input type="hidden" th:field="*{orders[__${iterStat.index}__].menuItem.description}"
+                           th:value="${menuItem.description}"/>
                 <td>
+                <td>
+                    <a th:href="@{'/restaurants/' + ${restaurant.name} + '/menu/' + ${menuItem.menuItemId}}"
+                       class="btn btn-primary" role="button">Details</a>
+                </td>
             </tr>
         </table>
-        <input type="submit" class="btn btn-primary" value="Order"/>
+        <input type="submit" class="btn btn-primary" value="Zamów"/>
     </form>
 
 
