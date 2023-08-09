@@ -29,6 +29,6 @@ spring:
         show_sql: true
         format_sql: false
   mvc:
-    hiddenmethod:
+    hidden-method:
       filter:
         enabled: true

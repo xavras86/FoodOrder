@@ -18,6 +18,6 @@ public class MenuItemDTO {
    private BigDecimal price;
    private String category;
    private String description;
-//   private RestaurantDTO restaurant;
+   private Boolean available;
 
 }

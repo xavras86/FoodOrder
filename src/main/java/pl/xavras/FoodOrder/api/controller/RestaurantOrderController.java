@@ -72,10 +72,11 @@ public class RestaurantOrderController {
     public String showRestaurantMenu(@PathVariable String restaurantName,
                                      Model model,
                                      HttpSession session) {
-        var restaurant = getRestaurant(restaurantName);
+        var restaurant = restaurantService.findByName(restaurantName);
         var address = addressMapper.map(restaurant.getAddress());
         var owner = ownerMapper.map(restaurant.getOwner());
-        var menuItems = new ArrayList<>(getMenuItemDTOs(restaurant));
+        Set<MenuItemDTO> menuItemDTOs = menuItemMapper.map(restaurantService.getAvailableMenuItems(restaurant));
+        var menuItems = new ArrayList<>(menuItemDTOs);
         MenuItemOrdersDTO menuItemOrdersDTO = new MenuItemOrdersDTO(menuItems.stream()
                 .map(a -> new MenuItemOrderDTO(0, a))
                 .toList());
@@ -128,9 +129,6 @@ public class RestaurantOrderController {
         return "thank-you";
     }
 
-    private Set<MenuItemDTO> getMenuItemDTOs(Restaurant restaurant) {
-        return menuItemMapper.map(restaurant.getMenuItems());
-    }
 
     private Restaurant getRestaurant(String restaurantName) {
         return restaurantService

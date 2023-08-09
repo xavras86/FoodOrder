@@ -5,12 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.xavras.FoodOrder.business.dao.RestaurantDAO;
 import pl.xavras.FoodOrder.domain.Address;
+import pl.xavras.FoodOrder.domain.MenuItem;
 import pl.xavras.FoodOrder.domain.Owner;
 import pl.xavras.FoodOrder.domain.Restaurant;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -37,4 +39,9 @@ public class RestaurantService {
         return restaurantDAO.findRestaurantsByOwner(ownerEmail);
     }
 
+    public Set<MenuItem> getAvailableMenuItems(Restaurant restaurant) {
+        return restaurant.getMenuItems().stream()
+                .filter(a -> a.getAvailable())
+                .collect(Collectors.toSet());
+    }
 }

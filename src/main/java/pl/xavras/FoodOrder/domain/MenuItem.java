@@ -16,8 +16,9 @@ public class MenuItem {
     BigDecimal price;
     String category;
     String description;
+    Boolean available;
     Restaurant restaurant;
     Set<MenuItemOrder> menuItemOrders;
-    //todo dodac set z menuitemorderami
+
 
 }

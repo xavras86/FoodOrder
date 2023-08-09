@@ -64,19 +64,10 @@
 
     </table>
 
-
-<!--    <ul>-->
-<!--        <li th:each="menuItemOrder : ${menuItemOrders}">-->
-<!--            <p><strong th:text="${menuItemOrder.menuItem.name}"></strong></p>-->
-<!--            <p><strong th:text="${menuItemOrder.menuItem.price}"></strong>-->
-<!--            <p><strong> Quantity:</strong> <strong th:text="${menuItemOrder.quantity}"></strong></p>-->
-<!--        </li>-->
-<!--    </ul>-->
-
     <h2>Total value:</h2>
 
-    <p><strong>Total value:</strong> <span th:text="${orderDetails.totalValue}"></span></p>
-
+    <strong><span th:text="${orderDetails.totalValue}"></span></strong>
+    <br>
     <p>
         <a th:href="@{/}" class="btn btn-primary" role="button">Back to the main page</a>
     </p>

@@ -5,6 +5,7 @@ create TABLE menu_item
     price               NUMERIC(8, 2)   NOT NULL,
     category            VARCHAR(32)     NOT NULL,
     description         TEXT            NOT NULL,
+    available           BOOL            DEFAULT TRUE,
     restaurant_id       INT             NOT NULL,
     PRIMARY KEY (menu_item_id),
     CONSTRAINT fk_menuItem_restaurant

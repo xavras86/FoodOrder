@@ -31,8 +31,12 @@ public class MenuItemEntity {
     @Column(name = "category")
     private String category; //todo zrobic enum z kategoriami
 
+
     @Column(name = "description")
     private String description;
+
+    @Column(name = "available",columnDefinition = "boolean default true")
+    private Boolean available;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")

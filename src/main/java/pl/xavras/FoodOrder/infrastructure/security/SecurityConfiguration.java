@@ -39,11 +39,12 @@ public class SecurityConfiguration {
     @ConditionalOnProperty(value = "spring.security.enabled", havingValue = "true", matchIfMissing = true)
     SecurityFilterChain securityEnabled(HttpSecurity http) throws Exception {
         return http
-                .csrf((csrf) -> csrf.configure(http)) // or method reference
+                .csrf((csrf) -> csrf.configure(http))// or method reference
                 .authorizeHttpRequests(requests -> requests
                                 .requestMatchers("/login", "/error", "/images/error.png").permitAll()
 //                        .requestMatchers(HttpMethod.DELETE).hasAuthority("ADMIN")
                                 .requestMatchers("/**").hasAnyAuthority("OWNER", "CUSTOMER")
+
                 )
                 .formLogin(formLogin -> formLogin
 //                        .loginPage("/login")

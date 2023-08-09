@@ -2677,14 +2677,15 @@ insert into address (country, city, street, building_number) values ('Polska', '
 insert into restaurant (restaurant_id, name, phone, email, address_id, owner_id) values (1,'Pyszna Picka', '970 540 3647', 'picka@t-online.de', '1', '1');
 insert into restaurant (restaurant_id, name, phone, email, address_id, owner_id) values (2,'Smaczne Domowe', '973 794 9792', 'smaczneDomowe@cbc.ca', '3 ', '1');
 insert into restaurant (restaurant_id, name, phone, email, address_id, owner_id) values (3,'Tenie Szamanie', '859 766 0860', 'tanieSzamanie@dot.gov', '5', '1');
-insert into restaurant (restaurant_id, name, phone, email, address_id, owner_id) values (4,'Jak u Mamy', '621 301 6838', 'jakumamy@mac.com', '8', '2');
+insert into restaurant (restaurant_id, name, phone, email, address_id, owner_id) values (4,'Jak u Mamy', '621 301 6838', 'jakumamy@mac.com', '8', '1');
 insert into restaurant (restaurant_id, name, phone, email, address_id, owner_id) values (5,'Kotlet i ziemniaki', '307 373 0225', 'kotelt@accuweather.com', '9', '2');
+insert into restaurant (restaurant_id, name, phone, email, address_id, owner_id) values (6,'Jadlodajnia', '307 123 0225', 'jadlo@accuweather.com', '10', '1');
 
 
 insert into restaurant_street (restaurant_street_id, restaurant_id, street_id) values (1,1,1);
 insert into restaurant_street (restaurant_street_id, restaurant_id, street_id) values (2,1,2);
 insert into restaurant_street (restaurant_street_id, restaurant_id, street_id) values (3,1,4);
-insert into restaurant_street (restaurant_street_id, restaurant_id, street_id) values (4,1,5);
+insert into restaurant_street (restaurant_street_id, restaurant_id, street_id) values (4,6,2);
 insert into restaurant_street (restaurant_street_id, restaurant_id, street_id) values (5,1,6);
 insert into restaurant_street (restaurant_street_id, restaurant_id, street_id) values (6,1,7);
 insert into restaurant_street (restaurant_street_id, restaurant_id, street_id) values (7,1,9);
@@ -2714,26 +2715,26 @@ insert into restaurant_street (restaurant_street_id, restaurant_id, street_id) v
 insert into restaurant_street (restaurant_street_id, restaurant_id, street_id) values (31,5,2);
 insert into restaurant_street (restaurant_street_id, restaurant_id, street_id) values (32,5,3);
 
-insert into menu_item (name, price, category, description, restaurant_id) values ('Pizza', '28.61', 'Obiad', 'orci luctus et ultrices posuere cubilia curae duis faucibus accumsan odio curabitur convallis duis consequat dui nec nisi volutpat eleifend', 4);
-insert into menu_item (name, price, category, description, restaurant_id) values ('Kebab', '16.13', 'Obiad', 'varius ut blandit non interdum in ante vestibulum ante ipsum primis', 2);
-insert into menu_item (name, price, category, description, restaurant_id) values ('Kotelt', '34.56', 'Obiad', 'aliquam erat volutpat in congue etiam justo etiam pretium iaculis justo in hac', 5);
-insert into menu_item (name, price, category, description, restaurant_id) values ('Frytki', '7.50', 'Dodatki', 'posuere cubilia curae duis faucibus accumsan odio curabitur convallis duis', 3);
-insert into menu_item (name, price, category, description, restaurant_id) values ('Chleb', '29.25', 'Dodatki', 'vel accumsan tellus nisi eu orci mauris lacinia sapien quis', 1);
-insert into menu_item (name, price, category, description, restaurant_id) values ('Falafel', '39.32', 'Obiad', 'leo odio porttitor id consequat in consequat ut nulla sed accumsan felis ut at dolor', 5);
-insert into menu_item (name, price, category, description, restaurant_id) values ('Ryba', '38.37', 'Obiad', 'sapien urna pretium nisl ut volutpat sapien arcu sed augue', 5);
-insert into menu_item (name, price, category, description, restaurant_id) values ('Kurczak', '26.79', 'Obiad', 'luctus et ultrices posuere cubilia curae mauris viverra diam vitae quam', 4);
-insert into menu_item (name, price, category, description, restaurant_id) values ('Wiśnia', '26.23', 'Przekąski', 'ipsum dolor sit amet consectetuer adipiscing elit proin risus praesent lectus vestibulum quam sapien varius ut blandit', 5);
-insert into menu_item (name, price, category, description, restaurant_id) values ('Tort', '11.26', 'Przekąski', 'neque libero convallis eget eleifend luctus ultricies eu nibh quisque id justo sit amet sapien dignissim', 5);
-insert into menu_item (name, price, category, description, restaurant_id) values ('Kanapka tuńczyk','11.29', 'Przekąski','amet turpis elementum ligula vehicula consequat morbi a ipsum integer a nibh in quis justo maecenas', 2);
-insert into menu_item (name, price, category, description, restaurant_id) values ('Sznycel', '8.84', 'Obiad', 'ac tellus semper interdum mauris ullamcorper purus sit amet nulla quisque arcu libero rutrum ac lobortis vel', 5);
-insert into menu_item (name, price, category, description, restaurant_id) values ('Pierogi', '24.63', 'Obiad', 'metus arcu adipiscing molestie hendrerit at vulputate vitae nisl aenean lectus pellentesque eget nunc donec quis orci eget orci vehicula', 1);
-insert into menu_item (name, price, category, description, restaurant_id) values ('Kopytka', '38.87', 'Dodatki', 'bibendum felis sed interdum venenatis turpis enim blandit mi in porttitor pede justo eu', 1);
-insert into menu_item (name, price, category, description, restaurant_id) values ('Ziemniaki', '28.64', 'Dodatki', 'pede justo lacinia eget tincidunt eget tempus vel pede morbi porttitor lorem id ligula suspendisse ornare', 1);
-insert into menu_item (name, price, category, description, restaurant_id) values ('Pomidorowa', '17.47', 'Zupa', 'lacinia eget tincidunt eget tempus vel pede morbi porttitor lorem id', 1);
-insert into menu_item (name, price, category, description, restaurant_id) values ('Rosół', '17.29', 'Zupa', 'felis donec semper sapien a libero nam dui proin leo odio porttitor id consequat in consequat', 4);
-insert into menu_item (name, price, category, description, restaurant_id) values ('Ryba2', '15.00', 'Obiad', 'proin at turpis a pede posuere nonummy integer non velit donec diam neque vestibulum eget vulputate', 3);
-insert into menu_item (name, price, category, description, restaurant_id) values ('Zapiekanka', '35.03', 'Przekąski', 'tortor duis mattis egestas metus aenean fermentum donec ut mauris eget massa tempor convallis nulla neque', 1);
-insert into menu_item (name, price, category, description, restaurant_id) values ('Ser', '11.23', 'Przekąski', 'mauris sit amet eros suspendisse accumsan tortor quis turpis sed ante vivamus tortor duis mattis egestas metus', 1);
+insert into menu_item (name, price, category, description, available, restaurant_id) values ('Pizza', '28.61', 'Obiad', 'orci luctus et ultrices posuere cubilia curae duis faucibus accumsan odio curabitur convallis duis consequat dui nec nisi volutpat eleifend', true, 4);
+insert into menu_item (name, price, category, description, available, restaurant_id) values ('Kebab', '16.13', 'Obiad', 'varius ut blandit non interdum in ante vestibulum ante ipsum primis', true, 2);
+insert into menu_item (name, price, category, description, available, restaurant_id) values ('Kotelt', '34.56', 'Obiad', 'aliquam erat volutpat in congue etiam justo etiam pretium iaculis justo in hac', true , 5);
+insert into menu_item (name, price, category, description, available, restaurant_id) values ('Frytki', '7.50', 'Dodatki', 'posuere cubilia curae duis faucibus accumsan odio curabitur convallis duis',true , 3);
+insert into menu_item (name, price, category, description, available, restaurant_id) values ('Chleb', '29.25', 'Dodatki', 'vel accumsan tellus nisi eu orci mauris lacinia sapien quis',true , 1);
+insert into menu_item (name, price, category, description, available, restaurant_id) values ('Falafel', '39.32', 'Obiad', 'leo odio porttitor id consequat in consequat ut nulla sed accumsan felis ut at dolor', true, 5);
+insert into menu_item (name, price, category, description, available, restaurant_id) values ('Ryba', '38.37', 'Obiad', 'sapien urna pretium nisl ut volutpat sapien arcu sed augue', true, 5);
+insert into menu_item (name, price, category, description, available, restaurant_id) values ('Kurczak', '26.79', 'Obiad', 'luctus et ultrices posuere cubilia curae mauris viverra diam vitae quam', true, 4);
+insert into menu_item (name, price, category, description, available, restaurant_id) values ('Wiśnia', '26.23', 'Przekąski', 'ipsum dolor sit amet consectetuer adipiscing elit proin risus praesent lectus vestibulum quam sapien varius ut blandit',true, 5);
+insert into menu_item (name, price, category, description, available, restaurant_id) values ('Tort', '11.26', 'Przekąski', 'neque libero convallis eget eleifend luctus ultricies eu nibh quisque id justo sit amet sapien dignissim',true, 5);
+insert into menu_item (name, price, category, description, available, restaurant_id) values ('Kanapka tuńczyk','11.29', 'Przekąski','amet turpis elementum ligula vehicula consequat morbi a ipsum integer a nibh in quis justo maecenas',true, 2);
+insert into menu_item (name, price, category, description, available, restaurant_id) values ('Sznycel', '8.84', 'Obiad', 'ac tellus semper interdum mauris ullamcorper purus sit amet nulla quisque arcu libero rutrum ac lobortis vel',true, 5);
+insert into menu_item (name, price, category, description, available, restaurant_id) values ('Pierogi', '24.63', 'Obiad', 'metus arcu adipiscing molestie hendrerit at vulputate vitae nisl aenean lectus pellentesque eget nunc donec quis orci eget orci vehicula',true, 1);
+insert into menu_item (name, price, category, description, available, restaurant_id) values ('Kopytka', '38.87', 'Dodatki', 'bibendum felis sed interdum venenatis turpis enim blandit mi in porttitor pede justo eu',true, 1);
+insert into menu_item (name, price, category, description, available, restaurant_id) values ('Ziemniaki', '28.64', 'Dodatki', 'pede justo lacinia eget tincidunt eget tempus vel pede morbi porttitor lorem id ligula suspendisse ornare',true, 1);
+insert into menu_item (name, price, category, description, available, restaurant_id) values ('Pomidorowa', '17.47', 'Zupa', 'lacinia eget tincidunt eget tempus vel pede morbi porttitor lorem id',true, 1);
+insert into menu_item (name, price, category, description, available, restaurant_id) values ('Rosół', '17.29', 'Zupa', 'felis donec semper sapien a libero nam dui proin leo odio porttitor id consequat in consequat',true, 4);
+insert into menu_item (name, price, category, description, available, restaurant_id) values ('Ryba2', '15.00', 'Obiad', 'proin at turpis a pede posuere nonummy integer non velit donec diam neque vestibulum eget vulputate',true, 3);
+insert into menu_item (name, price, category, description, available, restaurant_id) values ('Zapiekanka', '35.03', 'Przekąski', 'tortor duis mattis egestas metus aenean fermentum donec ut mauris eget massa tempor convallis nulla neque',true, 1);
+insert into menu_item (name, price, category, description, available, restaurant_id) values ('Ser', '11.23', 'Przekąski', 'mauris sit amet eros suspendisse accumsan tortor quis turpis sed ante vivamus tortor duis mattis egestas metus',true, 1);
 
 insert into orders (orders_number, received_date_time, completed_date_time, cancelled, completed, total_value, customer_id, address_id, restaurant_id) values ('2023.6.28-13.5.27.89', '2021-10-01 14:00:00+02', null, false, false, '33.44', 1, 1, 1);
 insert into orders (orders_number, received_date_time, completed_date_time, cancelled, completed, total_value, customer_id, address_id, restaurant_id) values ('2023.6.28-13.5.27.88', '2021-10-01 14:00:00+02', null, false, false, '33.44', 1, 1, 1);
