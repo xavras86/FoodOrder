@@ -9,6 +9,7 @@ import lombok.*;
 @ToString(of = {"name", "surname", "phone", "email"})
 public class Owner {
 
+    Integer ownerId;
     String name;
     String surname;
     String phone;

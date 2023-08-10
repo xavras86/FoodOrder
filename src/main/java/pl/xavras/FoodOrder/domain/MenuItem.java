@@ -22,7 +22,4 @@ public class MenuItem {
     Restaurant restaurant;
     byte[] image;
     Set<MenuItemOrder> menuItemOrders;
-
-
-
 }

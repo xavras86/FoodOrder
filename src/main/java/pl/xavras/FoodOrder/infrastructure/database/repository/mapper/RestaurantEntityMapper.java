@@ -17,27 +17,27 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface RestaurantEntityMapper {
 
-    @Mapping(source = "restaurantStreets", target = "restaurantStreets", qualifiedByName = "mapRestaurantStreets")
-    @Mapping(source = "menuItems", target = "menuItems", qualifiedByName = "mapMenuItems")
+//    @Mapping(source = "restaurantStreets", target = "restaurantStreets", qualifiedByName = "mapRestaurantStreets")
+//    @Mapping(source = "menuItems", target = "menuItems", qualifiedByName = "mapMenuItems")
     Restaurant mapFromEntity (RestaurantEntity entity);
 
     @Mapping(target = "restaurantStreets", ignore = true)
     RestaurantEntity mapToEntity (Restaurant restaurant);
 
-    @Mapping(target = "restaurant", ignore = true)
-    @Named("mapRestaurantStreets")
-    default Set<RestaurantStreet> mapRestaurantStreets(Set<RestaurantStreetEntity> entities) {
-        return entities.stream().map(this::mapFromEntity).collect(Collectors.toSet());
-    }
+//    @Mapping(target = "restaurant", ignore = true)
+//    @Named("mapRestaurantStreets")
+//    default Set<RestaurantStreet> mapRestaurantStreets(Set<RestaurantStreetEntity> entities) {
+//        return entities.stream().map(this::mapFromEntity).collect(Collectors.toSet());
+//    }
 
     @Mapping(target = "restaurant", ignore = true)
     @Mapping(target = "street", ignore = true)
     RestaurantStreet mapFromEntity(RestaurantStreetEntity entity);
 
-    @Named("mapMenuItems")
-    default Set<MenuItem> mapMenuItems(Set<MenuItemEntity> entities) {
-        return entities.stream().map(this::mapFromEntity).collect(Collectors.toSet());
-    }
+//    @Named("mapMenuItems")
+//    default Set<MenuItem> mapMenuItems(Set<MenuItemEntity> entities) {
+//        return entities.stream().map(this::mapFromEntity).collect(Collectors.toSet());
+//    }
 
     @Mapping(target = "restaurant", ignore = true)
     MenuItem mapFromEntity(MenuItemEntity entity);

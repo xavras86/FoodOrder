@@ -10,4 +10,6 @@ public interface AddressMapper {
 
     AddressDTO map(Address address);
 
+    Address map(AddressDTO addressDTO);
+
 }

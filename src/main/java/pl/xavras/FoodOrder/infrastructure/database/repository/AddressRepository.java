@@ -16,9 +16,17 @@ import java.util.Optional;
 public class AddressRepository implements AddressDAO {
 
     private final AddressJpaRepository addressJpaRepository;
-
     private final AddressEntityMapper addressEntityMapper;
 
+
+    public Optional<AddressEntity> findExistingAddress(Address address) {
+        return addressJpaRepository.findByCountryAndCityAndStreetAndBuildingNumber(
+                address.getCountry(),
+                address.getCity(),
+                address.getStreet(),
+                address.getBuildingNumber()
+        );
+    }
 
 
     @Override
@@ -28,7 +36,6 @@ public class AddressRepository implements AddressDAO {
     }
 
 
-
     @Override
     public Address saveAddress(Address address) {
         AddressEntity toSave = addressEntityMapper.mapToEntity(address);
@@ -36,8 +43,6 @@ public class AddressRepository implements AddressDAO {
         return addressEntityMapper.mapFromEntity(saved);
 
     }
-
-
 
 
 }

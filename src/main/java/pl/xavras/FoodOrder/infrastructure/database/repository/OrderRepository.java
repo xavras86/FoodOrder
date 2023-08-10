@@ -7,11 +7,13 @@ import pl.xavras.FoodOrder.business.dao.OrderDAO;
 import pl.xavras.FoodOrder.domain.MenuItemOrder;
 import pl.xavras.FoodOrder.domain.Order;
 import pl.xavras.FoodOrder.domain.Restaurant;
+import pl.xavras.FoodOrder.infrastructure.database.entity.AddressEntity;
 import pl.xavras.FoodOrder.infrastructure.database.entity.MenuItemOrderEntity;
 import pl.xavras.FoodOrder.infrastructure.database.entity.OrderEntity;
 import pl.xavras.FoodOrder.infrastructure.database.entity.RestaurantEntity;
 import pl.xavras.FoodOrder.infrastructure.database.repository.jpa.OrderJpaRepository;
 import pl.xavras.FoodOrder.infrastructure.database.repository.jpa.RestaurantJpaRepository;
+import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.AddressEntityMapper;
 import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.MenuItemOrderEntityMapper;
 import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.OrderEntityMapper;
 import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.RestaurantEntityMapper;
@@ -32,8 +34,11 @@ public class OrderRepository implements OrderDAO {
     private final OrderJpaRepository orderJpaRepository;
     private final OrderEntityMapper orderEntityMapper;
 
+    private final AddressRepository addressRepository;
     private final MenuItemOrderEntityMapper menuItemOrderEntityMapper;
-    private final RestaurantEntityMapper restaurantEntityMapper;
+    private final AddressEntityMapper addressEntityMapper;
+
+
     private final RestaurantJpaRepository restaurantJpaRepository;
 
 
@@ -70,7 +75,15 @@ public class OrderRepository implements OrderDAO {
         OrderEntity toSave = orderEntityMapper.mapToEntity(order);
         RestaurantEntity restaurant = restaurantJpaRepository.findByName(restaurantName)
                 .orElseThrow(() -> new RuntimeException("Could not find restaurant with name: [%s]"
-                .formatted(restaurantName)));
+                .formatted(restaurantName)));  //chyba lepiej cały obiekt niz sama string przekazywac do przemyslenia
+
+        //weryfikacja czy przekazany adres jest już w bazie
+        Optional<AddressEntity> existingAddress = addressRepository.findExistingAddress(order.getAddress());
+        if (existingAddress.isPresent()) {
+            toSave.setAddress(existingAddress.get());
+        } else {
+            toSave.setAddress(addressEntityMapper.mapToEntity(order.getAddress()));
+        }
 
         toSave.setRestaurant(restaurant);
         Set<MenuItemOrderEntity> menuItemOrderEntities = menuItemOrderEntityMapper.mapToEntity(menuItemOrders);

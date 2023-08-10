@@ -2674,12 +2674,12 @@ insert into address (country, city, street, building_number) values ('Polska', '
 insert into address (country, city, street, building_number) values ('Polska', 'Poznań', 'ul. Ignacego Krasickiego','5');
 
 
-insert into restaurant (restaurant_id, name, phone, email, address_id, owner_id) values (1,'Pyszna Picka', '970 540 3647', 'picka@t-online.de', '1', '1');
-insert into restaurant (restaurant_id, name, phone, email, address_id, owner_id) values (2,'Smaczne Domowe', '973 794 9792', 'smaczneDomowe@cbc.ca', '3 ', '1');
-insert into restaurant (restaurant_id, name, phone, email, address_id, owner_id) values (3,'Tenie Szamanie', '859 766 0860', 'tanieSzamanie@dot.gov', '5', '1');
-insert into restaurant (restaurant_id, name, phone, email, address_id, owner_id) values (4,'Jak u Mamy', '621 301 6838', 'jakumamy@mac.com', '8', '1');
-insert into restaurant (restaurant_id, name, phone, email, address_id, owner_id) values (5,'Kotlet i ziemniaki', '307 373 0225', 'kotelt@accuweather.com', '9', '2');
-insert into restaurant (restaurant_id, name, phone, email, address_id, owner_id) values (6,'Jadlodajnia', '307 123 0225', 'jadlo@accuweather.com', '10', '1');
+insert into restaurant (name, phone, email, address_id, owner_id) values ('Pyszna Picka', '970 540 3647', 'picka@t-online.de', '1', '1');
+insert into restaurant (name, phone, email, address_id, owner_id) values ('Smaczne Domowe', '973 794 9792', 'smaczneDomowe@cbc.ca', '3 ', '1');
+insert into restaurant (name, phone, email, address_id, owner_id) values ('Tenie Szamanie', '859 766 0860', 'tanieSzamanie@dot.gov', '5', '1');
+insert into restaurant (name, phone, email, address_id, owner_id) values ('Jak u Mamy', '621 301 6838', 'jakumamy@mac.com', '8', '1');
+insert into restaurant (name, phone, email, address_id, owner_id) values ('Kotlet i ziemniaki', '307 373 0225', 'kotelt@accuweather.com', '9', '2');
+insert into restaurant (name, phone, email, address_id, owner_id) values ('Jadlodajnia', '307 123 0225', 'jadlo@accuweather.com', '10', '1');
 
 
 insert into restaurant_street (restaurant_street_id, restaurant_id, street_id) values (1,1,1);

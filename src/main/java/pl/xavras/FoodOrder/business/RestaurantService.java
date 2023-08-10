@@ -1,6 +1,7 @@
 package pl.xavras.FoodOrder.business;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.xavras.FoodOrder.business.dao.RestaurantDAO;
@@ -20,6 +21,8 @@ import java.util.stream.Collectors;
 public class RestaurantService {
 
     private final RestaurantDAO restaurantDAO;
+
+    private final OwnerService ownerService;
 
     public List<Restaurant> findAll() {
         return restaurantDAO.findAll();
@@ -44,4 +47,9 @@ public class RestaurantService {
                 .filter(a -> a.getAvailable())
                 .collect(Collectors.toSet());
     }
+
+    public Restaurant saveNewRestaurant(Restaurant newRestaurant, Address newAddress) {
+        return restaurantDAO.createNewRestaurant(newRestaurant, newAddress);
+    }
 }
+

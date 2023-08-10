@@ -8,7 +8,7 @@ import pl.xavras.FoodOrder.domain.Customer;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface CustomerMapper {
 
-    CustomerDTO map(Customer customer);
+    CustomerDTO map(Customer customer);  //do wywalenia caly obiekt + mapper
 
     Customer map(CustomerDTO customerDTO);
 }

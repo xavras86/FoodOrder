@@ -43,7 +43,7 @@ public class RestaurantEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     private Set<RestaurantStreetEntity> restaurantStreets;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurant")
     private Set<OrderEntity> orders;
 
 

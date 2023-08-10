@@ -1,25 +1,22 @@
 package pl.xavras.FoodOrder.infrastructure.database.repository;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import pl.xavras.FoodOrder.business.dao.RestaurantDAO;
 import pl.xavras.FoodOrder.domain.Address;
 import pl.xavras.FoodOrder.domain.Owner;
 import pl.xavras.FoodOrder.domain.Restaurant;
 import pl.xavras.FoodOrder.domain.RestaurantStreet;
-import pl.xavras.FoodOrder.infrastructure.database.entity.OwnerEntity;
+import pl.xavras.FoodOrder.infrastructure.database.entity.AddressEntity;
 import pl.xavras.FoodOrder.infrastructure.database.entity.RestaurantEntity;
 import pl.xavras.FoodOrder.infrastructure.database.repository.jpa.RestaurantJpaRepository;
-import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.OwnerEntityMapper;
+import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.AddressEntityMapper;
 import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.RestaurantEntityMapper;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Repository
 @RequiredArgsConstructor
@@ -27,7 +24,12 @@ public class RestaurantRepository implements RestaurantDAO {
 
     private final RestaurantJpaRepository restaurantJpaRepository;
     private final RestaurantEntityMapper restaurantEntityMapper;
+    private final AddressEntityMapper addressEntityMapper;
+
+    private final OwnerRepository ownerRepository;
     private final StreetRepository streetRepository;
+    private final AddressRepository addressRepository;
+
 
 
     @Override
@@ -55,8 +57,23 @@ public class RestaurantRepository implements RestaurantDAO {
 
         return restaurantJpaRepository.findRestaurantsByOwner(ownerEmail)
                 .stream().map(restaurantEntityMapper::mapFromEntity).collect(Collectors.toSet());
-    };
+    }
 
+    @Override
+    public Restaurant createNewRestaurant(Restaurant newRestaurant, Address newAddress) {
 
+        Restaurant restaurant = newRestaurant.withOwner(ownerRepository.findLoggedOwner());
+        RestaurantEntity restaurantEntity = restaurantEntityMapper.mapToEntity(restaurant);
+
+        //weryfikacja czy przekazany adres jest już w bazie
+        Optional<AddressEntity> existingAddress = addressRepository.findExistingAddress(newAddress);
+        if (existingAddress.isPresent()) {
+            restaurantEntity.setAddress(existingAddress.get());
+        } else {
+            restaurantEntity.setAddress(addressEntityMapper.mapToEntity(newAddress));
+        }
+        return restaurantEntityMapper.mapFromEntity(restaurantJpaRepository.save(restaurantEntity));
+    }
 
 }
+

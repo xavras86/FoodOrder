@@ -31,7 +31,7 @@
 <div class="container">
     <div class="page-header" id="banner">
         <br>
-        <a class="btn btn-success btn-lg" th:href="@{/restaurants-owner}">Your restaurants</a>
+        <a class="btn btn-success btn-lg" th:href="@{/restaurants/owner}">Your restaurants</a>
         <a class="btn btn-secondary btn-lg" th:href="@{/orders-owner}">Your orders</a>
         <a class="btn btn-warning btn-lg" th:href="@{/}">Back to home</a>
         <a class="btn btn-dark btn-lg" th:href="@{/logout}">Logout</a>
@@ -86,6 +86,10 @@
                     <input type="hidden" name="restaurantName" th:value="${restaurant.name}"/>
                 </form>
             </td>
+            <td>
+                <a th:href="@{'/restaurants/owner/' + ${restaurant.name} + '/menu/' + ${menuItem.menuItemId}}"
+                   class="btn btn-primary" role="button">Details</a>
+            </td>
     </table>
 
     <nav aria-label="Page navigation example">
@@ -125,7 +129,7 @@
     </nav>
 
     <h2>Add new position to your menu:</h2>
-    <form action="#" th:action="@{/restaurants/owner-add}" th:method="POST" th:object="${newMenuItem}" enctype="multipart/form-data">
+    <form action="#" th:action="@{/restaurants/owner/add-menu-item}" th:method="POST" th:object="${newMenuItem}" enctype="multipart/form-data">
         <div class="form-group">
             <input type="hidden" name="restaurantName" th:value="${restaurant.name}"/>
             Name: <input type="text" th:field="*{name}"/><br>

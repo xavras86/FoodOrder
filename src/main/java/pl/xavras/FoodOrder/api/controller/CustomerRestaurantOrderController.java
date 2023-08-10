@@ -16,16 +16,13 @@ import pl.xavras.FoodOrder.domain.MenuItemOrder;
 import pl.xavras.FoodOrder.domain.Order;
 import pl.xavras.FoodOrder.domain.Restaurant;
 
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
 @AllArgsConstructor
 @Slf4j
-public class RestaurantOrderController {
+public class CustomerRestaurantOrderController {
 
     public static final String RESTAURANTS_BY_STREET = "/restaurants/street/{street}";
     private static final String RESTAURANT_BY_NAME = "/restaurants/{restaurantName}";
@@ -95,12 +92,24 @@ public class RestaurantOrderController {
                                       @PathVariable String restaurantName,
                                       Model model) {
 
+
         MenuItemDTO menuItemDTO = menuItemMapper.map(menuItemService.findById(menuItemId));
-        String imageBase64 = Base64.getEncoder().encodeToString(menuItemDTO.getImage());
+
+        //wyciagnac do metory
+        String imageBase64 = getString(menuItemDTO);
+
         model.addAttribute("menuItem", menuItemDTO);
         model.addAttribute("restaurantName", restaurantName);
         model.addAttribute("imageBase64", imageBase64);
         return "customer-menu-item-details";
+    }
+
+    private String getString(MenuItemDTO menuItemDTO) {
+        String imageBase64 = null;
+        if (menuItemDTO.getImage() != null) {
+            imageBase64 = Base64.getEncoder().encodeToString(menuItemDTO.getImage());
+        }
+        return imageBase64;
     }
 
     @PostMapping(RESTAURANT_ADD_ITEMS)

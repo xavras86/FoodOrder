@@ -1,19 +1,17 @@
 package pl.xavras.FoodOrder.api.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.util.UriComponentsBuilder;
+import pl.xavras.FoodOrder.api.dto.AddressDTO;
 import pl.xavras.FoodOrder.api.dto.MenuItemDTO;
 import pl.xavras.FoodOrder.api.dto.RestaurantDTO;
 import pl.xavras.FoodOrder.api.dto.mapper.AddressMapper;
@@ -23,11 +21,13 @@ import pl.xavras.FoodOrder.api.dto.mapper.RestaurantMapper;
 import pl.xavras.FoodOrder.business.MenuItemService;
 import pl.xavras.FoodOrder.business.OwnerService;
 import pl.xavras.FoodOrder.business.RestaurantService;
+import pl.xavras.FoodOrder.domain.Address;
 import pl.xavras.FoodOrder.domain.MenuItem;
 import pl.xavras.FoodOrder.domain.Restaurant;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -37,10 +37,12 @@ import java.util.stream.Collectors;
 @Slf4j
 public class OwnerRestaurantController {
 
-    public static final String RESTAURANT_OWNER = "/restaurants-owner";
+    public static final String RESTAURANT_OWNER = "/restaurants/owner";
+    public static final String RESTAURANT_OWNER_ADD_RESTAURANT = "/restaurants/owner/add-restaurant";
     public static final String RESTAURANT_OWNER_NAME = "/restaurants/owner/{restaurantName}";
-    public static final String RESTAURANT_OWNER_ADD = "/restaurants/owner-add";
+    public static final String RESTAURANT_OWNER_ADD = "/restaurants/owner/add-menu-item";
     public static final String RESTAURANT_OWNER_EDIT = "/restaurants/owner-edit/{menuItemId}";
+    public static final String RESTAURANT_OWNER_MENU_ITEM_DETAILS = "/restaurants/owner/{restaurantName}/menu/{menuItemId}";
     private final RestaurantService restaurantService;
     private final OwnerService ownerService;
     private final MenuItemService menuItemService;
@@ -58,16 +60,31 @@ public class OwnerRestaurantController {
                 .map(restaurantMapper::map).collect(Collectors.toSet());
         model.addAttribute("ownerEmail", email);
         model.addAttribute("restaurantByOwner", restaurantByOwner);
+        model.addAttribute("restaurantDTO", new RestaurantDTO());
+        model.addAttribute("addressDTO", new AddressDTO());
         return "restaurants-by-owner";
     }
 
+    @PostMapping(RESTAURANT_OWNER_ADD_RESTAURANT)
+    public String addNewRestaurant(
+            @ModelAttribute("restaurantDTO") RestaurantDTO restaurantDTO,
+            @ModelAttribute("addressDTO") AddressDTO addressDTO
+    ) {
+        Restaurant newRestaurant = restaurantMapper.map(restaurantDTO);
+        Address newAddress = addressMapper.map(addressDTO);
+        restaurantService.saveNewRestaurant(newRestaurant, newAddress);
+
+        return "redirect:/restaurants/owner";
+    }
+
+
     @GetMapping(RESTAURANT_OWNER_NAME)
-    public String showRestaurantMenu( @PathVariable String restaurantName,
-                                      @RequestParam(defaultValue = "0") int page,
-                                      @RequestParam(defaultValue = "10") int size,
-                                      @RequestParam(name = "sortField", defaultValue = "name") String sortField,
-                                      @RequestParam(name = "sortDirection", defaultValue = "asc") String sortDirection,
-                                      Model model
+    public String showRestaurantMenu(@PathVariable String restaurantName,
+                                     @RequestParam(defaultValue = "0") int page,
+                                     @RequestParam(defaultValue = "10") int size,
+                                     @RequestParam(name = "sortField", defaultValue = "name") String sortField,
+                                     @RequestParam(name = "sortDirection", defaultValue = "asc") String sortDirection,
+                                     Model model
 
     ) {
 
@@ -80,7 +97,7 @@ public class OwnerRestaurantController {
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortField);
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        log.info("PAGEABLE: "+ pageable.toString());
+        log.info("PAGEABLE: " + pageable.toString());
 
         Page<MenuItem> menuItemsPage = menuItemService.getMenuItemsByRestaurantPaged(restaurant, pageable);
 
@@ -99,6 +116,32 @@ public class OwnerRestaurantController {
         return "restaurant-menu-owner";
     }
 
+    @GetMapping(RESTAURANT_OWNER_MENU_ITEM_DETAILS)
+    public String showMenuItemDetails(@PathVariable Integer menuItemId,
+                                      @PathVariable String restaurantName,
+                                      Model model) {
+
+
+        MenuItemDTO menuItemDTO = menuItemMapper.map(menuItemService.findById(menuItemId));
+
+        //wyciagnac do metory
+        String imageBase64 = getString(menuItemDTO);
+
+        model.addAttribute("menuItem", menuItemDTO);
+        model.addAttribute("restaurantName", restaurantName);
+        model.addAttribute("imageBase64", imageBase64);
+        return "owner-menu-item-details";
+    }
+
+    private String getString(MenuItemDTO menuItemDTO) {
+        String imageBase64 = null;
+        if (menuItemDTO.getImage() != null) {
+            imageBase64 = Base64.getEncoder().encodeToString(menuItemDTO.getImage());
+        }
+        return imageBase64;
+    }
+
+
     @PostMapping(RESTAURANT_OWNER_ADD)
     public String editMenuItem(
             @ModelAttribute("newMenuItem") MenuItemDTO menuItemDTO,
@@ -108,10 +151,8 @@ public class OwnerRestaurantController {
     ) throws IOException {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
 
-
-
-            byte[] imageBytes = imageFile.getBytes();
-            menuItemDTO.setImage(imageBytes);
+        byte[] imageBytes = imageFile.getBytes();
+        menuItemDTO.setImage(imageBytes);
 
         MenuItem menuItemToSave = menuItemMapper.map(menuItemDTO).withAvailable(true);
 

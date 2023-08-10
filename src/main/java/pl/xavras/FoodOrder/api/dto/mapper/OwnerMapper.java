@@ -7,5 +7,5 @@ import pl.xavras.FoodOrder.domain.Owner;
 @Mapper(componentModel = "spring")
 public interface OwnerMapper {
 
-    OwnerDTO map(Owner owner);
+    OwnerDTO map(Owner owner); //do wywalenia caly obiekt + mapper
 }
