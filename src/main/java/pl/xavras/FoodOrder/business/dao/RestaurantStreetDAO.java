@@ -5,6 +5,6 @@ import pl.xavras.FoodOrder.domain.Street;
 
 public interface RestaurantStreetDAO {
 
-    Boolean isStreetInRestaurantRange(Restaurant restaurant, Street street);
+
 
 }

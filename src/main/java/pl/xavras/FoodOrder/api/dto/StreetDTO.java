@@ -14,6 +14,4 @@ public class StreetDTO {
     private Integer streetId;
     private String city;
     private String streetName;
-
-
 }

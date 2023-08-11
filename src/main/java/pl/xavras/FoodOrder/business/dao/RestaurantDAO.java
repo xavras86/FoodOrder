@@ -2,6 +2,7 @@ package pl.xavras.FoodOrder.business.dao;
 
 import pl.xavras.FoodOrder.domain.Address;
 import pl.xavras.FoodOrder.domain.Restaurant;
+import pl.xavras.FoodOrder.domain.Street;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,4 +20,6 @@ public interface RestaurantDAO {
     Set<Restaurant> findRestaurantsByOwner(String ownerEmail);
 
     Restaurant createNewRestaurant(Restaurant newRestaurant, Address newAddress);
+
+    void alternateCoverageStateForStreet(String restaurantName, Street street);
 }

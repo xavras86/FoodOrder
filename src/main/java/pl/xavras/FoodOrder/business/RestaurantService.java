@@ -5,11 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.xavras.FoodOrder.business.dao.RestaurantDAO;
-import pl.xavras.FoodOrder.domain.Address;
-import pl.xavras.FoodOrder.domain.MenuItem;
-import pl.xavras.FoodOrder.domain.Restaurant;
+import pl.xavras.FoodOrder.domain.*;
+import pl.xavras.FoodOrder.infrastructure.database.entity.RestaurantEntity;
+import pl.xavras.FoodOrder.infrastructure.database.entity.RestaurantStreetEntity;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -20,7 +21,6 @@ public class RestaurantService {
 
     private final RestaurantDAO restaurantDAO;
 
-    private final OwnerService ownerService;
 
     public List<Restaurant> findAll() {
         return restaurantDAO.findAll();
@@ -50,6 +50,16 @@ public class RestaurantService {
     @Transactional
     public Restaurant saveNewRestaurant(Restaurant newRestaurant, Address newAddress) {
         return restaurantDAO.createNewRestaurant(newRestaurant, newAddress);
+    }
+
+    @Transactional
+    public void alternateCoverageStateForStreet(String restaurantName, Street street) {
+       restaurantDAO.alternateCoverageStateForStreet(restaurantName, street);
+    }
+
+    public Boolean chceckStreetCoverageForRestaurant(String restaurantName, Street street) {
+        Set<RestaurantStreet> restaurantStreets = findByName(restaurantName).getRestaurantStreets();
+        return restaurantStreets.stream().anyMatch(a -> street.equals(a.getStreet()));
     }
 }
 

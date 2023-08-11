@@ -17,16 +17,10 @@ import pl.xavras.FoodOrder.api.dto.RestaurantDTO;
 import pl.xavras.FoodOrder.api.dto.StreetDTO;
 import pl.xavras.FoodOrder.api.dto.mapper.*;
 import pl.xavras.FoodOrder.business.*;
-import pl.xavras.FoodOrder.domain.Address;
-import pl.xavras.FoodOrder.domain.MenuItem;
-import pl.xavras.FoodOrder.domain.Restaurant;
-import pl.xavras.FoodOrder.domain.Street;
+import pl.xavras.FoodOrder.domain.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -42,7 +36,7 @@ public class OwnerRestaurantController {
     public static final String RESTAURANT_OWNER_EDIT = "/restaurants/owner-edit/{menuItemId}";
     public static final String RESTAURANT_OWNER_MENU_ITEM_DETAILS = "/restaurants/owner/{restaurantName}/menu/{menuItemId}";
     public static final String RESTAURANT_OWNER_RANGE = "/restaurants/owner/range/{restaurantName}";
-    public static final String RESTAURANT_OWNER_RANGE_EDIT = "/restaurants/owner/range/{restaurantName}/street/{streetId}";
+    public static final String RESTAURANT_OWNER_RANGE_EDIT = "/restaurants/owner/{restaurantName}/range/{streetId}";
     private final RestaurantService restaurantService;
     private final OwnerService ownerService;
     private final MenuItemService menuItemService;
@@ -169,6 +163,7 @@ public class OwnerRestaurantController {
 
         MenuItem menuItemToEdit = menuItemService.findById(menuItemId);
         menuItemService.changeAvailability(menuItemToEdit);
+
         redirectAttributes.addAttribute("restaurantName", restaurantName);
         return "redirect:/restaurants/owner/{restaurantName}";
     }
@@ -177,30 +172,36 @@ public class OwnerRestaurantController {
     public String adjustRestaurantRange(@PathVariable String restaurantName,
                                         Model model) {
 
-        List<StreetDTO> streetDTOList = streetMapper.map(streetService.findAll());
+        List<Street> streetDTOList = streetService.findAll();
+
+        Map<Street, Boolean> streetCoverageMap = streetDTOList.stream()
+                .collect(Collectors.toMap(
+                        street -> street,
+                        street -> restaurantService.chceckStreetCoverageForRestaurant(restaurantName, street)
+                ));
+
+
 
         model.addAttribute("restaurantName", restaurantName);
         model.addAttribute("streetDTOs", streetDTOList);
+        model.addAttribute("streetCoverageMap", streetCoverageMap);
+
 
         return "owner-restaurant-delivery-range";
     }
 
     @PutMapping(RESTAURANT_OWNER_RANGE_EDIT)
     public String editMenuItem(@PathVariable String restaurantName,
-                               @PathVariable Integer streetId,
-                               Model model
+                               @PathVariable Integer streetId
 
-//                               RedirectAttributes redirectAttributes
     ) {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
         Street street = streetService.findById(streetId);
 
-        Boolean streetInRestaurantRange = restaurantStreetService.isStreetInRestaurantRange(restaurant, street);
-
-        model.addAttribute("streetInRange", streetInRestaurantRange);
+        restaurantService.alternateCoverageStateForStreet(restaurantName, street);
 
 
-        return "/restaurants/owner/range/{restaurantName}";
+        return "redirect:/restaurants/owner/range/{restaurantName}";
     }
 
 

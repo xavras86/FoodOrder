@@ -40,7 +40,7 @@ public class RestaurantEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     private Set<MenuItemEntity> menuItems;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant", cascade = CascadeType.ALL)
     private Set<RestaurantStreetEntity> restaurantStreets;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurant")

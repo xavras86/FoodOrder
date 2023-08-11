@@ -16,9 +16,5 @@ public class RestaurantStreetService {
     private final RestaurantStreetDAO restaurantServiceDAO;
 
 
-    @Transactional
-    public Boolean isStreetInRestaurantRange(Restaurant restaurant, Street street) {
-        return restaurantServiceDAO.isStreetInRestaurantRange(restaurant, street);
 
-    }
 }

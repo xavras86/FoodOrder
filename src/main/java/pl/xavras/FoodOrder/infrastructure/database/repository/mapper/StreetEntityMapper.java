@@ -31,7 +31,7 @@ public interface StreetEntityMapper {
 
 
     @Mapping(target = "street", ignore = true)
-    @Mapping(target = "restaurant.address", ignore = true)
+//    @Mapping(target = "restaurant.address", ignore = true)
     @Mapping(target = "restaurant.restaurantStreets", ignore = true)
     @Mapping(target = "restaurant.menuItems", ignore = true)
     RestaurantStreet mapFromEntity(RestaurantStreetEntity entity);

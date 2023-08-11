@@ -27,6 +27,7 @@
         }
 
 
+
 </style>
 
 <body>
@@ -46,27 +47,29 @@
     <h1>Dostosuj zasięg dostawy dla restauracji:&nbsp; <span th:if="${restaurantName}"
                                                              th:text="${restaurantName}"></span></h1>
 
+
+
     <table class="table table-striped table-hover">
         <tr>
 
             <th>City</th>
             <th>Street</th>
         </tr>
-        <tr th:each="street : ${streetDTOs}">
+        <tr th:each="entry : ${streetCoverageMap}">
 
-            <td th:text="${street.city}"></td>
-            <td th:text="${street.streetName}"></td>
+            <td th:text="${entry.key.city}"></td>
+            <td th:text="${entry.key.streetName}"></td>
 
-            <!--            <td th:class="${menuItem.available ? 'text-success' : 'text-danger'}" th:text="${menuItem.available ? 'In Menu' : 'Removed'}"></td>-->
-                        <td>
-                            <form th:action="@{'/restaurants/owner/' + ${restaurantName} + '/range/' + ${street.streetName}}" th:method="PUT">
-<!--                                <button type="submit" th:class="${streetInRange} ? 'btn btn-danger' : 'btn btn-success'">-->
-<!--                                    <span th:text="${streetInRange ? 'Usuń' : 'Dodaj'}"></span>-->
-<!--                                </button>-->
-                                <button type="submit" class="btn btn-info">zmien</button>
+            <td th:class="${entry.value ? 'text-success' : 'text-danger'}"
+                th:text="${entry.value ? 'In range' : 'Out of Range'}"></td>
+            <td>
+                <form th:action="@{'/restaurants/owner/' + ${restaurantName} + '/range/' + ${entry.key.streetId}}"
+                      th:method="PUT">
+                    <button type="submit" th:class="${entry.value} ? 'btn btn-danger' : 'btn btn-success'">
+                        <span th:text="${entry.value ? 'Usuń' : 'Dodaj'}"></span>
+                    </button>
 
-<!--                                <input type="hidden" name="restaurantName" th:value="${restaurant.name}"/>-->
-            </form>
+                </form>
             </td>
         </tr>
     </table>

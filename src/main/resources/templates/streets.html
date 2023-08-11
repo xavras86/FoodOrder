@@ -56,9 +56,9 @@
         </tr>
         <tr th:each="street : ${streets}">
             <td th:text="${street.city}"></td>
-            <td th:text="${street.street}"></td>
+            <td th:text="${street.streetName}"></td>
             <td>
-                <form action="#" th:action="@{restaurants/street/{streetName}(streetName=${street.street})}"
+                <form action="#" th:action="@{restaurants/street/{streetName}(streetName=${street.streetName})}"
                       method="GET">
                     <button type="submit" class="btn btn-info">Show</button>
                 </form>
