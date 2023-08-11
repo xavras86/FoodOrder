@@ -26,10 +26,15 @@ public class StreetRepository implements StreetDAO {
                 .map(streetEntityMapper::mapFromEntity).toList();
     }
 
+    @Override
+    public Optional<Street> findByStreetId(Integer streetId) {
+        return streetJpaRepository.findByStreetId(streetId)
+                .map(streetEntityMapper::mapFromEntity);
+    }
 
     @Override
-    public Optional<Street> findByStreet(String street) {
-        return streetJpaRepository.findByStreet(street)
+    public Optional<Street> findByStreetName(String streetName) {
+        return streetJpaRepository.findByStreetName(streetName)
                 .map(streetEntityMapper::mapFromEntity);
     }
 

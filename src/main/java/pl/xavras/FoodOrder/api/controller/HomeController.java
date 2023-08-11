@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import pl.xavras.FoodOrder.infrastructure.security.RoleEntity;
 import pl.xavras.FoodOrder.infrastructure.security.UserRepository;
-
-import java.util.Set;
 
 @Controller
 @AllArgsConstructor

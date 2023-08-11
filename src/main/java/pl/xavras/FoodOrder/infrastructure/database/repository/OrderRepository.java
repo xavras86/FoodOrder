@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import pl.xavras.FoodOrder.business.dao.OrderDAO;
 import pl.xavras.FoodOrder.domain.MenuItemOrder;
 import pl.xavras.FoodOrder.domain.Order;
-import pl.xavras.FoodOrder.domain.Restaurant;
 import pl.xavras.FoodOrder.infrastructure.database.entity.AddressEntity;
 import pl.xavras.FoodOrder.infrastructure.database.entity.MenuItemOrderEntity;
 import pl.xavras.FoodOrder.infrastructure.database.entity.OrderEntity;
@@ -16,15 +15,12 @@ import pl.xavras.FoodOrder.infrastructure.database.repository.jpa.RestaurantJpaR
 import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.AddressEntityMapper;
 import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.MenuItemOrderEntityMapper;
 import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.OrderEntityMapper;
-import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.RestaurantEntityMapper;
 
 import java.time.OffsetDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Slf4j
 @Repository

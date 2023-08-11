@@ -8,9 +8,9 @@ import java.util.Optional;
 public interface StreetDAO {
    List<Street> findAll();
 
-   Optional<Street> findByStreet(String street);
 
-   //
-//    Set<Street> findStreetsByRestaurantName(String name);
 
+   Optional<Street> findByStreetId(Integer streetId);
+
+   Optional<Street> findByStreetName(String streetName);
 }

@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import pl.xavras.FoodOrder.business.dao.RestaurantDAO;
 import pl.xavras.FoodOrder.domain.Address;
-import pl.xavras.FoodOrder.domain.Owner;
 import pl.xavras.FoodOrder.domain.Restaurant;
 import pl.xavras.FoodOrder.domain.RestaurantStreet;
 import pl.xavras.FoodOrder.infrastructure.database.entity.AddressEntity;
@@ -46,7 +45,7 @@ public class RestaurantRepository implements RestaurantDAO {
 
     @Override
     public Set<Restaurant> findRestaurantsByStreetName(String streetName) {
-        var street = streetRepository.findByStreet(streetName)
+        var street = streetRepository.findByStreetName(streetName)
                 .orElseThrow(() -> new RuntimeException("wrong street name [%s]".formatted(streetName)));
         return street.getRestaurantStreets().stream().map(RestaurantStreet::getRestaurant)
                 .collect(Collectors.toSet());

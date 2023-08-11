@@ -8,5 +8,9 @@ import java.util.Optional;
 public interface StreetJpaRepository extends JpaRepository<StreetEntity, Integer> {
 
 
-    Optional<StreetEntity> findByStreet(String street);
+
+
+    Optional<StreetEntity> findByStreetName(String streetName);
+
+    Optional<StreetEntity> findByStreetId(Integer streetId);
 }

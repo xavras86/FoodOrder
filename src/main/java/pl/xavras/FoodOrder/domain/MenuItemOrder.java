@@ -1,6 +1,9 @@
 package pl.xavras.FoodOrder.domain;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Value;
+import lombok.With;
 
 
 @With

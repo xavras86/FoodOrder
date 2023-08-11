@@ -8,13 +8,10 @@ import pl.xavras.FoodOrder.domain.Customer;
 import pl.xavras.FoodOrder.infrastructure.database.entity.CustomerEntity;
 import pl.xavras.FoodOrder.infrastructure.database.repository.jpa.CustomerJpaRepository;
 import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.CustomerEntityMapper;
-import pl.xavras.FoodOrder.infrastructure.security.RoleEntity;
-import pl.xavras.FoodOrder.infrastructure.security.UserEntity;
 import pl.xavras.FoodOrder.infrastructure.security.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Repository
 @AllArgsConstructor

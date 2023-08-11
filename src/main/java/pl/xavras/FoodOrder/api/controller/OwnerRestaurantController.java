@@ -14,20 +14,18 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.xavras.FoodOrder.api.dto.AddressDTO;
 import pl.xavras.FoodOrder.api.dto.MenuItemDTO;
 import pl.xavras.FoodOrder.api.dto.RestaurantDTO;
-import pl.xavras.FoodOrder.api.dto.mapper.AddressMapper;
-import pl.xavras.FoodOrder.api.dto.mapper.MenuItemMapper;
-import pl.xavras.FoodOrder.api.dto.mapper.OwnerMapper;
-import pl.xavras.FoodOrder.api.dto.mapper.RestaurantMapper;
-import pl.xavras.FoodOrder.business.MenuItemService;
-import pl.xavras.FoodOrder.business.OwnerService;
-import pl.xavras.FoodOrder.business.RestaurantService;
+import pl.xavras.FoodOrder.api.dto.StreetDTO;
+import pl.xavras.FoodOrder.api.dto.mapper.*;
+import pl.xavras.FoodOrder.business.*;
 import pl.xavras.FoodOrder.domain.Address;
 import pl.xavras.FoodOrder.domain.MenuItem;
 import pl.xavras.FoodOrder.domain.Restaurant;
+import pl.xavras.FoodOrder.domain.Street;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -43,13 +41,18 @@ public class OwnerRestaurantController {
     public static final String RESTAURANT_OWNER_ADD = "/restaurants/owner/add-menu-item";
     public static final String RESTAURANT_OWNER_EDIT = "/restaurants/owner-edit/{menuItemId}";
     public static final String RESTAURANT_OWNER_MENU_ITEM_DETAILS = "/restaurants/owner/{restaurantName}/menu/{menuItemId}";
+    public static final String RESTAURANT_OWNER_RANGE = "/restaurants/owner/range/{restaurantName}";
+    public static final String RESTAURANT_OWNER_RANGE_EDIT = "/restaurants/owner/range/{restaurantName}/street/{streetId}";
     private final RestaurantService restaurantService;
     private final OwnerService ownerService;
     private final MenuItemService menuItemService;
+    private final RestaurantStreetService restaurantStreetService;
+    private final StreetService streetService;
     private final RestaurantMapper restaurantMapper;
     private final MenuItemMapper menuItemMapper;
     private final AddressMapper addressMapper;
     private final OwnerMapper ownerMapper;
+    private final StreetMapper streetMapper;
 
 
     @GetMapping(RESTAURANT_OWNER)
@@ -96,9 +99,6 @@ public class OwnerRestaurantController {
 
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortField);
         Pageable pageable = PageRequest.of(page, size, sort);
-
-        log.info("PAGEABLE: " + pageable.toString());
-
         Page<MenuItem> menuItemsPage = menuItemService.getMenuItemsByRestaurantPaged(restaurant, pageable);
 
         model.addAttribute("restaurant", restaurant);
@@ -113,7 +113,7 @@ public class OwnerRestaurantController {
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortDirection", sortDirection);
 
-        return "restaurant-menu-owner";
+        return "owner-restaurant-details";
     }
 
     @GetMapping(RESTAURANT_OWNER_MENU_ITEM_DETAILS)
@@ -124,7 +124,7 @@ public class OwnerRestaurantController {
 
         MenuItemDTO menuItemDTO = menuItemMapper.map(menuItemService.findById(menuItemId));
 
-        //wyciagnac do metory
+        //wyciagnac do metody w servisie
         String imageBase64 = getString(menuItemDTO);
 
         model.addAttribute("menuItem", menuItemDTO);
@@ -153,7 +153,6 @@ public class OwnerRestaurantController {
 
         byte[] imageBytes = imageFile.getBytes();
         menuItemDTO.setImage(imageBytes);
-
         MenuItem menuItemToSave = menuItemMapper.map(menuItemDTO).withAvailable(true);
 
 
@@ -167,15 +166,44 @@ public class OwnerRestaurantController {
     public String editMenuItem(@PathVariable Integer menuItemId,
                                @RequestParam("restaurantName") String restaurantName,
                                RedirectAttributes redirectAttributes) {
-        Restaurant restaurant = restaurantService.findByName(restaurantName);
+
         MenuItem menuItemToEdit = menuItemService.findById(menuItemId);
-
-
         menuItemService.changeAvailability(menuItemToEdit);
-
-        redirectAttributes.addAttribute("restaurantName", restaurant.getName());
+        redirectAttributes.addAttribute("restaurantName", restaurantName);
         return "redirect:/restaurants/owner/{restaurantName}";
     }
+
+    @GetMapping(RESTAURANT_OWNER_RANGE)
+    public String adjustRestaurantRange(@PathVariable String restaurantName,
+                                        Model model) {
+
+        List<StreetDTO> streetDTOList = streetMapper.map(streetService.findAll());
+
+        model.addAttribute("restaurantName", restaurantName);
+        model.addAttribute("streetDTOs", streetDTOList);
+
+        return "owner-restaurant-delivery-range";
+    }
+
+    @PutMapping(RESTAURANT_OWNER_RANGE_EDIT)
+    public String editMenuItem(@PathVariable String restaurantName,
+                               @PathVariable Integer streetId,
+                               Model model
+
+//                               RedirectAttributes redirectAttributes
+    ) {
+        Restaurant restaurant = restaurantService.findByName(restaurantName);
+        Street street = streetService.findById(streetId);
+
+        Boolean streetInRestaurantRange = restaurantStreetService.isStreetInRestaurantRange(restaurant, street);
+
+        model.addAttribute("streetInRange", streetInRestaurantRange);
+
+
+        return "/restaurants/owner/range/{restaurantName}";
+    }
+
+
 }
 
 

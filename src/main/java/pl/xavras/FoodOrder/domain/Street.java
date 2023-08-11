@@ -8,12 +8,12 @@ import java.util.Set;
 @Value
 @Builder
 @EqualsAndHashCode(of = "streetId")
-@ToString(of = {"city", "street" })
+@ToString(of = {"city", "streetName" })
 public class Street {
 
     Integer streetId;
     String city;
-    String street;
+    String streetName;
     Set<RestaurantStreet> restaurantStreets;
 
 }

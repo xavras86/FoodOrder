@@ -3,13 +3,8 @@ package pl.xavras.FoodOrder.business;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import pl.xavras.FoodOrder.business.dao.CustomerDAO;
 import pl.xavras.FoodOrder.business.dao.OwnerDAO;
-import pl.xavras.FoodOrder.domain.Customer;
 import pl.xavras.FoodOrder.domain.Owner;
-
-import java.util.List;
 
 @Service
 @AllArgsConstructor

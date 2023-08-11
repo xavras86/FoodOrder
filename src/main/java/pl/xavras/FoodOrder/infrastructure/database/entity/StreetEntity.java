@@ -10,7 +10,7 @@ import java.util.Set;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "streetId")
-@ToString(of ={"streetId", "city", "street"})
+@ToString(of ={"streetId", "city", "streetName"})
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,7 +27,7 @@ public class StreetEntity {
     private String city;
 
     @Column(name = "street")
-    private String street;
+    private String streetName;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "street")
     @Fetch(value = FetchMode.JOIN)

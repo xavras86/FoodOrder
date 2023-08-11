@@ -35,6 +35,7 @@
         <a class="btn btn-secondary btn-lg" th:href="@{/orders-owner}">Your orders</a>
         <a class="btn btn-warning btn-lg" th:href="@{/}">Back to home</a>
         <a class="btn btn-dark btn-lg" th:href="@{/logout}">Logout</a>
+
         <br>
     </div>
 
@@ -58,6 +59,10 @@
             <td th:text="${address.buildingNumber}"></td>
             <td th:text="${owner.name}"></td>
             <td th:text="${owner.surname}"></td>
+            <td>
+                <a th:href="@{'/restaurants/owner/range/' + ${restaurant.name}}"
+                   class="btn btn-primary" role="button">Adjust deliery range</a>
+            </td>
         </tr>
     </table>
 
@@ -84,6 +89,7 @@
                         <span th:text="${menuItem.available ? 'Remove' : 'Restore'}"></span>
                     </button>
                     <input type="hidden" name="restaurantName" th:value="${restaurant.name}"/>
+<!--                    czy to potrzebne ? może przekazać inaczej ?-->
                 </form>
             </td>
             <td>

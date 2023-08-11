@@ -4,7 +4,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import pl.xavras.FoodOrder.api.dto.CustomerAddressOrderDTO;
 import pl.xavras.FoodOrder.domain.Address;
-import pl.xavras.FoodOrder.domain.Customer;
 import pl.xavras.FoodOrder.domain.Order;
 
 @Mapper(componentModel = "spring")

@@ -1,15 +1,15 @@
 package pl.xavras.FoodOrder.domain;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Value;
+import lombok.With;
 
 @With
 @Value
 @Builder
-@EqualsAndHashCode(of = "restaurantStreetId")
-@ToString(of = {"restaurantStreetId"})
 public class RestaurantStreet {
 
-    Integer restaurantStreetId;
+    Integer id;
     Street street;
     Restaurant restaurant;
 

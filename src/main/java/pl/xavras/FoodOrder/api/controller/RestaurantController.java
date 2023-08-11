@@ -10,10 +10,8 @@ import pl.xavras.FoodOrder.api.dto.mapper.*;
 import pl.xavras.FoodOrder.business.OrderService;
 import pl.xavras.FoodOrder.business.OwnerService;
 import pl.xavras.FoodOrder.business.RestaurantService;
-import pl.xavras.FoodOrder.domain.Restaurant;
 
 import java.util.List;
-import java.util.Set;
 
 
 @Controller
@@ -26,18 +24,11 @@ public class RestaurantController {
     private static final String RESTAURANT_BY_NAME = "/restaurants/{restaurantName}";
     private static final String RESTAURANT_DELIVERY = "/restaurants/deliveryAddress";
     private static final String RESTAURANT_ADDITEMS = "/restaurants/addItems";
-    ;
+
 
     private final RestaurantService restaurantService;
-    private final OwnerService ownerService;
-    private final OrderService orderService;
     private final RestaurantMapper restaurantMapper;
-    private final MenuItemMapper menuItemMapper;
-    private final AddressMapper addressMapper;
-    private final OwnerMapper ownerMapper;
-    private final OrderMapper orderMapper;
 
-    private final MenuItemOrderMapper menuItemOrderMapper;
 
 
     @GetMapping(RESTAURANT)
