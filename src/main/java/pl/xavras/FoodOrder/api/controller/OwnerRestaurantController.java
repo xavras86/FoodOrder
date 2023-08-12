@@ -163,7 +163,6 @@ public class OwnerRestaurantController {
 
         MenuItem menuItemToEdit = menuItemService.findById(menuItemId);
         menuItemService.changeAvailability(menuItemToEdit);
-
         redirectAttributes.addAttribute("restaurantName", restaurantName);
         return "redirect:/restaurants/owner/{restaurantName}";
     }
@@ -180,12 +179,9 @@ public class OwnerRestaurantController {
                         street -> restaurantService.chceckStreetCoverageForRestaurant(restaurantName, street)
                 ));
 
-
-
         model.addAttribute("restaurantName", restaurantName);
         model.addAttribute("streetDTOs", streetDTOList);
         model.addAttribute("streetCoverageMap", streetCoverageMap);
-
 
         return "owner-restaurant-delivery-range";
     }
@@ -199,7 +195,6 @@ public class OwnerRestaurantController {
         Street street = streetService.findById(streetId);
 
         restaurantService.alternateCoverageStateForStreet(restaurantName, street);
-
 
         return "redirect:/restaurants/owner/range/{restaurantName}";
     }

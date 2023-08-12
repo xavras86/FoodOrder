@@ -4,14 +4,14 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import pl.xavras.FoodOrder.infrastructure.security.UserRepository;
+import pl.xavras.FoodOrder.infrastructure.security.UserJpaRepository;
 
 @Controller
 @AllArgsConstructor
 public class HomeController {
 
     public static final String HOME = "/";
-    private final UserRepository userRepository;
+    private final UserJpaRepository userRepository;
 
     @GetMapping(HOME)
     public String home() {

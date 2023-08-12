@@ -41,18 +41,18 @@ public class SecurityConfiguration {
         return http
                 .csrf((csrf) -> csrf.configure(http))// or method reference
                 .authorizeHttpRequests(requests -> requests
-                                .requestMatchers("/login", "/error", "/images/error.png").permitAll()
+                                .requestMatchers("/login", "/error", "/images/error.png", "/register").permitAll()
 //                        .requestMatchers(HttpMethod.DELETE).hasAuthority("ADMIN")
                                 .requestMatchers("/**").hasAnyAuthority("OWNER", "CUSTOMER")
 
                 )
                 .formLogin(formLogin -> formLogin
-//                        .loginPage("/login")
+                        .loginPage("/login")
                         .permitAll()
                         .defaultSuccessUrl("/", true))
                 .logout(logout -> logout
-//                        .logoutUrl("/logout")
-                                .logoutSuccessUrl("/login")
+                        .logoutUrl("/logout")
+                                .logoutSuccessUrl("/login?logout")
                                 .invalidateHttpSession(true)
                                 .deleteCookies("JSESSIONID")
                                 .permitAll()

@@ -22,10 +22,7 @@ import pl.xavras.FoodOrder.domain.MenuItemOrder;
 import pl.xavras.FoodOrder.domain.Order;
 import pl.xavras.FoodOrder.domain.Restaurant;
 
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -126,10 +123,13 @@ public class CustomerRestaurantOrderController {
                                HttpSession session) {
 
         List<MenuItemOrderDTO> menuItemOrderDTOList = menuItemOrdersDTO.getOrders();
-        Set<MenuItemOrder> menuItemOrdersToOrder = menuItemOrderDTOList.stream()
-                .filter(a -> a.getQuantity() > 0)
-                .map(menuItemOrderMapper::map)
-                .collect(Collectors.toSet());
+        Set<MenuItemOrder> menuItemOrdersToOrder = new HashSet<>();
+        if(Objects.nonNull(menuItemOrderDTOList)) {
+            menuItemOrdersToOrder = menuItemOrderDTOList.stream()
+                    .filter(a -> a.getQuantity() > 0)
+                    .map(menuItemOrderMapper::map)
+                    .collect(Collectors.toSet());
+        }
 
         CustomerAddressOrderDTO orderAddressData = (CustomerAddressOrderDTO) session.getAttribute("addressDTO");
 

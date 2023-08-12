@@ -5,9 +5,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 import pl.xavras.FoodOrder.business.dao.OwnerDAO;
 import pl.xavras.FoodOrder.domain.Owner;
+import pl.xavras.FoodOrder.infrastructure.database.entity.OwnerEntity;
 import pl.xavras.FoodOrder.infrastructure.database.repository.jpa.OwnerJpaRepository;
 import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.OwnerEntityMapper;
-import pl.xavras.FoodOrder.infrastructure.security.UserRepository;
+import pl.xavras.FoodOrder.infrastructure.security.UserJpaRepository;
 
 import java.util.Optional;
 
@@ -19,7 +20,7 @@ public class OwnerRepository implements OwnerDAO {
 
     private final OwnerEntityMapper ownerEntityMapper;
 
-    private final UserRepository userRepository;
+    private final UserJpaRepository userRepository;
 
 
     @Override
@@ -27,8 +28,9 @@ public class OwnerRepository implements OwnerDAO {
         return ownerJpaRepository.findByEmail(email)
                 .map(ownerEntityMapper::mapFromEntity);
     }
+
     @Override
-    public Owner findLoggedOwner(){
+    public Owner findLoggedOwner() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         var loggedEmail = userRepository.findByUserName(username).getEmail();
         return ownerJpaRepository.findByEmail(loggedEmail)
@@ -37,5 +39,13 @@ public class OwnerRepository implements OwnerDAO {
                         .formatted(loggedEmail)));
     }
 
-
+    @Override
+    public Owner saveOwner(Owner owner) {
+        OwnerEntity toSave = ownerEntityMapper.mapToEntity(owner);
+        OwnerEntity saved = ownerJpaRepository.save(toSave);
+        return ownerEntityMapper.mapFromEntity(saved);
+    }
 }
+
+
+

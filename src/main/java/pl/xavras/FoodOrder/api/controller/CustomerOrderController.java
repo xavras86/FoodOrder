@@ -20,12 +20,10 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CustomerOrderController {
 
-
     public static final String ORDERS = "/orders";
     public static final String ORDERS_CANCEL = "/orders/cancel/{orderNumber}";
     private final OrderService orderService;
     private final CustomerService customerService;
-
 
     @GetMapping(ORDERS)
     public String orders(Model model) {
@@ -58,9 +56,7 @@ public class CustomerOrderController {
         Order orderToCancel = orderService.findByOrderNumber(orderNumber)
                 .orElseThrow(() -> new NotFoundException("Could not find order with orderNumber: " + orderNumber));
 
-//        if (!orderToCancel.getCancelled() && orderService.isCancellable(orderToCancel)) {
             orderService.cancelOrder(orderToCancel);
-//        }
 
         return "redirect:/orders";
     }

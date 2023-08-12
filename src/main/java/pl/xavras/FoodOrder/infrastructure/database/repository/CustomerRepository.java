@@ -8,7 +8,7 @@ import pl.xavras.FoodOrder.domain.Customer;
 import pl.xavras.FoodOrder.infrastructure.database.entity.CustomerEntity;
 import pl.xavras.FoodOrder.infrastructure.database.repository.jpa.CustomerJpaRepository;
 import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.CustomerEntityMapper;
-import pl.xavras.FoodOrder.infrastructure.security.UserRepository;
+import pl.xavras.FoodOrder.infrastructure.security.UserJpaRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +21,7 @@ public class CustomerRepository implements CustomerDAO {
 
     private final CustomerEntityMapper customerEntityMapper;
 
-    private final UserRepository userRepository;
+    private final UserJpaRepository userRepository;
 
 
 

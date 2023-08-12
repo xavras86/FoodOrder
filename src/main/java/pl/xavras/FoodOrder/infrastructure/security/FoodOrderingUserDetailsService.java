@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Service
 public class FoodOrderingUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final UserJpaRepository userRepository;
 
     @Override
     @Transactional

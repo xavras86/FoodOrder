@@ -14,11 +14,8 @@ public class RestaurantStreetRepository implements RestaurantStreetDAO {
 
     private final RestaurantStreetJpaRepository restaurantStreetJpaRepository;
 
-
-
     public void delete(RestaurantStreetEntity restaurantStreetEntity) {
         restaurantStreetJpaRepository.delete(restaurantStreetEntity);
-        log.info("USUWAM RSE!");
     }
 }
 

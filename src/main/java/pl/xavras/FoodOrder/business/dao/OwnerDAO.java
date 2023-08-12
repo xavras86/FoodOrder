@@ -10,4 +10,6 @@ public interface OwnerDAO {
     Optional<Owner> findByEmail(String email);
 
     Owner findLoggedOwner();
+
+    Owner saveOwner(Owner owner);
 }

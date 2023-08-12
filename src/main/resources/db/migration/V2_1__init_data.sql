@@ -1,7 +1,7 @@
-insert into OWNER (name, surname, phone, email) values ('Xavras', 'Wyzryn', '571 731 7592', 'xavras.sikora@gmail.com');
+insert into OWNER (name, surname, phone, email) values ('Jonh', 'Doe', '571 731 7592', 'owner@gmail.com');
 insert into OWNER (name, surname, phone, email) values ('Hetty', 'Frawley', '700 457 1196', 'hfrawley1@samsung.com');
 
-insert into CUSTOMER (name, surname, phone, email) values ('Marcin', 'Sikora', '417 595 1397', 'sikomar@interia.pl');
+insert into CUSTOMER (name, surname, phone, email) values ('Marcin', 'Sikora', '417 595 1397', 'customer@interia.pl');
 insert into CUSTOMER (name, surname, phone, email) values ('Corine', 'Dunsire', '957 408 5246', 'cdunsire1@virginia.edu');
 insert into CUSTOMER (name, surname, phone, email) values ('Inga', 'McGown', '282 736 5542', 'imcgown2@vimeo.com');
 insert into CUSTOMER (name, surname, phone, email) values ('Lolita', 'Sallter', '292 499 9098', 'lsallter3@mac.com');
@@ -2674,11 +2674,11 @@ insert into address (country, city, street, building_number) values ('Polska', '
 insert into address (country, city, street, building_number) values ('Polska', 'Poznań', 'ul. Ignacego Krasickiego','5');
 
 
-insert into restaurant (name, phone, email, address_id, owner_id) values ('Pyszna Picka', '970 540 3647', 'picka@t-online.de', '1', '1');
+insert into restaurant (name, phone, email, address_id, owner_id) values ('Szybka Picka', '970 540 3647', 'picka@t-online.de', '1', '1');
 insert into restaurant (name, phone, email, address_id, owner_id) values ('Smaczne Domowe', '973 794 9792', 'smaczneDomowe@cbc.ca', '3 ', '1');
-insert into restaurant (name, phone, email, address_id, owner_id) values ('Tenie Szamanie', '859 766 0860', 'tanieSzamanie@dot.gov', '5', '1');
-insert into restaurant (name, phone, email, address_id, owner_id) values ('Jak u Mamy', '621 301 6838', 'jakumamy@mac.com', '8', '1');
-insert into restaurant (name, phone, email, address_id, owner_id) values ('Kotlet i ziemniaki', '307 373 0225', 'kotelt@accuweather.com', '9', '2');
+insert into restaurant (name, phone, email, address_id, owner_id) values ('Bar Bar', '859 766 0860', 'tanieSzamanie@dot.gov', '5', '1');
+insert into restaurant (name, phone, email, address_id, owner_id) values ('Vifon-san', '621 301 6838', 'vi-fon@mac.com', '8', '1');
+insert into restaurant (name, phone, email, address_id, owner_id) values ('Kurczaki-ziemniaki', '307 373 0225', 'kotelt@accuweather.com', '9', '2');
 insert into restaurant (name, phone, email, address_id, owner_id) values ('Jadlodajnia', '307 123 0225', 'jadlo@accuweather.com', '10', '1');
 
 
