@@ -10,17 +10,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import pl.xavras.FoodOrder.api.dto.CustomerAddressOrderDTO;
-import pl.xavras.FoodOrder.api.dto.MenuItemDTO;
-import pl.xavras.FoodOrder.api.dto.MenuItemOrderDTO;
-import pl.xavras.FoodOrder.api.dto.MenuItemOrdersDTO;
+import pl.xavras.FoodOrder.api.dto.*;
 import pl.xavras.FoodOrder.api.dto.mapper.*;
-import pl.xavras.FoodOrder.business.MenuItemService;
-import pl.xavras.FoodOrder.business.OrderService;
-import pl.xavras.FoodOrder.business.RestaurantService;
-import pl.xavras.FoodOrder.domain.MenuItemOrder;
-import pl.xavras.FoodOrder.domain.Order;
-import pl.xavras.FoodOrder.domain.Restaurant;
+import pl.xavras.FoodOrder.business.*;
+import pl.xavras.FoodOrder.domain.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,14 +21,17 @@ import java.util.stream.Collectors;
 @Controller
 @AllArgsConstructor
 @Slf4j
-public class CustomerRestaurantOrderController {
+public class  CustomerRestaurantOrderController {
 
     public static final String RESTAURANTS_BY_STREET = "/restaurants/street/{street}";
     private static final String RESTAURANT_BY_NAME = "/restaurants/{restaurantName}";
     private static final String RESTAURANT_ADD_ITEMS = "/restaurants/addItems";
     private static final String RESTAURANT_MENU_ITEM_DETAILS = "/restaurants/{restaurantName}/menu/{menuItemId}";
+    private static final String ORDER_DETAILS = "/order/thanks/{orderNumber}";
     private final RestaurantService restaurantService;
     private final OrderService orderService;
+
+    private final StreetService streetService;
     private final MenuItemService menuItemService;
     private final RestaurantMapper restaurantMapper;
     private final AddressMapper addressMapper;
@@ -44,11 +40,22 @@ public class CustomerRestaurantOrderController {
     private final MenuItemMapper menuItemMapper;
     private final OrderMapper orderMapper;
 
+    private final AddressService addressService;
+    private final StreetMapper streetMapper;
+
 
     @GetMapping("/address")
     public String showAddressForm(Model model) {
+        var all =  streetMapper.map(streetService.findAll());
+        List<String> allCountries = List.of("Polska");
+        List<String> allCities = List.of("Poznań");
+        List<String> allStreets = all.stream().map(StreetDTO::getStreetName).toList();
         model.addAttribute("addressDTO", new CustomerAddressOrderDTO());
+        model.addAttribute("countries", allCountries);
+        model.addAttribute("cities", allCities);
+        model.addAttribute("streets", allStreets);
         return "address-form";
+
     }
 
     @PostMapping("/submit-address")
@@ -120,7 +127,9 @@ public class CustomerRestaurantOrderController {
 
     @PostMapping(RESTAURANT_ADD_ITEMS)
     public String addMenuItems(@ModelAttribute MenuItemOrdersDTO menuItemOrdersDTO,
-                               HttpSession session) {
+                               HttpSession session,
+                               RedirectAttributes redirectAttributes
+                               ) {
 
         List<MenuItemOrderDTO> menuItemOrderDTOList = menuItemOrdersDTO.getOrders();
         Set<MenuItemOrder> menuItemOrdersToOrder = new HashSet<>();
@@ -138,27 +147,40 @@ public class CustomerRestaurantOrderController {
         String restaurantName = (String) session.getAttribute("restaurant");
 
         Order placedOrder = orderService.placeOrder(order, restaurantName, menuItemOrdersToOrder);
+        String orderNumber = placedOrder.getOrderNumber();
 
         CustomerAddressOrderDTO placed = orderMapper.mapToDTO(placedOrder);
 
         session.setAttribute("placedOrder", placed);
+        session.setAttribute("orderNumber", orderNumber);
+
         session.setAttribute("menuItemOrdersDTO", menuItemOrdersToOrder);
+        redirectAttributes.addAttribute("orderNumber", orderNumber);
 
-        return "redirect:/thank-you";
+        return "redirect:/order/thanks/{orderNumber}";
     }
 
-    @GetMapping("/thank-you")
-    public String orderPlaced(HttpSession session, Model model) {
+    @GetMapping(ORDER_DETAILS)
+    public String orderPlaced(@PathVariable String orderNumber,
+                              Model model) {
 
-        CustomerAddressOrderDTO orderDetails = (CustomerAddressOrderDTO) session.getAttribute("placedOrder");
-        model.addAttribute("orderDetails", orderDetails);
+        Order order = orderService.findByOrderNumber(orderNumber);
+        Address deliveryAddress = order.getAddress();
+        Address restaurantAddress = order.getRestaurant().getAddress();
+        Set<MenuItemOrder> menuItemOrders = order.getMenuItemOrders();
+        String status = orderService.orderStatus(order);
+        String mapUrl = addressService.createMapUrl(restaurantAddress, deliveryAddress);
 
-        Set<MenuItemOrderDTO> menuItemOrdersDTO = (Set<MenuItemOrderDTO>) session.getAttribute("menuItemOrdersDTO");
+        model.addAttribute("order", order);
+        model.addAttribute("deliveryAddress", deliveryAddress);
+        model.addAttribute("restaurantAddress", restaurantAddress);
+        model.addAttribute("menuItemOrders", menuItemOrders);
+        model.addAttribute("status", status);
+        model.addAttribute("mapUrl",  mapUrl);
 
-        model.addAttribute("menuItemOrders", menuItemOrdersDTO);
-
-        return "thank-you";
+        return "customer-thank-you";
     }
+
 
 
     private Restaurant getRestaurant(String restaurantName) {

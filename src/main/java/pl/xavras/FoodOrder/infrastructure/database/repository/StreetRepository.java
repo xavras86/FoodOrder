@@ -2,6 +2,8 @@ package pl.xavras.FoodOrder.infrastructure.database.repository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import pl.xavras.FoodOrder.business.dao.StreetDAO;
 import pl.xavras.FoodOrder.domain.Street;
@@ -36,6 +38,11 @@ public class StreetRepository implements StreetDAO {
     public Optional<Street> findByStreetName(String streetName) {
         return streetJpaRepository.findByStreetName(streetName)
                 .map(streetEntityMapper::mapFromEntity);
+    }
+
+    @Override
+    public Page<Street> findAll(Pageable pageable) {
+        return (streetJpaRepository.findAll(pageable)).map(streetEntityMapper::mapFromEntity);
     }
 
 }

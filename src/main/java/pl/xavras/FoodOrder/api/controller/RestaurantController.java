@@ -20,10 +20,6 @@ import java.util.List;
 public class RestaurantController {
 
     public static final String RESTAURANT = "/restaurants";
-    public static final String RESTAURANT_BY_OWNER = "/restaurants/owner";
-    private static final String RESTAURANT_BY_NAME = "/restaurants/{restaurantName}";
-    private static final String RESTAURANT_DELIVERY = "/restaurants/deliveryAddress";
-    private static final String RESTAURANT_ADDITEMS = "/restaurants/addItems";
 
 
     private final RestaurantService restaurantService;

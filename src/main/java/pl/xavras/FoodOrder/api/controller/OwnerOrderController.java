@@ -56,9 +56,7 @@ public class OwnerOrderController {
 
     @PutMapping(ORDERS_COMPLETE)
     public String completeOrder(@PathVariable String orderNumber) {
-        Order orderToComplete = orderService.findByOrderNumber(orderNumber)
-                .orElseThrow(() -> new NotFoundException("Could not find order with orderNumber: " + orderNumber));
-
+        Order orderToComplete = orderService.findByOrderNumber(orderNumber);
         if (!orderToComplete.getCompleted() && Objects.isNull(orderToComplete.getCompletedDateTime())) {
             orderService.completeOrder(orderToComplete);
         }

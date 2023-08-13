@@ -14,3 +14,4 @@ public class Address {
     String street;
     String buildingNumber;
 }
+

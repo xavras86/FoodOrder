@@ -167,21 +167,65 @@ public class OwnerRestaurantController {
         return "redirect:/restaurants/owner/{restaurantName}";
     }
 
+//    @GetMapping(RESTAURANT_OWNER_RANGE)
+//    public String adjustRestaurantRange(@PathVariable String restaurantName,
+//                                        Model model,
+//                                        @RequestParam(defaultValue = "10") int pageSize,
+//                                        @RequestParam(defaultValue = "1") int pageNumber,
+//                                        @RequestParam(defaultValue = "streetName") String sortBy,
+//                                        @RequestParam(defaultValue = "asc") String sortDirection) {
+//
+//        Pageable pageable = PageRequest.of(
+//                pageNumber - 1,
+//                pageSize,
+//                Sort.by(Sort.Direction.fromString(sortDirection), sortBy));
+//        Page<Street> streetPage = streetService.findAll(pageable);
+//        List<Integer> pageNumbers = streetService.generatePageNumbers(pageNumber, streetPage.getTotalPages());
+//
+//        List<Street> streetList = streetService.findAll();
+//
+//        Map<Street, Boolean> streetCoverageMap = streetList.stream()
+//                .collect(Collectors.toMap(
+//                        street -> street,
+//                        street -> restaurantService.chceckStreetCoverageForRestaurant(restaurantName, street)
+//                ));
+//
+//        model.addAttribute("restaurantName", restaurantName);
+//        model.addAttribute("streetDTOs", streetList);
+//        model.addAttribute("streetCoverageMap", streetCoverageMap);
+//
+//        return "owner-restaurant-delivery-range";
+//    }
     @GetMapping(RESTAURANT_OWNER_RANGE)
     public String adjustRestaurantRange(@PathVariable String restaurantName,
-                                        Model model) {
+                                        Model model,
+                                        @RequestParam(defaultValue = "10") int pageSize,
+                                        @RequestParam(defaultValue = "1") int pageNumber,
+                                        @RequestParam(defaultValue = "streetName") String sortBy,
+                                        @RequestParam(defaultValue = "asc") String sortDirection) {
 
-        List<Street> streetDTOList = streetService.findAll();
+        Pageable pageable = PageRequest.of(
+                pageNumber - 1,
+                pageSize,
+                Sort.by(Sort.Direction.fromString(sortDirection), sortBy));
+        Page<Street> streetPage = streetService.findAll(pageable);
+        List<Integer> pageNumbers = streetService.generatePageNumbers(pageNumber, streetPage.getTotalPages());
 
-        Map<Street, Boolean> streetCoverageMap = streetDTOList.stream()
+
+        Map<Street, Boolean> streetCoverageMap = streetPage.stream()
                 .collect(Collectors.toMap(
                         street -> street,
                         street -> restaurantService.chceckStreetCoverageForRestaurant(restaurantName, street)
                 ));
 
         model.addAttribute("restaurantName", restaurantName);
-        model.addAttribute("streetDTOs", streetDTOList);
         model.addAttribute("streetCoverageMap", streetCoverageMap);
+        model.addAttribute("totalPages", streetPage.getTotalPages());
+        model.addAttribute("currentPage", pageNumber);
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("sortDirection", sortDirection);
+        model.addAttribute("pageNumbers", pageNumbers);
 
         return "owner-restaurant-delivery-range";
     }

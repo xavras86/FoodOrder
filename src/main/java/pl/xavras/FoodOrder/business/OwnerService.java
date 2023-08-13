@@ -33,4 +33,6 @@ public class OwnerService {
         return ownerDAO.findLoggedOwner();
     }
 
+
+
 }

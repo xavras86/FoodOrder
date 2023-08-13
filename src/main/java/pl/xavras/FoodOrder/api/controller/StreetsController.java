@@ -2,11 +2,19 @@ package pl.xavras.FoodOrder.api.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import pl.xavras.FoodOrder.api.dto.mapper.StreetMapper;
+import org.springframework.web.bind.annotation.RequestParam;
 import pl.xavras.FoodOrder.business.StreetService;
+import pl.xavras.FoodOrder.domain.Street;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @AllArgsConstructor
@@ -15,18 +23,46 @@ public class StreetsController {
 
     public static final String STREETS = "/streets";
     private final StreetService streetService;
-    private final StreetMapper streetMapper;
 
 
     @GetMapping(STREETS)
-    public String streets(Model model) {
-        var allStreets = streetService.findAll().stream()
-                .map(streetMapper::map).toList();
+    public String streets(Model model,
+                          @RequestParam(defaultValue = "10") int pageSize,
+                          @RequestParam(defaultValue = "1") int pageNumber,
+                          @RequestParam(defaultValue = "streetName") String sortBy,
+                          @RequestParam(defaultValue = "asc") String sortDirection) {
 
-        model.addAttribute("streets", allStreets);
+        Pageable pageable = PageRequest.of(
+                pageNumber - 1,
+                pageSize,
+                Sort.by(Sort.Direction.fromString(sortDirection), sortBy));
+        Page<Street> streetPage = streetService.findAll(pageable);
+        List<Integer> pageNumbers = streetService.generatePageNumbers(pageNumber, streetPage.getTotalPages());
+
+        model.addAttribute("streets", streetPage.getContent());
+        model.addAttribute("totalPages", streetPage.getTotalPages());
+        model.addAttribute("currentPage", pageNumber);
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("sortDirection", sortDirection);
+        model.addAttribute("pageNumbers", pageNumbers);
 
         return "streets";
+
     }
+
+    private List<Integer> generatePageNumbers(int currentPage, int totalPages) {
+        int numToShow = 5;
+        int start = Math.max(1, currentPage - numToShow / 2);
+        int end = Math.min(totalPages, start + numToShow - 1);
+
+        List<Integer> pageNumbers = new ArrayList<>();
+        for (int i = start; i <= end; i++) {
+            pageNumbers.add(i);
+        }
+        return pageNumbers;
+    }
+
 }
 
 

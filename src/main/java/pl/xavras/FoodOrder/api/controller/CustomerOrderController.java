@@ -53,8 +53,7 @@ public class CustomerOrderController {
 
     @PutMapping(ORDERS_CANCEL)
     public String cancelOrder(@PathVariable String orderNumber) {
-        Order orderToCancel = orderService.findByOrderNumber(orderNumber)
-                .orElseThrow(() -> new NotFoundException("Could not find order with orderNumber: " + orderNumber));
+        Order orderToCancel = orderService.findByOrderNumber(orderNumber);
 
             orderService.cancelOrder(orderToCancel);
 

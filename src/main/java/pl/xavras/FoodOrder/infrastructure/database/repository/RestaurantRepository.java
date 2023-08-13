@@ -54,7 +54,9 @@ public class RestaurantRepository implements RestaurantDAO {
     @Override
     public Set<Restaurant> findRestaurantsByStreetName(String streetName) {
         var street = streetRepository.findByStreetName(streetName)
-                .orElseThrow(() -> new RuntimeException("wrong street name [%s]".formatted(streetName)));
+                .orElseThrow(() -> new RuntimeException(
+                        "Unfortunately, the given street name [%s] is incorrect, please try again"
+                                .formatted(streetName)));
         return street.getRestaurantStreets().stream().map(RestaurantStreet::getRestaurant)
                 .collect(Collectors.toSet());
     }

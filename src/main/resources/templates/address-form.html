@@ -5,6 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/css/select2.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/js/select2.min.js"></script>
 
 
 </head>
@@ -23,11 +25,14 @@
             font-size: 20px;
             margin: 10px;
         }
-        form-group {
+        table {
             justify-content:center;
             display: flex;
 
         }
+
+
+
 
 </style>
 
@@ -51,19 +56,49 @@
     <form action="#" th:action="@{/submit-address}" th:method="POST" th:object="${addressDTO}"
           class="col card p-5 mb-3">
 
-            <div class="form-group">
-                <label>Country:</label> <input type="text" th:field="*{country}" required/><br>
-                <label>City:</label> <input type="text" th:field="*{city}" required/><br>
-                <label>Street:</label> <input type="text" th:field="*{street}" required/><br>
-                <label>Build no.:</label> <input type="text" th:field="*{buildingNumber}" required/><br>
-            </div>
+        <table>
+            <tr>
+                <th><label>Country:</label></th>
+                <td><select th:field="*{country}" class="js-example-basic-single" required>
+                    <option th:each="countryOption : ${countries}" th:value="${countryOption}"
+                            th:text="${countryOption}"></option>
+                </select></td>
+            </tr>
+            <tr>
+                <th><label>City:</label></th>
+                <td><select th:field="*{city}" class="js-example-basic-single" required>
+                    <option th:each="cityOption : ${cities}" th:value="${cityOption}" th:text="${cityOption}"></option>
+                </select></td>
+            </tr>
+            <tr>
+                <th><label>Street:</label></th>
+                <td><select th:field="*{street}" class="js-example-basic-single" required>
+                    <option th:each="streetOption : ${streets}" th:value="${streetOption}"
+                            th:text="${streetOption}"></option>
+                </select></td>
+            </tr>
+            <tr>
+                <th><label>Build no.:</label></th>
+                <td><input type="text" th:field="*{buildingNumber}" required/></td>
+            </tr>
 
-            <div class="form-group">
-                <input type="submit" class="btn btn-primary btn-lg" value="Next" name="button"/>
-            </div>
-<!--        </div>-->
+    </table>
+
+    <div class="form-group">
+        <input type="submit" class="btn btn-primary btn-lg" value="Next" name="button"/>
+    </div>
+
     </form>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('.js-example-basic-single').select2();
+    });
+
+
+
+</script>
 
 
 <footer th:fragment="footer" class="text-center">&copy; 2023 FoodOrder</footer>

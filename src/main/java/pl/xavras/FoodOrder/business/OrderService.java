@@ -36,12 +36,12 @@ public class OrderService {
         return orderDAO.findOrdersByOwnerEmail(ownerEmail);
     }
 
-    public Optional<Order> findByOrderNumber(String orderNumber) {
+    public  Order findByOrderNumber(String orderNumber) {
         Optional<Order> byOrderNumber = orderDAO.findByOrderNumber(orderNumber);
         if (byOrderNumber.isEmpty()) {
             throw new NotFoundException("Could not find order with orderNumber: [%s]".formatted(orderNumber));
         }
-        return byOrderNumber;
+        return byOrderNumber.get();
     }
     public void completeOrder(Order orderToComplete) {
         if ((orderToComplete.getCompleted() && Objects.nonNull(orderToComplete.getCompletedDateTime()))
@@ -69,6 +69,11 @@ public class OrderService {
         Order orderToPlace = buildOrder(deliveryAddress, menuItemOrders);
         return orderDAO.saveOrder(orderToPlace, restaurantName, menuItemOrders);
     }
+
+    public String orderStatus(Order order) {
+        return order.getCancelled() ? "Cancelled" : (order.getCompleted() ? "Completed" : "Waiting");
+    }
+
 
     private Order buildOrder(Address address,
                              Set<MenuItemOrder> menuItemOrders
@@ -109,6 +114,8 @@ public class OrderService {
                 (new Random().nextInt(90) + 10)
         );
     }
+
+
 
 
 }

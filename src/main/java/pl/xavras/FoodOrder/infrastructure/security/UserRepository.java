@@ -36,7 +36,7 @@ public class UserRepository implements UserDAO {
                 .active(true)
                 .roles(Set.of(role))
                 .build();
-        userJpaRepository.save(userToSave);
+        UserEntity save = userJpaRepository.save(userToSave);
 
 
     }
