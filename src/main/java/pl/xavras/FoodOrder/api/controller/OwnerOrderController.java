@@ -7,8 +7,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import pl.xavras.FoodOrder.business.AddressService;
 import pl.xavras.FoodOrder.business.OrderService;
 import pl.xavras.FoodOrder.business.OwnerService;
+import pl.xavras.FoodOrder.domain.Address;
+import pl.xavras.FoodOrder.domain.MenuItemOrder;
 import pl.xavras.FoodOrder.domain.Order;
 import pl.xavras.FoodOrder.domain.exception.NotFoundException;
 
@@ -22,10 +25,12 @@ import java.util.stream.Collectors;
 public class OwnerOrderController {
 
 
-    public static final String ORDERS_OWNER = "/orders-owner";
+    public static final String ORDERS_OWNER = "/owner/orders";
     public static final String ORDERS_COMPLETE = "/orders/complete/{orderNumber}";
+    public static final String ORDERS_DETAILS = "/owner/orders/{orderNumber}";
     private final OrderService orderService;
     private final OwnerService ownerService;
+    private final AddressService addressService;
 
 
     @GetMapping(ORDERS_OWNER)
@@ -54,6 +59,27 @@ public class OwnerOrderController {
         return "owner-orders";
     }
 
+    @GetMapping(ORDERS_DETAILS)
+    public String orderPlaced(@PathVariable String orderNumber,
+                              Model model) {
+
+        Order order = orderService.findByOrderNumber(orderNumber);
+        Address deliveryAddress = order.getAddress();
+        Address restaurantAddress = order.getRestaurant().getAddress();
+        Set<MenuItemOrder> menuItemOrders = order.getMenuItemOrders();
+        String status = orderService.orderStatus(order);
+        String mapUrl = addressService.createMapUrl(restaurantAddress, deliveryAddress);
+
+        model.addAttribute("order", order);
+        model.addAttribute("deliveryAddress", deliveryAddress);
+        model.addAttribute("restaurantAddress", restaurantAddress);
+        model.addAttribute("menuItemOrders", menuItemOrders);
+        model.addAttribute("status", status);
+        model.addAttribute("mapUrl",  mapUrl);
+
+        return "owner-order-details";
+    }
+
     @PutMapping(ORDERS_COMPLETE)
     public String completeOrder(@PathVariable String orderNumber) {
         Order orderToComplete = orderService.findByOrderNumber(orderNumber);
@@ -61,7 +87,7 @@ public class OwnerOrderController {
             orderService.completeOrder(orderToComplete);
         }
 
-        return "redirect:/orders-owner";
+        return "redirect:/owner/orders";
     }
 }
 

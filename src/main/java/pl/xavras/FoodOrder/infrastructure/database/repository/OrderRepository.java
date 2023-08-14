@@ -2,17 +2,18 @@ package pl.xavras.FoodOrder.infrastructure.database.repository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import pl.xavras.FoodOrder.business.dao.OrderDAO;
+import pl.xavras.FoodOrder.domain.Customer;
 import pl.xavras.FoodOrder.domain.MenuItemOrder;
 import pl.xavras.FoodOrder.domain.Order;
-import pl.xavras.FoodOrder.infrastructure.database.entity.AddressEntity;
-import pl.xavras.FoodOrder.infrastructure.database.entity.MenuItemOrderEntity;
-import pl.xavras.FoodOrder.infrastructure.database.entity.OrderEntity;
-import pl.xavras.FoodOrder.infrastructure.database.entity.RestaurantEntity;
+import pl.xavras.FoodOrder.infrastructure.database.entity.*;
 import pl.xavras.FoodOrder.infrastructure.database.repository.jpa.OrderJpaRepository;
 import pl.xavras.FoodOrder.infrastructure.database.repository.jpa.RestaurantJpaRepository;
 import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.AddressEntityMapper;
+import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.CustomerEntityMapper;
 import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.MenuItemOrderEntityMapper;
 import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.OrderEntityMapper;
 
@@ -34,6 +35,8 @@ public class OrderRepository implements OrderDAO {
     private final MenuItemOrderEntityMapper menuItemOrderEntityMapper;
     private final AddressEntityMapper addressEntityMapper;
 
+    private final CustomerEntityMapper customerEntityMapper;
+
 
     private final RestaurantJpaRepository restaurantJpaRepository;
 
@@ -50,6 +53,21 @@ public class OrderRepository implements OrderDAO {
                 .map(orderEntityMapper::mapFromEntity)
                 .collect(Collectors.toSet());
     }
+
+    @Override
+    public Page<Order> findOrdersByCustomerPaged(Pageable pageable, Customer activeCustomer) {
+        CustomerEntity customerEntity = customerEntityMapper.mapToEntity(activeCustomer);
+
+        Page<OrderEntity> byActiveCustomer =  orderJpaRepository.findByCustomer(pageable, customerEntity);
+        return byActiveCustomer.map(orderEntityMapper::mapFromEntity);
+    }
+    @Override
+    public Page<Order> findByCustomerAndCancelledAndCompletedPaged(Pageable pageable, Customer customer, boolean cancelled, boolean completed) {
+        CustomerEntity customerEntity = customerEntityMapper.mapToEntity(customer);
+        Page<OrderEntity> byActiveCustomerAndFlags =  orderJpaRepository.findByCustomerAndCancelledAndCompleted(pageable, customerEntity,cancelled, completed);
+        return byActiveCustomerAndFlags.map(orderEntityMapper::mapFromEntity);
+    }
+
 
     @Override
     public Optional<Order> findByOrderNumber(String orderNumber) {

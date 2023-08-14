@@ -11,10 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import pl.xavras.FoodOrder.api.dto.AddressDTO;
-import pl.xavras.FoodOrder.api.dto.MenuItemDTO;
-import pl.xavras.FoodOrder.api.dto.RestaurantDTO;
-import pl.xavras.FoodOrder.api.dto.StreetDTO;
+import pl.xavras.FoodOrder.api.dto.*;
 import pl.xavras.FoodOrder.api.dto.mapper.*;
 import pl.xavras.FoodOrder.business.*;
 import pl.xavras.FoodOrder.domain.*;
@@ -29,7 +26,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class OwnerRestaurantController {
 
-    public static final String RESTAURANT_OWNER = "/restaurants/owner";
+    public static final String RESTAURANT_OWNER = "/owner/restaurants";
     public static final String RESTAURANT_OWNER_ADD_RESTAURANT = "/restaurants/owner/add-restaurant";
     public static final String RESTAURANT_OWNER_NAME = "/restaurants/owner/{restaurantName}";
     public static final String RESTAURANT_OWNER_ADD = "/restaurants/owner/add-menu-item";
@@ -40,13 +37,12 @@ public class OwnerRestaurantController {
     private final RestaurantService restaurantService;
     private final OwnerService ownerService;
     private final MenuItemService menuItemService;
-    private final RestaurantStreetService restaurantStreetService;
     private final StreetService streetService;
     private final RestaurantMapper restaurantMapper;
     private final MenuItemMapper menuItemMapper;
     private final AddressMapper addressMapper;
     private final OwnerMapper ownerMapper;
-    private final StreetMapper streetMapper;
+    private final UtilityService utilityService;
 
 
     @GetMapping(RESTAURANT_OWNER)
@@ -59,7 +55,7 @@ public class OwnerRestaurantController {
         model.addAttribute("restaurantByOwner", restaurantByOwner);
         model.addAttribute("restaurantDTO", new RestaurantDTO());
         model.addAttribute("addressDTO", new AddressDTO());
-        return "restaurants-by-owner";
+        return "owner-restaurants";
     }
 
     @PostMapping(RESTAURANT_OWNER_ADD_RESTAURANT)
@@ -71,7 +67,7 @@ public class OwnerRestaurantController {
         Address newAddress = addressMapper.map(addressDTO);
         restaurantService.saveNewRestaurant(newRestaurant, newAddress);
 
-        return "redirect:/restaurants/owner";
+        return "redirect:/owner/restaurants";
     }
 
 
@@ -167,35 +163,6 @@ public class OwnerRestaurantController {
         return "redirect:/restaurants/owner/{restaurantName}";
     }
 
-//    @GetMapping(RESTAURANT_OWNER_RANGE)
-//    public String adjustRestaurantRange(@PathVariable String restaurantName,
-//                                        Model model,
-//                                        @RequestParam(defaultValue = "10") int pageSize,
-//                                        @RequestParam(defaultValue = "1") int pageNumber,
-//                                        @RequestParam(defaultValue = "streetName") String sortBy,
-//                                        @RequestParam(defaultValue = "asc") String sortDirection) {
-//
-//        Pageable pageable = PageRequest.of(
-//                pageNumber - 1,
-//                pageSize,
-//                Sort.by(Sort.Direction.fromString(sortDirection), sortBy));
-//        Page<Street> streetPage = streetService.findAll(pageable);
-//        List<Integer> pageNumbers = streetService.generatePageNumbers(pageNumber, streetPage.getTotalPages());
-//
-//        List<Street> streetList = streetService.findAll();
-//
-//        Map<Street, Boolean> streetCoverageMap = streetList.stream()
-//                .collect(Collectors.toMap(
-//                        street -> street,
-//                        street -> restaurantService.chceckStreetCoverageForRestaurant(restaurantName, street)
-//                ));
-//
-//        model.addAttribute("restaurantName", restaurantName);
-//        model.addAttribute("streetDTOs", streetList);
-//        model.addAttribute("streetCoverageMap", streetCoverageMap);
-//
-//        return "owner-restaurant-delivery-range";
-//    }
     @GetMapping(RESTAURANT_OWNER_RANGE)
     public String adjustRestaurantRange(@PathVariable String restaurantName,
                                         Model model,
@@ -209,17 +176,20 @@ public class OwnerRestaurantController {
                 pageSize,
                 Sort.by(Sort.Direction.fromString(sortDirection), sortBy));
         Page<Street> streetPage = streetService.findAll(pageable);
-        List<Integer> pageNumbers = streetService.generatePageNumbers(pageNumber, streetPage.getTotalPages());
+        List<Integer> pageNumbers = utilityService.generatePageNumbers(pageNumber, streetPage.getTotalPages());
 
 
-        Map<Street, Boolean> streetCoverageMap = streetPage.stream()
+//
+        Map<Street, Boolean> streetStatusMap = streetPage.stream()
                 .collect(Collectors.toMap(
                         street -> street,
-                        street -> restaurantService.chceckStreetCoverageForRestaurant(restaurantName, street)
+                        street -> restaurantService.checkStreetCoverageForRestaurant(restaurantName, street),
+                        (existingValue, newValue) -> existingValue,
+                        LinkedHashMap::new
                 ));
 
         model.addAttribute("restaurantName", restaurantName);
-        model.addAttribute("streetCoverageMap", streetCoverageMap);
+        model.addAttribute("streetStatusMap", streetStatusMap);
         model.addAttribute("totalPages", streetPage.getTotalPages());
         model.addAttribute("currentPage", pageNumber);
         model.addAttribute("pageSize", pageSize);
@@ -229,6 +199,9 @@ public class OwnerRestaurantController {
 
         return "owner-restaurant-delivery-range";
     }
+
+
+
 
     @PutMapping(RESTAURANT_OWNER_RANGE_EDIT)
     public String editMenuItem(@PathVariable String restaurantName,

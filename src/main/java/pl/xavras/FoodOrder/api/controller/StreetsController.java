@@ -50,19 +50,6 @@ public class StreetsController {
         return "streets";
 
     }
-
-    private List<Integer> generatePageNumbers(int currentPage, int totalPages) {
-        int numToShow = 5;
-        int start = Math.max(1, currentPage - numToShow / 2);
-        int end = Math.min(totalPages, start + numToShow - 1);
-
-        List<Integer> pageNumbers = new ArrayList<>();
-        for (int i = start; i <= end; i++) {
-            pageNumbers.add(i);
-        }
-        return pageNumbers;
-    }
-
 }
 
 

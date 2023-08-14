@@ -32,8 +32,8 @@
 <div class="container">
     <div class="page-header" id="banner">
         <br>
-        <a class="btn btn-success btn-lg" th:href="@{/restaurants/owner}">Your restaurants</a>
-        <a class="btn btn-secondary btn-lg" th:href="@{/orders-owner}">Your orders</a>
+        <a class="btn btn-success btn-lg" th:href="@{/owner/restaurants}">Your restaurants</a>
+        <a class="btn btn-secondary btn-lg" th:href="@{/owner/orders}">Your orders</a>
         <a class="btn btn-warning btn-lg" th:href="@{/}">Back to home</a>
         <a class="btn btn-dark btn-lg" th:href="@{/logout}">Logout</a>
         <br>
@@ -88,6 +88,13 @@
                         </button>
                     </form>
                 </td>
+                <td>
+                    <form action="#"
+                          th:action="@{/owner/orders/{orderNumber}(orderNumber=${order.orderNumber})}"
+                          method="GET">
+                        <button type="submit" class="btn btn-info">Order details</button>
+                    </form>
+                </td>
             </tr>
             </tbody>
         </table>
@@ -127,6 +134,13 @@
                     </table>
                 </td>
                 <td th:text="${order.totalValue}"></td>
+                <td>
+                    <form action="#"
+                          th:action="@{/owner/orders/{orderNumber}(orderNumber=${order.orderNumber})}"
+                          method="GET">
+                        <button type="submit" class="btn btn-info">Order details</button>
+                    </form>
+                </td>
             </tr>
             </tbody>
         </table>
@@ -167,6 +181,13 @@
                     </table>
                 </td>
                 <td th:text="${order.totalValue}"></td>
+                <td>
+                    <form action="#"
+                          th:action="@{/owner/orders/{orderNumber}(orderNumber=${order.orderNumber})}"
+                          method="GET">
+                        <button type="submit" class="btn btn-info">Order details</button>
+                    </form>
+                </td>
 
             </tr>
             </tbody>

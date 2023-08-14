@@ -36,7 +36,7 @@
         <a class="btn btn-success btn-lg" th:href="@{/address}">Order some food</a>
         <a class="btn btn-primary btn-lg" th:href="@{/restaurants}">All restaurants</a>
         <a class="btn btn-success btn-lg" th:href="@{/streets}">Restaurants by delivery street </a>
-        <a class="btn btn-secondary btn-lg" th:href="@{/orders}">Your orders</a>
+        <a class="btn btn-secondary btn-lg" th:href="@{/customer/orders}">Your orders</a>
         <a class="btn btn-warning btn-lg" th:href="@{/}">Back to main page</a>
         <a class="btn btn-dark btn-lg" th:href="@{/logout}">Logout</a>
         <br>
@@ -57,10 +57,8 @@
 
         <br>
         <br>
-        <form action="#" th:action="@{/restaurants/{restaurantName}(restaurantName=${restaurantName})}"
-              method="GET">
-            <button type="submit" class="btn btn-info">Back to menu page</button>
-        </form>
+        <button onclick="window.history.back()" class="btn btn-primary">Back to menu page</button>
+
 
         <br>
     </div>

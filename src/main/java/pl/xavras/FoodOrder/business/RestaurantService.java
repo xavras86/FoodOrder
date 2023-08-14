@@ -2,15 +2,15 @@ package pl.xavras.FoodOrder.business;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.xavras.FoodOrder.business.dao.RestaurantDAO;
 import pl.xavras.FoodOrder.domain.*;
-import pl.xavras.FoodOrder.infrastructure.database.entity.RestaurantEntity;
-import pl.xavras.FoodOrder.infrastructure.database.entity.RestaurantStreetEntity;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -54,12 +54,17 @@ public class RestaurantService {
 
     @Transactional
     public void alternateCoverageStateForStreet(String restaurantName, Street street) {
-       restaurantDAO.alternateCoverageStateForStreet(restaurantName, street);
+        restaurantDAO.alternateCoverageStateForStreet(restaurantName, street);
     }
 
-    public Boolean chceckStreetCoverageForRestaurant(String restaurantName, Street street) {
+    public Boolean checkStreetCoverageForRestaurant(String restaurantName, Street street) {
         Set<RestaurantStreet> restaurantStreets = findByName(restaurantName).getRestaurantStreets();
         return restaurantStreets.stream().anyMatch(a -> street.equals(a.getStreet()));
+    }
+
+
+    public Page<Restaurant> findAll(Pageable pageable) {
+        return restaurantDAO.findAll(pageable);
     }
 }
 

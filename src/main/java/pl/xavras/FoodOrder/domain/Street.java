@@ -16,4 +16,5 @@ public class Street {
     String streetName;
     Set<RestaurantStreet> restaurantStreets;
 
+
 }

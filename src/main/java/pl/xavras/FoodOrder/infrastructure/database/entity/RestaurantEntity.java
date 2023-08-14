@@ -29,7 +29,7 @@ public class RestaurantEntity {
     @Column(name = "email")
     private String email;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private AddressEntity address;
 
@@ -43,7 +43,7 @@ public class RestaurantEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant", cascade = CascadeType.ALL)
     private Set<RestaurantStreetEntity> restaurantStreets;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurant")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     private Set<OrderEntity> orders;
 
 

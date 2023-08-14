@@ -42,30 +42,30 @@
         <a class="btn btn-success btn-lg" th:href="@{/address}">Delivery address</a>
         <a class="btn btn-primary btn-lg" th:href="@{/restaurants}">All restaurants</a>
         <a class="btn btn-success btn-lg" th:href="@{/streets}">Restaurants by delivery street </a>
-        <a class="btn btn-secondary btn-lg" th:href="@{/orders}">Your orders</a>
+        <a class="btn btn-secondary btn-lg" th:href="@{/customer/orders}">Your orders</a>
         <a class="btn btn-warning btn-lg" th:href="@{/customer}">Back to main page</a>
         <a class="btn btn-dark btn-lg" th:href="@{/logout}">Logout</a>
         <br>
     </div>
 
     <h1>Check who delivers food to selected streets:</h1>
-    <!-- Formularz sortowania i paginacji -->
+
+
     <form action="#" th:action="@{/streets}" method="GET">
-        <label for="sortBy">Sort by:</label>
         <select id="sortBy" name="sortBy">
-            <option value="city">City</option>
-            <option value="streetName">Street</option>
+        <option value="city" th:selected="${sortBy == 'city'}">City</option>
+        <option value="streetName" th:selected="${sortBy == 'streetName'}">Street</option>
         </select>
         <label for="sortDirection">Sort direction:</label>
         <select id="sortDirection" name="sortDirection">
-            <option value="asc">Ascending</option>
-            <option value="desc">Descending</option>
+            <option value="asc" th:selected="${sortDirection == 'asc'}">Ascending</option>
+            <option value="desc" th:selected="${sortDirection == 'desc'}">Descending</option>
         </select>
         <label for="pageSize">Page size:</label>
         <select id="pageSize" name="pageSize">
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="20">20</option>
+            <option value="5" th:selected="${pageSize == 5}">5</option>
+            <option value="10" th:selected="${pageSize == 10}">10</option>
+            <option value="20" th:selected="${pageSize == 20}">20</option>
         </select>
         <button type="submit" class="btn btn-info">Apply</button>
     </form>
@@ -89,7 +89,6 @@
         </tr>
     </table>
 
-    <!-- Przyciski paginacji -->
     <div class="text-center">
         <nav aria-label="Page navigation">
             <ul class="pagination pagination-centered">
@@ -103,12 +102,12 @@
                 <li th:each="page : ${pageNumbers}"
                     th:classappend="${page == currentPage} ? 'page-item active' : 'page-item'">
                     <a class="page-link"
-                       th:href="@{/streets(pageNumber=${page}, pageSize=${pageSize}, sortBy=${sortBy}, sortDirection=${sortDirection})}"
+                       th:href="@{/streets(pageSize=${pageSize}, sortBy=${sortBy}, sortDirection=${sortDirection}, pageNumber=${page})}"
                        th:text="${page}"></a>
                 </li>
                 <li th:class="${currentPage == totalPages} ? 'page-item disabled' : 'page-item'">
                     <a class="page-link"
-                       th:href="@{/streets(pageNumber=${currentPage + 1}, pageSize=${pageSize}, sortBy=${sortBy}, sortDirection=${sortDirection})}"
+                       th:href="@{/streets(pageSize=${pageSize}, sortBy=${sortBy}, sortDirection=${sortDirection}, pageNumber=${currentPage + 1})}"
                        aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
@@ -116,6 +115,11 @@
             </ul>
         </nav>
     </div>
+
+
+
+
+
 
 </div>
 <footer th:fragment="footer" class="text-center">&copy; 2023 FoodOrder</footer>

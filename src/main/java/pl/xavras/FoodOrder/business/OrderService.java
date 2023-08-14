@@ -2,9 +2,12 @@ package pl.xavras.FoodOrder.business;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.xavras.FoodOrder.business.dao.OrderDAO;
 import pl.xavras.FoodOrder.domain.Address;
+import pl.xavras.FoodOrder.domain.Customer;
 import pl.xavras.FoodOrder.domain.MenuItemOrder;
 import pl.xavras.FoodOrder.domain.Order;
 import pl.xavras.FoodOrder.domain.exception.NotFoundException;
@@ -18,8 +21,8 @@ import java.util.*;
 @AllArgsConstructor
 @Slf4j
 public class OrderService {
-
     private static final long MAX_CANCEL_SECONDS = 1200;
+
     private final OrderDAO orderDAO;
     private final CustomerService customerService;
 
@@ -32,10 +35,18 @@ public class OrderService {
         return orderDAO.findOrdersByCustomerEmail(email);
     }
 
+    public Page<Order> findOrdersByCustomerPaged(Pageable pageable, Customer activeCustomer) {
+        return orderDAO.findOrdersByCustomerPaged(pageable, activeCustomer);
+    }
+
+
+    public Page<Order> findByCustomerAndCancelledAndCompletedPaged(Pageable pageable, Customer activeCustomer, Boolean cancelled, Boolean completed){
+        return orderDAO.findByCustomerAndCancelledAndCompletedPaged(pageable, activeCustomer, cancelled, completed);
+    }
+
     public Set<Order> findByOwnerEmail(String ownerEmail) {
         return orderDAO.findOrdersByOwnerEmail(ownerEmail);
     }
-
     public  Order findByOrderNumber(String orderNumber) {
         Optional<Order> byOrderNumber = orderDAO.findByOrderNumber(orderNumber);
         if (byOrderNumber.isEmpty()) {
@@ -43,6 +54,7 @@ public class OrderService {
         }
         return byOrderNumber.get();
     }
+
     public void completeOrder(Order orderToComplete) {
         if ((orderToComplete.getCompleted() && Objects.nonNull(orderToComplete.getCompletedDateTime()))
                 || orderToComplete.getCancelled()) {
@@ -114,8 +126,5 @@ public class OrderService {
                 (new Random().nextInt(90) + 10)
         );
     }
-
-
-
 
 }

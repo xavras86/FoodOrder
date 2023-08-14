@@ -9,9 +9,7 @@ import pl.xavras.FoodOrder.domain.Order;
 @Mapper(componentModel = "spring")
 public interface OrderMapper extends OffsetDateTimeMapper {
 
-//    @Mapping(source = "receivedDateTime", target = "receivedDateTime", qualifiedByName = "mapOffsetDateTimeToString")
-//    @Mapping(source = "completedDateTime", target = "completedDateTime", qualifiedByName = "mapOffsetDateTimeToString")
-//    OrderDTO map(Order order);
+
 
     @Mapping(source = "receivedDateTime", target = "receivedDateTime", qualifiedByName = "mapOffsetDateTimeToString")
     @Mapping(source = "completedDateTime", target = "completedDateTime", qualifiedByName = "mapOffsetDateTimeToString")

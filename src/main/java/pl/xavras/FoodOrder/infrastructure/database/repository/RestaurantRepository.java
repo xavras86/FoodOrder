@@ -2,6 +2,8 @@ package pl.xavras.FoodOrder.infrastructure.database.repository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import pl.xavras.FoodOrder.business.dao.RestaurantDAO;
 import pl.xavras.FoodOrder.domain.Address;
@@ -108,6 +110,11 @@ public class RestaurantRepository implements RestaurantDAO {
         restaurantEntity.setRestaurantStreets(restaurantStreetEntities);
         RestaurantEntity save = restaurantJpaRepository.save(restaurantEntity);
 
+    }
+
+    @Override
+    public Page<Restaurant> findAll(Pageable pageable) {
+        return (restaurantJpaRepository.findAll(pageable)).map(restaurantEntityMapper::mapFromEntity);
     }
 
 }

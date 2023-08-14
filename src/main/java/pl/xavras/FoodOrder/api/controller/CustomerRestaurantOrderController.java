@@ -27,7 +27,7 @@ public class  CustomerRestaurantOrderController {
     private static final String RESTAURANT_BY_NAME = "/restaurants/{restaurantName}";
     private static final String RESTAURANT_ADD_ITEMS = "/restaurants/addItems";
     private static final String RESTAURANT_MENU_ITEM_DETAILS = "/restaurants/{restaurantName}/menu/{menuItemId}";
-    private static final String ORDER_DETAILS = "/order/thanks/{orderNumber}";
+    private static final String ORDER_THANKS = "/customer/orders/thanks/{orderNumber}";
     private final RestaurantService restaurantService;
     private final OrderService orderService;
 
@@ -139,8 +139,13 @@ public class  CustomerRestaurantOrderController {
                     .map(menuItemOrderMapper::map)
                     .collect(Collectors.toSet());
         }
+        if (Objects.isNull(session.getAttribute("addressDTO"))){
+
+            redirectAttributes.addFlashAttribute("message", "Powoli, na początek podaj adres dostawy!");
+            return "redirect:/address";}
 
         CustomerAddressOrderDTO orderAddressData = (CustomerAddressOrderDTO) session.getAttribute("addressDTO");
+        //todo tu jest jakaś maniana poprawić!
 
         Order order = orderMapper.mapFromDTO(orderAddressData);
 
@@ -157,10 +162,12 @@ public class  CustomerRestaurantOrderController {
         session.setAttribute("menuItemOrdersDTO", menuItemOrdersToOrder);
         redirectAttributes.addAttribute("orderNumber", orderNumber);
 
-        return "redirect:/order/thanks/{orderNumber}";
+        return "redirect:/customer/orders/thanks/{orderNumber}";
+
     }
 
-    @GetMapping(ORDER_DETAILS)
+    @GetMapping(ORDER_THANKS)
+
     public String orderPlaced(@PathVariable String orderNumber,
                               Model model) {
 

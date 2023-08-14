@@ -1,87 +1,434 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
-
-
-<!--    <div class="pagination justify-content-center">-->
-<!--        <a th:if="${menuItemsPage.hasPrevious}" th:href="@{'/restaurants/owner/' + ${restaurant.name}(sortField=${sortField}, sortDirection=${sortDirection}, page=${menuItemsPage.number - 1})}">Previous</a>-->
-<!--        <span th:if="${!menuItemsPage.hasPrevious}">Previous</span>-->
-
-<!--        <span th:text="${menuItemsPage.number + 1}"></span>-->
-
-<!--        <a th:if="${menuItemsPage.hasNext}" th:href="@{'/restaurants/owner/' + ${restaurant.name}(sortField=${sortField}, sortDirection=${sortDirection}, page=${menuItemsPage.number + 1})}">Next</a>-->
-<!--        <span th:if="${!menuItemsPage.hasNext}">Next</span>-->
-<!--    </div>-->
-
-
-
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Home page</title>
+    <title>Customers</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
-    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
-
-=
+<style type=text/css>
+        h1 {
+            justify-content:center;
+            display: flex;
+            margin: 10px;
+        }
+        body {
+            margin: 10px;
+            background-color: Azure;
+            text-align: center;
+            font-size: 20px;
+            margin: 10px;
+        }
+        form-group {
+            justify-content:center;
+            display: flex;
+        }
+                .pagination-centered {
+        display: flex;
+        justify-content: center;
+    }
+</style>
 
 <body>
-<h1>Thank You for Your Order!</h1>
+
 
 <div class="container">
-    <p><strong>OrderNumber:</strong> <span th:text="${orderDetails.orderNumber}"></span></p>
-    <p><strong>Time of Order:</strong> <span th:text="${orderDetails.receivedDateTime}"></span></p>
-    <p><strong>Country:</strong> <span th:text="${orderDetails.country}"></span></p>
-    <p><strong>City:</strong> <span th:text="${orderDetails.city}"></span></p>
-    <p><strong>Street:</strong> <span th:text="${orderDetails.street}"></span></p>
-    <p><strong>Building No.:</strong> <span th:text="${orderDetails.buildingNumber}"></span></p>
+    <div class="page-header" id="banner">
+        <br>
+        <a class="btn btn-success btn-lg" th:href="@{/address}">Order some food</a>
+        <a class="btn btn-primary btn-lg" th:href="@{/restaurants}">All restaurants</a>
+        <a class="btn btn-success btn-lg" th:href="@{/streets}">Restaurants by delivery street </a>
+        <a class="btn btn-secondary btn-lg" th:href="@{/customer/orders}">Your orders</a>
+        <a class="btn btn-warning btn-lg" th:href="@{/}">Back to main page</a>
+        <a class="btn btn-dark btn-lg" th:href="@{/logout}">Logout</a>
+        <br>
+    </div>
 
+    <!--    active order table-->
 
-    <h2>Ordered Menu Items:</h2>
-    <table class="table-hover">
+    <h1>Active Orders</h1>
+
+    <form action="#" th:action="@{/customer/orders}" method="GET">
+        <select id="activeSortBy" name="activeSortBy">
+            <option value="orderNumber" th:selected="${activeSortBy == 'orderNumber'}">Order Number</option>
+            <option value="receivedDateTime" th:selected="${activeSortBy == 'receivedDateTime'}">Order moment</option>
+            <option value="totalValue" th:selected="${activeSortBy == 'totalValue'}">TotalCost</option>
+        </select>
+        <label for="activeSortDirection">Sort direction:</label>
+        <select id="activeSortDirection" name="activeSortDirection">
+            <option value="asc" th:selected="${activeSortDirection == 'asc'}">Ascending</option>
+            <option value="desc" th:selected="${activeSortDirection == 'desc'}">Descending</option>
+        </select>
+        <label for="activePageSize">Page size:</label>
+        <select id="activePageSize" name="activePageSize">
+            <option value="5" th:selected="${activePageSize == 5}">5</option>
+            <option value="10" th:selected="${activePageSize == 10}">10</option>
+            <option value="20" th:selected="${activePageSize == 20}">20</option>
+        </select>
+        <button type="submit" class="btn btn-info">Apply</button>
+    </form>
+
+    <table class="table table-hover">
+        <thead>
         <tr>
-            <th>Nazwa</th>
-            <th>Cena</th>
-            <th>Ilość</th>
-
+            <th>Order Number</th>
+            <th>Received Date/Time</th>
+            <th>>Menu Items</th>
+            <th>Total Value</th>
+            <th>Status</th>
+            <th>Cancel</th>
         </tr>
-        <tr th:each="menuItemOrder : ${menuItemOrders}">
-            <td th:text="${menuItemOrder.menuItem.name}"></td>
-            <td th:text="${menuItemOrder.menuItem.price}"></td>
-            <td th:text="${menuItemOrder.quantity}"></td>
+        </thead>
+        <tbody>
+        <tr th:each="entry : ${activeOrdersMap}">
+            <td th:text="${entry.key.orderNumber}"></td>
+            <td th:text="${entry.key.receivedDateTime}"></td>
             <td>
-
+                <table class="table table-sm">
+                    <thead>
+                    <tr>
+                        <th>name</th>
+                        <th>quantity</th>
+                        <th>price[szt]</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="menuItem : ${entry.key.menuItemOrders}">
+                        <td th:text="${menuItem.menuItem.name}"></td>
+                        <td th:text="${menuItem.quantity}"></td>
+                        <td th:text="${menuItem.menuItem.price}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td th:text="${entry.key.totalValue}"></td>
+            <td th:text="${entry.key.cancelled ? 'Cancelled' : 'Active'}"></td>
+            <td th:if="${!entry.key.cancelled}" th:unless="${!entry.value}">
+                <form th:action="@{/customer/orders/cancel/{orderNumber}(orderNumber=${entry.key.orderNumber})}"
+                      th:method="PUT">
+                    <button type="submit" class="btn btn-warning" onclick="return confirm('Are you sure you want to cancel this order?')">
+                        Cancel
+                    </button>
+                </form>
+            </td>
+            <td th:if="${!entry.value}">
+                <span>cancellation period expired</span>
+            </td>
+        </tr>
+        </tbody>
     </table>
 
-    <h2>Total value:</h2>
-
-    <strong><span th:text="${orderDetails.totalValue}"></span></strong>
-    <br>
-
-    <div>
-
-        <iframe th:src="@{'https://www.google.com/maps/embed/v1/directions?key=AIzaSyDvwTDMi-cXeamefAssYo3ZmhtHXnnZO9g'
-            + '&origin=' + ${startPoint} + '&destination=' + ${deliveryPoint}'}"
-                th:attr="width=600,height=450"></iframe>
-
-
+    <div class="text-center">
+        <nav aria-label="Page navigation">
+            <ul class="pagination pagination-centered">
+                <li th:class="${activeCurrentPage == 1} ? 'page-item disabled' : 'page-item'">
+                    <a class="page-link"
+                       th:href="@{/customer/orders(activePageSize=${activePageSize}, activeSortBy=${activeSortBy}, activeSortDirection=${activeSortDirection},activePageNumber=${activeCurrentPage - 1})}"
+                       aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li th:each="page : ${activePageNumbers}"
+                    th:classappend="${page == activeCurrentPage} ? 'page-item active' : 'page-item'">
+                    <a class="page-link"
+                       th:href="@{/customer/orders(activePageSize=${activePageSize}, activeSortBy=${activeSortBy}, activeSortDirection=${activeSortDirection}, activePageNumber=${page})}"
+                       th:text="${page}"></a>
+                </li>
+                <li th:class="${activeCurrentPage == activeTotalPages} ? 'page-item disabled' : 'page-item'">
+                    <a class="page-link"
+                       th:href="@{/customer/orders(activePageSize=${activePageSize}, activeSortBy=${activeSortBy}, activeSortDirection=${activeSortDirection}, activePageNumber=${activeCurrentPage + 1})}"
+                       aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
 
 
-    <p>
-        <a th:href="@{/}" class="btn btn-primary" role="button">Back to the main page</a>
-    </p>
-    <br>
+    <!--    completed order table-->
+
+    <h1>Completed orders</h1>
+
+    <form action="#" th:action="@{/customer/orders}" method="GET">
+        <select id="completedSortBy" name="completedSortBy">
+            <option value="orderNumber" th:selected="${completedSortBy == 'orderNumber'}">Order Number</option>
+            <option value="receivedDateTime" th:selected="${completedSortBy == 'receivedDateTime'}">Order moment</option>
+            <option value="totalValue" th:selected="${completedSortBy == 'totalValue'}">TotalCost</option>
+        </select>
+        <label for="completedSortDirection">Sort direction:</label>
+        <select id="completedSortDirection" name="completedSortDirection">
+            <option value="asc" th:selected="${completedSortDirection == 'asc'}">Ascending</option>
+            <option value="desc" th:selected="${completedSortDirection == 'desc'}">Descending</option>
+        </select>
+        <label for="completedPageSize">Page size:</label>
+        <select id="completedPageSize" name="completedPageSize">
+            <option value="5" th:selected="${completedPageSize == 5}">5</option>
+            <option value="10" th:selected="${completedPageSize == 10}">10</option>
+            <option value="20" th:selected="${completedPageSize == 20}">20</option>
+        </select>
+        <button type="submit" class="btn btn-info">Apply</button>
+    </form>
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Order Number</th>
+            <th>Received Date/Time</th>
+            <th>>Menu Items</th>
+            <th>Total Value</th>
+            <th>Status</th>
+            <th>Cancel</th>
+
+            <th>Order Number</th>
+            <th>Received Date/Time</th>
+            <th>Completed Date/Time</th>
+            <th>Menu Items</th>
+            <th>Total Value</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="entry : ${completedOrdersMap}">
+            <td th:text="${entry.key.orderNumber}"></td>
+            <td th:text="${entry.key.receivedDateTime}"></td>
+            <td th:text="${entry.key.completedDateTime}"></td>
+            <td>
+                <table class="table table-sm">
+                    <thead>
+                    <tr>
+                        <th>name</th>
+                        <th>quantity</th>
+                        <th>price[szt]</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="menuItem : ${entry.key.menuItemOrders}">
+                        <td th:text="${menuItem.menuItem.name}"></td>
+                        <td th:text="${menuItem.quantity}"></td>
+                        <td th:text="${menuItem.menuItem.price}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td th:text="${entry.key.totalValue}"></td>
+
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="text-center">
+        <nav aria-label="Page navigation">
+            <ul class="pagination pagination-centered">
+                <li th:class="${completedCurrentPage == 1} ? 'page-item disabled' : 'page-item'">
+                    <a class="page-link"
+                       th:href="@{/customer/orders(completedPageSize=${completedPageSize}, completedSortBy=${completedSortBy}, completedSortDirection=${completedSortDirection},completedPageNumber=${completedCurrentPage - 1})}"
+                       aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li th:each="page : ${completedPageNumbers}"
+                    th:classappend="${page == completedCurrentPage} ? 'page-item completed' : 'page-item'">
+                    <a class="page-link"
+                       th:href="@{/customer/orders(completedPageSize=${completedPageSize}, completedSortBy=${completedSortBy}, completedSortDirection=${completedSortDirection}, completedPageNumber=${page})}"
+                       th:text="${page}"></a>
+                </li>
+                <li th:class="${completedCurrentPage == completedTotalPages} ? 'page-item disabled' : 'page-item'">
+                    <a class="page-link"
+                       th:href="@{/customer/orders(completedPageSize=${completedPageSize}, completedSortBy=${completedSortBy}, completedSortDirection=${completedSortDirection}, completedPageNumber=${completedCurrentPage + 1})}"
+                       aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <h1>Cancelled orders </h1>
+
+    <form action="#" th:action="@{/customer/orders}" method="GET">
+        <select id="cancelledSortBy" name="cancelledSortBy">
+            <option value="orderNumber" th:selected="${cancelledSortBy == 'orderNumber'}">Order Number</option>
+            <option value="receivedDateTime" th:selected="${cancelledSortBy == 'receivedDateTime'}">Order moment</option>
+            <option value="totalValue" th:selected="${cancelledSortBy == 'totalValue'}">TotalCost</option>
+        </select>
+        <label for="cancelledSortDirection">Sort direction:</label>
+        <select id="cancelledSortDirection" name="cancelledSortDirection">
+            <option value="asc" th:selected="${cancelledSortDirection == 'asc'}">Ascending</option>
+            <option value="desc" th:selected="${cancelledSortDirection == 'desc'}">Descending</option>
+        </select>
+        <label for="cancelledPageSize">Page size:</label>
+        <select id="cancelledPageSize" name="cancelledPageSize">
+            <option value="5" th:selected="${cancelledPageSize == 5}">5</option>
+            <option value="10" th:selected="${cancelledPageSize == 10}">10</option>
+            <option value="20" th:selected="${cancelledPageSize == 20}">20</option>
+        </select>
+        <button type="submit" class="btn btn-info">Apply</button>
+    </form>
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Order Number</th>
+            <th>Received Date/Time</th>
+            <th>>Menu Items</th>
+            <th>Total Value</th>
+            <th>Status</th>
+            <th>Cancel</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="entry : ${cancelledOrdersMap}">
+            <td th:text="${entry.key.orderNumber}"></td>
+            <td th:text="${entry.key.receivedDateTime}"></td>
+            <td>
+                <table class="table table-sm">
+                    <thead>
+                    <tr>
+                        <th>name</th>
+                        <th>quantity</th>
+                        <th>price[szt]</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="menuItem : ${entry.key.menuItemOrders}">
+                        <td th:text="${menuItem.menuItem.name}"></td>
+                        <td th:text="${menuItem.quantity}"></td>
+                        <td th:text="${menuItem.menuItem.price}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td th:text="${entry.key.totalValue}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="text-center">
+        <nav aria-label="Page navigation">
+            <ul class="pagination pagination-centered">
+                <li th:class="${cancelledCurrentPage == 1} ? 'page-item disabled' : 'page-item'">
+                    <a class="page-link"
+                       th:href="@{/customer/orders(cancelledPageSize=${cancelledPageSize}, cancelledSortBy=${cancelledSortBy}, cancelledSortDirection=${cancelledSortDirection},cancelledPageNumber=${cancelledCurrentPage - 1})}"
+                       aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li th:each="page : ${cancelledPageNumbers}"
+                    th:classappend="${page == cancelledCurrentPage} ? 'page-item cancelled' : 'page-item'">
+                    <a class="page-link"
+                       th:href="@{/customer/orders(cancelledPageSize=${cancelledPageSize}, cancelledSortBy=${cancelledSortBy}, cancelledSortDirection=${cancelledSortDirection}, cancelledPageNumber=${page})}"
+                       th:text="${page}"></a>
+                </li>
+                <li th:class="${cancelledCurrentPage == cancelledTotalPages} ? 'page-item disabled' : 'page-item'">
+                    <a class="page-link"
+                       th:href="@{/customer/orders(cancelledPageSize=${cancelledPageSize}, cancelledSortBy=${cancelledSortBy}, cancelledSortDirection=${cancelledSortDirection}, cancelledPageNumber=${cancelledCurrentPage + 1})}"
+                       aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
 </div>
+
+
+
+
+
+
+
+
 <footer th:fragment="footer" class="text-center">&copy; 2023 FoodOrder</footer>
 </body>
 </html>
+
+
+
+<!--        <h2>Cancelled Orders</h2>-->
+<!--        <table class="table table-hover">-->
+<!--            <thead>-->
+<!--            <tr>-->
+<!--                <th>Order Number</th>-->
+<!--                <th>Received Date/Time</th>-->
+<!--                <th>Menu Items</th>-->
+<!--                <th>Total Value</th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--            <tr th:each="order : ${cancelledOrders}" th:if="${not #lists.isEmpty(cancelledOrders)}">-->
+<!--                <td th:text="${order.orderNumber}"></td>-->
+<!--                <td th:text="${order.receivedDateTime}"></td>-->
+
+<!--                <td>-->
+<!--                    <table class="table table-sm">-->
+<!--                        <thead>-->
+<!--                        <tr>-->
+<!--                            <th>name</th>-->
+<!--                            <th>quantity</th>-->
+<!--                            <th>price[szt]</th>-->
+<!--                        </tr>-->
+<!--                        </thead>-->
+<!--                        <tbody>-->
+<!--                        <tr th:each="menuItem : ${order.menuItemOrders}">-->
+<!--                            <td th:text="${menuItem.menuItem.name}"></td>-->
+<!--                            <td th:text="${menuItem.quantity}"></td>-->
+<!--                            <td th:text="${menuItem.menuItem.price}"></td>-->
+<!--                        </tr>-->
+<!--                        </tbody>-->
+<!--                    </table>-->
+<!--                </td>-->
+<!--                <td th:text="${order.totalValue}"></td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </table>-->
+
+<!-- -->
+
+
+<!--        <h2>Completed Orders</h2>-->
+<!--        <table class="table table-hover">-->
+<!--            <thead>-->
+<!--            <tr>-->
+<!--                <th>Order Number</th>-->
+<!--                <th>Received Date/Time</th>-->
+<!--                <th>Completed Date/Time</th>-->
+<!--                <th>Menu Items</th>-->
+<!--                <th>Total Value</th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--            <tr th:each="order : ${completedOrders}" th:if="${not #lists.isEmpty(completedOrders)}">-->
+<!--                <td th:text="${order.orderNumber}"></td>-->
+<!--                <td th:text="${order.receivedDateTime}"></td>-->
+<!--                <td th:text="${order.completedDateTime}"></td>-->
+<!--                <td>-->
+<!--                    <table class="table table-sm">-->
+<!--                        <thead>-->
+<!--                        <tr>-->
+<!--                            <th>name</th>-->
+<!--                            <th>quantity</th>-->
+<!--                            <th>price[szt]</th>-->
+<!--                        </tr>-->
+<!--                        </thead>-->
+<!--                        <tbody>-->
+<!--                        <tr th:each="menuItem : ${order.menuItemOrders}">-->
+<!--                            <td th:text="${menuItem.menuItem.name}"></td>-->
+<!--                            <td th:text="${menuItem.quantity}"></td>-->
+<!--                            <td th:text="${menuItem.menuItem.price}"></td>-->
+<!--                        </tr>-->
+<!--                        </tbody>-->
+<!--                    </table>-->
+<!--                </td>-->
+<!--                <td th:text="${order.totalValue}"></td>-->
+
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </table>-->
+<!--</div>-->
+
+<!--    <footer th:fragment="footer" class="text-center">&copy; 2023 FoodOrder</footer>-->
+<!--</body>-->
+<!--</html>-->
