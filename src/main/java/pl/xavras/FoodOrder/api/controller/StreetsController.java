@@ -47,7 +47,7 @@ public class StreetsController {
         model.addAttribute("sortDirection", sortDirection);
         model.addAttribute("pageNumbers", pageNumbers);
 
-        return "streets";
+        return "customer-streets";
 
     }
 }

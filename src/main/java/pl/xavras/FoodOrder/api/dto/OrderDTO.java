@@ -4,8 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.xavras.FoodOrder.domain.*;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
+import java.util.Set;
 
 @Data
 @Builder
@@ -13,27 +16,15 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class OrderDTO {
 
-    private String name;
-    private String surname;
-    private String phone;
-    private String email;
+    String orderNumber;
+    String receivedDateTime;
+    String completedDateTime;
+    Boolean cancelled;
+    Boolean completed;
+    BigDecimal totalValue;
+    CustomerDTO customer;
+    AddressDTO address;
+    RestaurantDTO restaurant;
+    Set<MenuItemOrder> menuItemOrders;
 
-
-    private String country;
-    private String city;
-    private String street;
-    private String buildingNumber;
-
-    private String orderNumber;
-    private String receivedDateTime;
-    private String completedDateTime;
-    private Boolean isCancelled;
-    private Boolean isCompleted;
-    private BigDecimal totalValue;
-
-    private String restaurantName;
-    private String restaurantCountry;
-    private String restaurantCity;
-    private String restaurantStreet;
-    private String restaurantBuildingNumber;
 }

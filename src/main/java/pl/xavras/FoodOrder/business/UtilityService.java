@@ -2,6 +2,8 @@ package pl.xavras.FoodOrder.business;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,5 +23,12 @@ public class UtilityService {
         return IntStream.rangeClosed(start, end)
                 .boxed()
                 .collect(Collectors.toList());
+    }
+
+    public PageRequest createPagable(int pageSize, int pageNumber, String sortBy, String sortDirection) {
+        return PageRequest.of(
+                pageNumber - 1,
+                pageSize,
+                Sort.by(Sort.Direction.fromString(sortDirection), sortBy));
     }
 }

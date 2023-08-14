@@ -68,6 +68,13 @@ public class MenuItemRepository implements MenuItemDAO {
         return byRestaurant.map(menuItemMapper::mapFromEntity);
     }
 
+    @Override
+    public Page<MenuItem> getAvailableMenuItemsByRestaurant(Restaurant restaurant, Pageable pageable) {
+        RestaurantEntity restaurantEntity = restaurantEntityMapper.mapToEntity(restaurant);
+        Page<MenuItemEntity> byRestaurantAndAvailable = menuItemJpaRepository.findByRestaurantAndAvailable(restaurantEntity, true, pageable);
+        return byRestaurantAndAvailable.map(menuItemMapper::mapFromEntity);
+    }
+
 
     @Override
     public MenuItem findByName(String name) {

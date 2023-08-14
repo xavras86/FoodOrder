@@ -30,10 +30,6 @@
             display: flex;
 
         }
-
-
-
-
 </style>
 
 
@@ -43,7 +39,7 @@
 
     <div class="page-header" id="banner">
         <br>
-        <a class="btn btn-success btn-lg" th:href="@{/address}">Order some food</a>
+        <a class="btn btn-success btn-lg" th:href="@{/customer/address}">Order some food</a>
         <a class="btn btn-primary btn-lg" th:href="@{/restaurants}">All restaurants</a>
         <a class="btn btn-success btn-lg" th:href="@{/streets}">Restaurants by delivery street </a>
         <a class="btn btn-secondary btn-lg" th:href="@{/customer/orders}">Your orders</a>
@@ -59,7 +55,7 @@
 
 
     <h1>Enter Address Details</h1>
-    <form action="#" th:action="@{/submit-address}" th:method="POST" th:object="${addressDTO}"
+    <form action="#" th:action="@{/customer/submit-address}" th:method="POST" th:object="${addressDTO}"
           class="col card p-5 mb-3">
 
         <table>
@@ -69,7 +65,7 @@
                     <option th:each="countryOption : ${countries}" th:value="${countryOption}"
                             th:text="${countryOption}"></option>
                 </select></td>
-            </tr>
+
             <tr>
                 <th><label>City:</label></th>
                 <td><select th:field="*{city}" class="js-example-basic-single" required>

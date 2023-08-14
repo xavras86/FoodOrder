@@ -17,7 +17,6 @@ public class CustomerService {
     private final CustomerDAO customerDAO;
 
     public List<Customer> findAll() {
-
         return customerDAO.findAll();
     }
 

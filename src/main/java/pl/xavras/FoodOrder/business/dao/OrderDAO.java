@@ -2,9 +2,7 @@ package pl.xavras.FoodOrder.business.dao;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import pl.xavras.FoodOrder.domain.Customer;
-import pl.xavras.FoodOrder.domain.MenuItemOrder;
-import pl.xavras.FoodOrder.domain.Order;
+import pl.xavras.FoodOrder.domain.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,4 +28,5 @@ public interface OrderDAO {
 
     void completeOrder(Order order);
 
+    Page<Order> findByOwnerAndCancelledAndCompletedPaged(Pageable pageable, Owner activeOwner, Boolean cancelled, Boolean completed);
 }

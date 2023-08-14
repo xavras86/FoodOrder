@@ -656,7 +656,7 @@ insert into address (country, city, street, building_number) values ('Polska', '
 insert into address (country, city, street, building_number) values ('Polska', 'Poznań', 'Adama Mickiewicza','25');
 insert into address (country, city, street, building_number) values ('Polska', 'Poznań', 'Altanowa','15');
 insert into address (country, city, street, building_number) values ('Polska', 'Poznań', 'Bernardyński','5');
-insert into address (country, city, street, building_number) values ('Polska', 'Poznań', 'Borowa','5');
+insert into address (country, city, street, building_number) values ('Polska', 'Poznań', 'Polna','19');
 insert into address (country, city, street, building_number) values ('Polska', 'Poznań', 'Chodzieska','4');
 insert into address (country, city, street, building_number) values ('Polska', 'Poznań', 'Dereniowa','5');
 insert into address (country, city, street, building_number) values ('Polska', 'Poznań', 'Energetyczna','5');

@@ -5,17 +5,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import pl.xavras.FoodOrder.api.dto.OrderDTO;
+import pl.xavras.FoodOrder.api.dto.mapper.OrderMapper;
 import pl.xavras.FoodOrder.business.dao.OrderDAO;
-import pl.xavras.FoodOrder.domain.Address;
-import pl.xavras.FoodOrder.domain.Customer;
-import pl.xavras.FoodOrder.domain.MenuItemOrder;
-import pl.xavras.FoodOrder.domain.Order;
+import pl.xavras.FoodOrder.domain.*;
 import pl.xavras.FoodOrder.domain.exception.NotFoundException;
 
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -25,6 +25,8 @@ public class OrderService {
 
     private final OrderDAO orderDAO;
     private final CustomerService customerService;
+
+    private final OrderMapper orderMapper;
 
 
     public List<Order> findAll() {
@@ -43,6 +45,11 @@ public class OrderService {
     public Page<Order> findByCustomerAndCancelledAndCompletedPaged(Pageable pageable, Customer activeCustomer, Boolean cancelled, Boolean completed){
         return orderDAO.findByCustomerAndCancelledAndCompletedPaged(pageable, activeCustomer, cancelled, completed);
     }
+
+    public Page<Order> findByOwnerAndCancelledAndCompletedPaged(Pageable pageable, Owner activeOwner, Boolean cancelled, Boolean completed){
+        return orderDAO.findByOwnerAndCancelledAndCompletedPaged(pageable, activeOwner, cancelled, completed);
+    }
+
 
     public Set<Order> findByOwnerEmail(String ownerEmail) {
         return orderDAO.findOrdersByOwnerEmail(ownerEmail);
@@ -74,16 +81,26 @@ public class OrderService {
         return Duration.between(order.getReceivedDateTime(), OffsetDateTime.now()).toSeconds() <= MAX_CANCEL_SECONDS;
     }
 
-
-    public Order placeOrder(Order order, String restaurantName, Set<MenuItemOrder> menuItemOrders) {
-        Address deliveryAddress = order.getAddress();
-
-        Order orderToPlace = buildOrder(deliveryAddress, menuItemOrders);
-        return orderDAO.saveOrder(orderToPlace, restaurantName, menuItemOrders);
+    //creating map with order key and key with flag telling if you still can cancel the order + mapping to order DTO
+    public LinkedHashMap<OrderDTO, Boolean> createOrderCancellationMap(Page<Order> activeOrders) {
+        return activeOrders.stream()
+                .collect(Collectors.toMap(
+                        orderMapper::mapToDTO,
+                        this::isCancellable,
+                        (existingValue, newValue) -> existingValue,
+                        LinkedHashMap::new
+                ));
     }
+
 
     public String orderStatus(Order order) {
         return order.getCancelled() ? "Cancelled" : (order.getCompleted() ? "Completed" : "Waiting");
+    }
+
+    public Order placeOrder(Address deliveryAddress, String restaurantName, Set<MenuItemOrder> menuItemOrders) {
+
+        Order orderToPlace = buildOrder(deliveryAddress, menuItemOrders);
+        return orderDAO.saveOrder(orderToPlace, restaurantName, menuItemOrders);
     }
 
 
@@ -99,6 +116,7 @@ public class OrderService {
                 .cancelled(false)
                 .completed(false)
                 .customer(customerService.activeCustomer())
+                .menuItemOrders(menuItemOrders)
                 .build();
     }
 

@@ -22,4 +22,7 @@ public interface MenuItemDAO {
     MenuItem findByName(String name);
 
     Page<MenuItem> getMenuItemsByRestaurantPaged(Restaurant restaurant, Pageable pageable);
+
+    Page<MenuItem> getAvailableMenuItemsByRestaurant(Restaurant restaurant, Pageable pageable);
+
 }

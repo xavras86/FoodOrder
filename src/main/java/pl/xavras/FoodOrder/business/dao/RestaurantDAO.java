@@ -3,6 +3,7 @@ package pl.xavras.FoodOrder.business.dao;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import pl.xavras.FoodOrder.domain.Address;
+import pl.xavras.FoodOrder.domain.Owner;
 import pl.xavras.FoodOrder.domain.Restaurant;
 import pl.xavras.FoodOrder.domain.Street;
 
@@ -27,4 +28,9 @@ public interface RestaurantDAO {
 
     Page<Restaurant> findAll(Pageable pageable);
 
+    Page<Restaurant> findByOwner(Pageable pageable, Owner activeOwner);
+
+    Page<Restaurant> findByStreetName(String street, Pageable pageable);
+
+    Page<Restaurant> findRestaurantsByStreetNamePaged(String streetName, Pageable pageable);
 }

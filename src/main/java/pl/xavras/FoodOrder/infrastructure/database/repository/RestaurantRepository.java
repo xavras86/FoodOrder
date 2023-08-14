@@ -6,17 +6,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import pl.xavras.FoodOrder.business.dao.RestaurantDAO;
-import pl.xavras.FoodOrder.domain.Address;
-import pl.xavras.FoodOrder.domain.Restaurant;
-import pl.xavras.FoodOrder.domain.RestaurantStreet;
-import pl.xavras.FoodOrder.domain.Street;
-import pl.xavras.FoodOrder.infrastructure.database.entity.AddressEntity;
-import pl.xavras.FoodOrder.infrastructure.database.entity.RestaurantEntity;
-import pl.xavras.FoodOrder.infrastructure.database.entity.RestaurantStreetEntity;
+import pl.xavras.FoodOrder.domain.*;
+import pl.xavras.FoodOrder.infrastructure.database.entity.*;
 import pl.xavras.FoodOrder.infrastructure.database.repository.jpa.RestaurantJpaRepository;
-import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.AddressEntityMapper;
-import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.RestaurantEntityMapper;
-import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.RestaurantStreetEntityMapper;
+import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +24,8 @@ public class RestaurantRepository implements RestaurantDAO {
     private final RestaurantJpaRepository restaurantJpaRepository;
     private final RestaurantEntityMapper restaurantEntityMapper;
     private final AddressEntityMapper addressEntityMapper;
+
+    private final OwnerEntityMapper ownerEntityMapper;
 
     private final RestaurantStreetEntityMapper restaurantStreetEntityMapper;
 
@@ -62,6 +57,18 @@ public class RestaurantRepository implements RestaurantDAO {
         return street.getRestaurantStreets().stream().map(RestaurantStreet::getRestaurant)
                 .collect(Collectors.toSet());
     }
+
+//    @Override
+//    public Page<Restaurant> findRestaurantsByStreetNamePaged(String streetName, Pageable pageable) {
+//        var street = streetRepository.findByStreetName(streetName)
+//                .orElseThrow(() -> new RuntimeException(
+//                        "Unfortunately, the given street name [%s] is incorrect, please try again"
+//                                .formatted(streetName)));
+//        var result = street.getRestaurantStreets().stream().map(RestaurantStreet::getRestaurant).toList();
+//
+//
+//    }
+
 
     @Override
     public Set<Restaurant> findRestaurantsByOwner(String ownerEmail) {
@@ -114,8 +121,23 @@ public class RestaurantRepository implements RestaurantDAO {
 
     @Override
     public Page<Restaurant> findAll(Pageable pageable) {
-        return (restaurantJpaRepository.findAll(pageable)).map(restaurantEntityMapper::mapFromEntity);
+        return restaurantJpaRepository.findAll(pageable)
+                .map(restaurantEntityMapper::mapFromEntity);
     }
+
+    @Override
+    public Page<Restaurant> findByOwner(Pageable pageable, Owner activeOwner) {
+        OwnerEntity ownerEntity = ownerEntityMapper.mapToEntity(activeOwner);
+
+        Page<RestaurantEntity> byActiveOwner =  restaurantJpaRepository.findByOwner(pageable, ownerEntity);
+        return byActiveOwner.map(restaurantEntityMapper::mapFromEntity);
+    }
+
+
+
+
+
+
 
 }
 

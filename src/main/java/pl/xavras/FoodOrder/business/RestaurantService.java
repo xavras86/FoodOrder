@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.xavras.FoodOrder.business.dao.RestaurantDAO;
 import pl.xavras.FoodOrder.domain.*;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -29,6 +28,11 @@ public class RestaurantService {
     public Set<Restaurant> findRestaurantsByStreetName(String streetName) {
         return restaurantDAO.findRestaurantsByStreetName(streetName);
     }
+
+    public Page<Restaurant> findRestaurantsByStreetNamePaged(String streetName, Pageable pageable) {
+        return restaurantDAO.findRestaurantsByStreetNamePaged(streetName, pageable);
+    }
+
 
     public Restaurant findByName(String restaurantName) {
         return restaurantDAO.findByName(restaurantName)
@@ -65,6 +69,14 @@ public class RestaurantService {
 
     public Page<Restaurant> findAll(Pageable pageable) {
         return restaurantDAO.findAll(pageable);
+    }
+
+    public Page<Restaurant> findByOwner(Pageable pageable, Owner activeOwner) {
+        return restaurantDAO.findByOwner(pageable, activeOwner);
+    }
+
+    public Page<Restaurant> findByStreet(String street, Pageable pageable) {
+        return restaurantDAO.findByStreetName(street, pageable);
     }
 }
 

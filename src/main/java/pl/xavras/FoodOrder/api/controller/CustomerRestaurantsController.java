@@ -1,6 +1,5 @@
 package pl.xavras.FoodOrder.api.controller;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -10,27 +9,18 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-import pl.xavras.FoodOrder.api.dto.MenuItemDTO;
-import pl.xavras.FoodOrder.api.dto.MenuItemOrderDTO;
-import pl.xavras.FoodOrder.api.dto.MenuItemOrdersDTO;
-import pl.xavras.FoodOrder.api.dto.RestaurantDTO;
-import pl.xavras.FoodOrder.api.dto.mapper.RestaurantMapper;
 import pl.xavras.FoodOrder.business.RestaurantService;
 import pl.xavras.FoodOrder.business.UtilityService;
 import pl.xavras.FoodOrder.domain.Restaurant;
-import pl.xavras.FoodOrder.domain.Street;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 
 @Controller
 @AllArgsConstructor
 @Slf4j
-public class RestaurantController {
+public class CustomerRestaurantsController {
 
     public static final String RESTAURANT = "/restaurants";
 
@@ -46,10 +36,7 @@ public class RestaurantController {
                               @RequestParam(defaultValue = "name") String sortBy,
                               @RequestParam(defaultValue = "asc") String sortDirection) {
 
-        Pageable pageable = PageRequest.of(
-                pageNumber - 1,
-                pageSize,
-                Sort.by(Sort.Direction.fromString(sortDirection), sortBy));
+        Pageable pageable = utilityService.createPagable(pageSize,pageNumber,sortBy,sortDirection);
         Page<Restaurant> restaurantPage = restaurantService.findAll(pageable);
         List<Integer> pageNumbers = utilityService.generatePageNumbers(pageNumber, restaurantPage.getTotalPages());
 

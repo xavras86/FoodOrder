@@ -12,33 +12,40 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import pl.xavras.FoodOrder.api.dto.MenuItemDTO;
+import pl.xavras.FoodOrder.api.dto.AddressDTO;
+import pl.xavras.FoodOrder.api.dto.OrderDTO;
+import pl.xavras.FoodOrder.api.dto.mapper.AddressMapper;
+import pl.xavras.FoodOrder.api.dto.mapper.OrderMapper;
 import pl.xavras.FoodOrder.business.AddressService;
-import pl.xavras.FoodOrder.business.CustomerService;
 import pl.xavras.FoodOrder.business.OrderService;
+import pl.xavras.FoodOrder.business.OwnerService;
 import pl.xavras.FoodOrder.business.UtilityService;
 import pl.xavras.FoodOrder.domain.Address;
-import pl.xavras.FoodOrder.domain.MenuItem;
 import pl.xavras.FoodOrder.domain.MenuItemOrder;
 import pl.xavras.FoodOrder.domain.Order;
+import pl.xavras.FoodOrder.domain.Owner;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @Controller
 @AllArgsConstructor
 @Slf4j
-public class CustomerOrderController {
+public class OwnerOrdersController {
 
-    public static final String ORDERS = "/customer/orders";
-    public static final String ORDERS_CANCEL = "/customer/orders/cancel/{orderNumber}";
-    public static final String ORDERS_DETAILS = "/customer/orders/{orderNumber}";
+
+    public static final String ORDERS_OWNER = "/owner/orders";
+    public static final String ORDERS_COMPLETE = "/orders/complete/{orderNumber}";
+    public static final String ORDERS_DETAILS = "/owner/orders/{orderNumber}";
     private final OrderService orderService;
-    private final CustomerService customerService;
+    private final OwnerService ownerService;
     private final AddressService addressService;
     private final UtilityService utilityService;
+    private final OrderMapper orderMapper;
+    private final AddressMapper addressMapper;
 
-    @GetMapping(ORDERS)
+    @GetMapping(ORDERS_OWNER)
     public String orders(Model model,
                          @RequestParam(defaultValue = "5") int activePageSize,
                          @RequestParam(defaultValue = "5") int cancelledPageSize,
@@ -70,84 +77,84 @@ public class CustomerOrderController {
                 Sort.by(Sort.Direction.fromString(completedSortDirection), completedSortBy));
 
 
-        Page<Order> activeOrders = orderService.findByCustomerAndCancelledAndCompletedPaged(activePageable, customerService.activeCustomer(), false, false);
-        List<Integer> activePageNumbers = utilityService.generatePageNumbers(activePageNumber, activeOrders.getTotalPages());
-        Map<Order, Boolean> activeOrdersMap = getCollect(activeOrders);
+        Owner activeOwner = ownerService.activeOwner();
 
-        Page<Order> cancelledOrders = orderService.findByCustomerAndCancelledAndCompletedPaged(cancelledPageable, customerService.activeCustomer(), true, false);
-        List<Integer> cancelledPageNumbers = utilityService.generatePageNumbers(cancelledPageNumber, cancelledOrders.getTotalPages());
+        Page<OrderDTO> activeOrdersDTO = orderService
+                .findByOwnerAndCancelledAndCompletedPaged(activePageable, activeOwner, false, false)
+                .map(orderMapper::mapToDTO);
+        List<Integer> activePageNumbers = utilityService.generatePageNumbers(activePageNumber, activeOrdersDTO.getTotalPages());
 
-        Page<Order> completedOrders = orderService.findByCustomerAndCancelledAndCompletedPaged(completedPageable, customerService.activeCustomer(), false, true);
-        List<Integer> completedPageNumbers = utilityService.generatePageNumbers(completedPageNumber, completedOrders.getTotalPages());
 
-        model.addAttribute("activeOrdersMap", activeOrdersMap);
+        Page<OrderDTO> cancelledOrdersDTO = orderService
+                .findByOwnerAndCancelledAndCompletedPaged(cancelledPageable, activeOwner, true, false)
+                .map(orderMapper::mapToDTO);
+
+        List<Integer> cancelledPageNumbers = utilityService.generatePageNumbers(cancelledPageNumber, cancelledOrdersDTO.getTotalPages());
+
+        Page<OrderDTO> completedOrdersDTO = orderService
+                .findByOwnerAndCancelledAndCompletedPaged(completedPageable, activeOwner, false, true)
+                .map(orderMapper::mapToDTO);
+
+        List<Integer> completedPageNumbers = utilityService.generatePageNumbers(completedPageNumber, completedOrdersDTO.getTotalPages());
+
+        model.addAttribute("activeOrders", activeOrdersDTO.getContent());
         model.addAttribute("activeCurrentPage", activePageNumber);
-        model.addAttribute("activeTotalPages", activeOrders.getTotalPages());
+        model.addAttribute("activeTotalPages", activeOrdersDTO.getTotalPages());
         model.addAttribute("activePageSize", activePageSize);
         model.addAttribute("activeSortBy", activeSortBy);
         model.addAttribute("activeSortDirection", activeSortDirection);
         model.addAttribute("activePageNumbers", activePageNumbers);
 
-        model.addAttribute("cancelledOrders", cancelledOrders.getContent());
+        model.addAttribute("cancelledOrders", cancelledOrdersDTO.getContent());
         model.addAttribute("cancelledCurrentPage", cancelledPageNumber);
-        model.addAttribute("cancelledTotalPages", cancelledOrders.getTotalPages());
+        model.addAttribute("cancelledTotalPages", cancelledOrdersDTO.getTotalPages());
         model.addAttribute("cancelledPageSize", cancelledPageSize);
         model.addAttribute("cancelledSortBy", cancelledSortBy);
         model.addAttribute("cancelledSortDirection", cancelledSortDirection);
-        model.addAttribute("cancelledPageNumbers", completedPageNumbers);
+        model.addAttribute("cancelledPageNumbers", cancelledPageNumbers);
 
-        model.addAttribute("completedOrders", completedOrders.getContent());
+        model.addAttribute("completedOrders", completedOrdersDTO.getContent());
         model.addAttribute("completedCurrentPage", completedPageNumber);
-        model.addAttribute("completedTotalPages", completedOrders.getTotalPages());
+        model.addAttribute("completedTotalPages", completedOrdersDTO.getTotalPages());
         model.addAttribute("completedPageSize", completedPageSize);
         model.addAttribute("completedSortBy", completedSortBy);
         model.addAttribute("completedSortDirection", completedSortDirection);
-        model.addAttribute("completedPageNumbers", cancelledPageNumbers);
+        model.addAttribute("completedPageNumbers", completedPageNumbers);
 
-        return "customer-orders";
+        return "owner-orders";
     }
 
-    //creating map with order key and key with flag telling if you still can cancel the order
-    private LinkedHashMap<Order, Boolean> getCollect(Page<Order> activeOrders) {
-        return activeOrders.stream()
-                .collect(Collectors.toMap(
-                        order -> order,
-                        orderService::isCancellable,
-                        (existingValue, newValue) -> existingValue,
-                        LinkedHashMap::new
-                ));
-    }
 
     @GetMapping(ORDERS_DETAILS)
     public String orderPlaced(@PathVariable String orderNumber,
                               Model model) {
 
         Order order = orderService.findByOrderNumber(orderNumber);
-        Address deliveryAddress = order.getAddress();
-        Address restaurantAddress = order.getRestaurant().getAddress();
+        OrderDTO orderDTO = orderMapper.mapToDTO(order);
+        AddressDTO deliveryAddressDTO = addressMapper.map(order.getAddress());
+        AddressDTO restaurantAddressDTO = addressMapper.map(order.getRestaurant().getAddress());
         Set<MenuItemOrder> menuItemOrders = order.getMenuItemOrders();
         String status = orderService.orderStatus(order);
-        String mapUrl = addressService.createMapUrl(restaurantAddress, deliveryAddress);
+        String mapUrl = addressService.createMapUrl(restaurantAddressDTO, deliveryAddressDTO);
 
         model.addAttribute("order", order);
-        model.addAttribute("deliveryAddress", deliveryAddress);
-        model.addAttribute("restaurantAddress", restaurantAddress);
+        model.addAttribute("deliveryAddress", deliveryAddressDTO);
+        model.addAttribute("restaurantAddress", restaurantAddressDTO);
         model.addAttribute("menuItemOrders", menuItemOrders);
         model.addAttribute("status", status);
         model.addAttribute("mapUrl",  mapUrl);
 
-        return "customer-order-details";
+        return "owner-order-details";
     }
 
-    @PutMapping(ORDERS_CANCEL)
-    public String cancelOrder(@PathVariable String orderNumber) {
-        Order orderToCancel = orderService.findByOrderNumber(orderNumber);
+    @PutMapping(ORDERS_COMPLETE)
+    public String completeOrder(@PathVariable String orderNumber) {
+        Order orderToComplete = orderService.findByOrderNumber(orderNumber);
+        if (!orderToComplete.getCompleted() && Objects.isNull(orderToComplete.getCompletedDateTime())) {
+            orderService.completeOrder(orderToComplete);
+        }
 
-        orderService.cancelOrder(orderToCancel);
-
-        return "redirect:/customer/orders";
+        return "redirect:/owner/orders";
     }
-
-
 }
 

@@ -9,13 +9,11 @@ import pl.xavras.FoodOrder.business.dao.OrderDAO;
 import pl.xavras.FoodOrder.domain.Customer;
 import pl.xavras.FoodOrder.domain.MenuItemOrder;
 import pl.xavras.FoodOrder.domain.Order;
+import pl.xavras.FoodOrder.domain.Owner;
 import pl.xavras.FoodOrder.infrastructure.database.entity.*;
 import pl.xavras.FoodOrder.infrastructure.database.repository.jpa.OrderJpaRepository;
 import pl.xavras.FoodOrder.infrastructure.database.repository.jpa.RestaurantJpaRepository;
-import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.AddressEntityMapper;
-import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.CustomerEntityMapper;
-import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.MenuItemOrderEntityMapper;
-import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.OrderEntityMapper;
+import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.*;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -36,6 +34,7 @@ public class OrderRepository implements OrderDAO {
     private final AddressEntityMapper addressEntityMapper;
 
     private final CustomerEntityMapper customerEntityMapper;
+    private final OwnerEntityMapper ownerEntityMapper;
 
 
     private final RestaurantJpaRepository restaurantJpaRepository;
@@ -70,6 +69,13 @@ public class OrderRepository implements OrderDAO {
 
 
     @Override
+    public Page<Order> findByOwnerAndCancelledAndCompletedPaged(Pageable pageable, Owner owner, Boolean cancelled, Boolean completed) {
+        OwnerEntity ownerEntity = ownerEntityMapper.mapToEntity(owner);
+        Page<OrderEntity> byActiveOwnerAndFlags =  orderJpaRepository.findByRestaurantOwnerAndCancelledAndCompleted(pageable, ownerEntity, cancelled,completed);
+        return byActiveOwnerAndFlags.map(orderEntityMapper::mapFromEntity);
+    }
+
+    @Override
     public Optional<Order> findByOrderNumber(String orderNumber) {
         return orderJpaRepository.findByOrderNumber(orderNumber)
                 .map(orderEntityMapper::mapFromEntity);
@@ -92,12 +98,10 @@ public class OrderRepository implements OrderDAO {
                 .formatted(restaurantName)));  //chyba lepiej cały obiekt niz sama string przekazywac do przemyslenia
 
         //weryfikacja czy przekazany adres jest już w bazie
-        Optional<AddressEntity> existingAddress = addressRepository.findExistingAddress(order.getAddress());
-        if (existingAddress.isPresent()) {
-            toSave.setAddress(existingAddress.get());
-        } else {
-            toSave.setAddress(addressEntityMapper.mapToEntity(order.getAddress()));
-        }
+        AddressEntity address = addressRepository.findExistingAddress(order.getAddress())
+                .orElseGet(() -> addressEntityMapper.mapToEntity(order.getAddress()));
+
+        toSave.setAddress(address);
 
         toSave.setRestaurant(restaurant);
         Set<MenuItemOrderEntity> menuItemOrderEntities = menuItemOrderEntityMapper.mapToEntity(menuItemOrders);

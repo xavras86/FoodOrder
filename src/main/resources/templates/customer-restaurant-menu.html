@@ -24,20 +24,22 @@
             justify-content:center;
             display: flex;
         }
+                .pagination-centered {
+        display: flex;
+        justify-content: center;
+    }
 </style>
 
 <body>
 <div class="container">
     <br>
-    <a class="btn btn-success btn-lg" th:href="@{/address}">Order some food</a>
+    <a class="btn btn-success btn-lg" th:href="@{/customer/address}">Order some food</a>
     <a class="btn btn-primary btn-lg" th:href="@{/restaurants}">All restaurants</a>
     <a class="btn btn-success btn-lg" th:href="@{/streets}">Restaurants by delivery street </a>
     <a class="btn btn-secondary btn-lg" th:href="@{/customer/orders}">Your orders</a>
     <a class="btn btn-warning btn-lg" th:href="@{/}">Back to main page</a>
     <a class="btn btn-dark btn-lg" th:href="@{/logout}">Logout</a>
     <br>
-
-
 
     <h1>RESTAURANT DETAILS:&nbsp; <span th:if="${restaurant.name}" th:text="${restaurant.name}"></span></h1>
     <table class="table table-striped">
@@ -51,7 +53,6 @@
             <th>Owner Surname</th>
         </tr>
         <tr>
-
             <td th:text="${restaurant.phone}"></td>
             <td th:text="${restaurant.email}"></td>
             <td th:text="${address.city}"></td>
@@ -62,9 +63,31 @@
         </tr>
     </table>
 
-    <form th:action="@{/restaurants/addItems}" th:object="${menuItemOrdersDTO}" method="post">
+    <form action="#" th:action="@{/restaurants/{restaurantName}(restaurantName=${restaurant.name})}" method="GET">
+        <select id="sortBy" name="sortBy">
+            <option value="name" th:selected="${sortBy == 'name'}">Name</option>
+            <option value="price" th:selected="${sortBy == 'price'}">Price</option>
+            <option value="category" th:selected="${sortBy == 'category'}">Category</option>
 
-        <table class="table-bordered">
+        </select>
+        <label for="sortDirection">Sort direction:</label>
+        <select id="sortDirection" name="sortDirection">
+            <option value="asc" th:selected="${sortDirection == 'asc'}">Ascending</option>
+            <option value="desc" th:selected="${sortDirection == 'desc'}">Descending</option>
+        </select>
+        <label for="pageSize">Page size:</label>
+        <select id="pageSize" name="pageSize">
+            <option value="5" th:selected="${pageSize == 5}">5</option>
+            <option value="10" th:selected="${pageSize == 10}">10</option>
+            <option value="20" th:selected="${pageSize == 20}">20</option>
+        </select>
+        <button type="submit" class="btn btn-info">Apply</button>
+    </form>
+
+
+    <form th:action="@{/restaurants/addItems/{restaurantName}(restaurantName=${restaurant.name})}" th:object="${menuItemOrdersDTO}" method="post">
+
+        <table class="table-hover">
             <tr>
                 <th>Nazwa</th>
                 <th>Cena</th>
@@ -78,7 +101,8 @@
                 <td th:text="${menuItem.description}"></td>
                 <td th:text="${menuItem.category}"></td>
                 <td>
-                    <input type="number" th:field="*{orders[__${iterStat.index}__].quantity}" min="0"/>
+                    <input type="number" th:field="*{orders[__${iterStat.index}__].quantity}" min="0"
+                           class="form-control form-control-lg text-center" style="max-width: 100px;" />
                     <input type="hidden" th:field="*{orders[__${iterStat.index}__].menuItem.menuItemId}"
                            th:value="${menuItem.menuItemId}"/>
                     <input type="hidden" th:field="*{orders[__${iterStat.index}__].menuItem.name}"
@@ -96,13 +120,40 @@
                 </td>
             </tr>
         </table>
+        <div class="text-center">
+            <nav aria-label="Page navigation">
+                <ul class="pagination pagination-centered">
+                    <li th:class="${currentPage == 1} ? 'page-item disabled' : 'page-item'">
+                        <a class="page-link"
+                           th:href="@{/restaurants/{restaurantName}(restaurantName=${restaurantName}, pageSize=${pageSize}, sortBy=${sortBy}, sortDirection=${sortDirection}, pageNumber=${currentPage - 1})}"
+                           aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li th:each="page : ${pageNumbers}" th:classappend="${page == currentPage} ? 'page-item active' : 'page-item'">
+                        <a class="page-link"
+                           th:href="@{/restaurants/{restaurantName}(restaurantName=${restaurantName}, pageSize=${pageSize}, sortBy=${sortBy}, sortDirection=${sortDirection}, pageNumber=${page})}"
+                           th:text="${page}"></a>
+                    </li>
+                    <li th:class="${currentPage == totalPages} ? 'page-item disabled' : 'page-item'">
+                        <a class="page-link"
+                           th:href="@{/restaurants/{restaurantName}(restaurantName=${restaurantName}, pageSize=${pageSize}, sortBy=${sortBy}, sortDirection=${sortDirection}, pageNumber=${currentPage + 1})}"
+                           aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
         <input type="submit" class="btn btn-primary" value="Zamów"/>
 
     </form>
 
 
-</div>
 
+
+</div>
 
 <footer th:fragment="footer" class="text-center">&copy; 2023 FoodOrder</footer>
 </body>

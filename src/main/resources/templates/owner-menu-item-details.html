@@ -25,6 +25,7 @@
             display: flex;
         }
 
+
 </style>
 
 <body>
@@ -50,21 +51,25 @@
         <p><strong>Restaurant Name:</strong> <span th:text="${restaurantName}"></span></p>
         <p><strong>Image:</strong></p>
         <br>
-        <img th:if="${imageBase64 != null}" th:src="'data:image/png;base64,' + ${imageBase64}" alt="Image not available" width="auto" height="300px"/>
-        <img th:unless="${imageBase64 != null}" th:src="@{/images/foodDefault.jpg}" alt="Default Image" width="auto" height="300px"/>
+        <img th:if="${imageBase64 != null}" th:src="'data:image/png;base64,' + ${imageBase64}" alt="Image not available"
+             width="auto" height="300px"/>
+        <img th:unless="${imageBase64 != null}" th:src="@{/images/foodDefault.jpg}" alt="Default Image" width="auto"
+             height="300px"/>
 
         <br>
         <br>
+
         <button onclick="window.history.back()" class="btn btn-primary">Back to menu page</button>
-<!--        <form action="#" th:action="@{/restaurants/owner/{restaurantName}(restaurantName=${restaurantName})}"-->
-<!--              method="GET">-->
-<!--            <button type="submit" class="btn btn-info">Back to restaurant details</button>-->
-<!--        </form>-->
+
+        <!--        <form action="#" th:action="@{/owner/restaurants/{restaurantName}(restaurantName=${restaurantName})}"-->
+        <!--              method="GET">-->
+        <!--            <button type="submit" class="btn btn-info">Back to restaurant details</button>-->
+        <!--        </form>-->
 
         <br>
     </div>
 </div>
 
-    <footer th:fragment="footer" class="text-center">&copy; 2023 FoodOrder</footer>
+<footer th:fragment="footer" class="text-center">&copy; 2023 FoodOrder</footer>
 </body>
 </html>

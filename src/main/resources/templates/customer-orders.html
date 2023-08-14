@@ -37,7 +37,7 @@
 <div class="container">
     <div class="page-header" id="banner">
         <br>
-        <a class="btn btn-success btn-lg" th:href="@{/address}">Order some food</a>
+        <a class="btn btn-success btn-lg" th:href="@{/customer/address}">Order some food</a>
         <a class="btn btn-primary btn-lg" th:href="@{/restaurants}">All restaurants</a>
         <a class="btn btn-success btn-lg" th:href="@{/streets}">Restaurants by delivery street </a>
         <a class="btn btn-secondary btn-lg" th:href="@{/customer/orders}">Your orders</a>
@@ -54,7 +54,9 @@
         <select id="activeSortBy" name="activeSortBy">
             <option value="orderNumber" th:selected="${activeSortBy == 'orderNumber'}">Order Number</option>
             <option value="receivedDateTime" th:selected="${activeSortBy == 'receivedDateTime'}">Order moment</option>
-            <option value="totalValue" th:selected="${activeSortBy == 'totalValue'}">TotalCost</option>
+            <option value="totalValue" th:selected="${activeSortBy == 'totalValue'}">Total value</option>
+            <option value="restaurant.name" th:selected="${activeSortBy == 'restaurant.name'}">Restaurant</option>
+
         </select>
         <label for="activeSortDirection">Sort direction:</label>
         <select id="activeSortDirection" name="activeSortDirection">
@@ -75,6 +77,7 @@
         <tr>
             <th>Order Number</th>
             <th>Received Date/Time</th>
+            <th>Restaurant</th>
             <th>Menu Items</th>
             <th>Total Value</th>
             <th>Cancel</th>
@@ -84,6 +87,7 @@
         <tr th:each="entry : ${activeOrdersMap}">
             <td th:text="${entry.key.orderNumber}"></td>
             <td th:text="${entry.key.receivedDateTime}"></td>
+            <td th:text="${entry.key.restaurant.name}"></td>
             <td>
                 <table class="table table-sm">
                     <thead>
@@ -166,7 +170,8 @@
             </option>
             <option value="completedDateTime" th:selected="${completedSortBy == 'completedDateTime'}">Delivery moment
             </option>
-            <option value="totalValue" th:selected="${completedSortBy == 'totalValue'}">TotalCost</option>
+            <option value="totalValue" th:selected="${completedSortBy == 'totalValue'}">Total Value</option>
+            <option value="restaurant.name" th:selected="${completedSortBy == 'restaurant.name'}">Restaurant</option>
         </select>
         <label for="completedSortDirection">Sort direction:</label>
         <select id="completedSortDirection" name="completedSortDirection">
@@ -188,6 +193,7 @@
             <th>Order Number</th>
             <th>Received Date/Time</th>
             <th>Completed Date/Time</th>
+            <th>Restaurant</th>
             <th>Menu Items</th>
             <th>Total Value</th>
 
@@ -198,6 +204,7 @@
             <td th:text="${order.orderNumber}"></td>
             <td th:text="${order.receivedDateTime}"></td>
             <td th:text="${order.completedDateTime}"></td>
+            <td th:text="${order.restaurant.name}"></td>
             <td>
                 <table class="table table-sm">
                     <thead>
@@ -256,6 +263,8 @@
         </nav>
     </div>
 
+    <!--    cancelled order table-->
+
     <h1>Cancelled orders </h1>
 
     <form action="#" th:action="@{/customer/orders}" method="GET">
@@ -263,7 +272,8 @@
             <option value="orderNumber" th:selected="${cancelledSortBy == 'orderNumber'}">Order Number</option>
             <option value="receivedDateTime" th:selected="${cancelledSortBy == 'receivedDateTime'}">Order moment
             </option>
-            <option value="totalValue" th:selected="${cancelledSortBy == 'totalValue'}">TotalCost</option>
+            <option value="totalValue" th:selected="${cancelledSortBy == 'totalValue'}">Total value</option>
+            <option value="restaurant.name" th:selected="${completedSortBy == 'restaurant.name'}">Restaurant</option>
         </select>
         <label for="cancelledSortDirection">Sort direction:</label>
         <select id="cancelledSortDirection" name="cancelledSortDirection">
@@ -292,6 +302,7 @@
         <tr th:each="order : ${cancelledOrders}">
             <td th:text="${order.orderNumber}"></td>
             <td th:text="${order.receivedDateTime}"></td>
+            <td th:text="${order.restaurant.name}"></td>
             <td>
                 <table class="table table-sm">
                     <thead>
@@ -354,3 +365,6 @@
 <footer th:fragment="footer" class="text-center">&copy; 2023 FoodOrder</footer>
 </body>
 </html>
+
+
+
