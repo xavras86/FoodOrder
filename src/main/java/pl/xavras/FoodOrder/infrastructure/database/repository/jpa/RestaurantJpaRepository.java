@@ -36,5 +36,11 @@ public interface RestaurantJpaRepository extends JpaRepository<RestaurantEntity,
 
     Page<RestaurantEntity> findByOwner(Pageable pageable, OwnerEntity ownerEntity);
 
-    Page <RestaurantEntity> findByName(String street, Pageable pageable);
+//    @Query("""
+//            SELECT res FROM RestaurantEntity res
+//            JOIN res.restaurantStreets rs
+//            JOIN rs.street s
+//            WHERE s.streetName = :streetName
+//            """)
+    Page<RestaurantEntity> findByRestaurantStreets_Street_StreetName(final @Param("streetName") String streetName, Pageable pageable);
 }

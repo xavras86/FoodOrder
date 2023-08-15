@@ -30,7 +30,6 @@ public interface RestaurantDAO {
 
     Page<Restaurant> findByOwner(Pageable pageable, Owner activeOwner);
 
-    Page<Restaurant> findByStreetName(String street, Pageable pageable);
 
     Page<Restaurant> findRestaurantsByStreetNamePaged(String streetName, Pageable pageable);
 }

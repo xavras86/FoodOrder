@@ -66,7 +66,6 @@ public class RestaurantService {
         return restaurantStreets.stream().anyMatch(a -> street.equals(a.getStreet()));
     }
 
-
     public Page<Restaurant> findAll(Pageable pageable) {
         return restaurantDAO.findAll(pageable);
     }
@@ -75,8 +74,6 @@ public class RestaurantService {
         return restaurantDAO.findByOwner(pageable, activeOwner);
     }
 
-    public Page<Restaurant> findByStreet(String street, Pageable pageable) {
-        return restaurantDAO.findByStreetName(street, pageable);
-    }
+
 }
 

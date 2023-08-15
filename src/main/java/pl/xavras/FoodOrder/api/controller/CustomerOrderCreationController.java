@@ -84,15 +84,21 @@ public class CustomerOrderCreationController {
                                           @RequestParam(defaultValue = "name") String sortBy,
                                           @RequestParam(defaultValue = "asc") String sortDirection,
                                           Model model) {
-        Set<Restaurant> restaurantsByStreetName = restaurantService.findRestaurantsByStreetName(street);
-        Page<Restaurant>
 
         Pageable pageable = utilityService.createPagable(pageSize,pageNumber,sortBy,sortDirection);
-        Page<Restaurant> restaurantPage = restaurantService.findByStreet(street, pageable);
-//        List<Integer> pageNumbers = utilityService.generatePageNumbers(pageNumber, restaurantPage.getTotalPages());
-        var restaurantsSet = restaurantService.findRestaurantsByStreetName(street).stream()
-                .map(restaurantMapper::map).collect(Collectors.toSet());
-        model.addAttribute("restaurants", restaurantsSet);
+        Page<Restaurant> restaurantsByStreetNamePaged = restaurantService.findRestaurantsByStreetNamePaged(street, pageable);
+        Page<RestaurantDTO> restaurantPage = restaurantsByStreetNamePaged
+                .map(restaurantMapper::map);
+
+        List<Integer> pageNumbers = utilityService.generatePageNumbers(pageNumber, restaurantPage.getTotalPages());
+
+        List<Address> addresses = restaurantsByStreetNamePaged.map(Restaurant::getAddress).stream().toList();
+
+
+        model.addAttribute("restaurants", restaurantPage.getContent());
+        model.addAttribute("addresses", addresses);
+        String attributeValue = "AIzaSyDvwTDMi-cXeamefAssYo3ZmhtHXnnZO9g";
+        model.addAttribute("apiKey", attributeValue);
         model.addAttribute("street", street);
         model.addAttribute("totalPages", restaurantPage.getTotalPages());
         model.addAttribute("currentPage", pageNumber);
@@ -113,7 +119,7 @@ public class CustomerOrderCreationController {
                                      Model model){
 //todo refactor!
         var restaurant = restaurantService.findByName(restaurantName);
-        var address = addressMapper.map(restaurant.getAddress());
+        var addressDTO = addressMapper.map(restaurant.getAddress());
         var owner = ownerMapper.map(restaurant.getOwner());
         Set<MenuItemDTO> menuItemDTOs = menuItemMapper.map(restaurantService.getAvailableMenuItems(restaurant));
 
@@ -126,8 +132,10 @@ public class CustomerOrderCreationController {
                 .map(a -> new MenuItemOrderDTO(0, a))
                 .toList());
 
+        String mapUrl = addressService.createMapUrlPoint(addressDTO);
+
         model.addAttribute("restaurant", restaurant);
-        model.addAttribute("address", address);
+        model.addAttribute("address", addressDTO);
         model.addAttribute("owner", owner);
         model.addAttribute("menuItems", menuItemsPage.getContent());
         model.addAttribute("menuItemOrdersDTO", menuItemOrdersDTO);
@@ -137,34 +145,10 @@ public class CustomerOrderCreationController {
         model.addAttribute("sortBy", sortBy);
         model.addAttribute("sortDirection", sortDirection);
         model.addAttribute("pageNumbers", pageNumbers);
+        model.addAttribute("mapUrl",  mapUrl);
 
         return "customer-restaurant-menu";
     }
-
-//    @GetMapping(RESTAURANT_BY_NAME)
-//    public String showRestaurantMenu(@PathVariable String restaurantName,
-//                                     @RequestParam(defaultValue = "10") int pageSize,
-//                                     @RequestParam(defaultValue = "1") int pageNumber,
-//                                     @RequestParam(defaultValue = "name") String sortBy,
-//                                     @RequestParam(defaultValue = "asc") String sortDirection,
-//                                     Model model){
-//
-//        var restaurant = restaurantService.findByName(restaurantName);
-//        var address = addressMapper.map(restaurant.getAddress());
-//        var owner = ownerMapper.map(restaurant.getOwner());
-//        Set<MenuItemDTO> menuItemDTOs = menuItemMapper.map(restaurantService.getAvailableMenuItems(restaurant));
-//        var menuItems = new ArrayList<>(menuItemDTOs);
-//        MenuItemOrdersDTO menuItemOrdersDTO = new MenuItemOrdersDTO(menuItems.stream()
-//                .map(a -> new MenuItemOrderDTO(0, a))
-//                .toList());
-//        model.addAttribute("restaurant", restaurant);
-//        model.addAttribute("address", address);
-//        model.addAttribute("owner", owner);
-//        model.addAttribute("menuItems", menuItems);
-//        model.addAttribute("menuItemOrdersDTO", menuItemOrdersDTO);
-//
-//        return "customer-restaurant-menu";
-//    }
 
 
     @PostMapping(RESTAURANT_ADD_ITEMS)
@@ -260,14 +244,4 @@ public class CustomerOrderCreationController {
     }
 
 
-    //    private List<MenuItemOrderDTO> createMenuItemOrdersDTO(Page<MenuItemDTO> menuItemDTOs) {
-//        return menuItemDTOs.stream()
-//                .map(a -> new MenuItemOrderDTO(0, a)).collect(Collectors.toList());
-//    }
-//
-//    private List<MenuItemOrderDTO> createMenuItemOrdersDTO2(Map<MenuItemDTO, Integer> menuItemDTOMap) {
-//        return menuItemDTOMap.entrySet().stream().map(a -> new MenuItemOrderDTO(a.getValue(), a.getKey()))
-//                .toList();
-//
-//    }
 }

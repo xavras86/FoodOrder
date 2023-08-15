@@ -33,4 +33,11 @@ public class AddressService {
         String destination = delivery.getCountry() + " " + delivery.getCity() + " " + delivery.getStreet() + " " + delivery.getBuildingNumber();
         return "https://www.google.com/maps/embed/v1/directions?key=" + googleMapsApiKey + "&origin=" + origin + "&destination=" + destination;
     }
+
+    public String createMapUrlPoint(AddressDTO restaurant) {
+
+        String origin = restaurant.getCountry() + " " + restaurant.getCity() + " " + restaurant.getStreet() + " " + restaurant.getBuildingNumber();
+
+        return "https://www.google.com/maps/embed/v1/place?key=" + googleMapsApiKey  +"&q=" + origin;
+    }
 }

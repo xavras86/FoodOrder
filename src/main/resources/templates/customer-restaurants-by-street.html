@@ -24,6 +24,10 @@
             justify-content:center;
             display: flex;
         }
+                        .pagination-centered {
+        display: flex;
+        justify-content: center;
+    }
 
 </style>
 
@@ -44,25 +48,20 @@
     <h1>Restaurants delivering to street:&nbsp; <span th:if="${street}" th:text="${street}"></span></h1>
 
         <form action="#" th:action="@{/restaurants/street/{street}(street=${street})}" method="GET">
-            <select id="completedSortBy" name="completedSortBy">
-                <option value="name" th:selected="${completedSortBy == 'name'}">Name</option>
-
-                </option>
-                <option value="completedDateTime" th:selected="${completedSortBy == 'completedDateTime'}">Delivery moment
-                </option>
-                <option value="totalValue" th:selected="${completedSortBy == 'totalValue'}">Total Value</option>
-                <option value="restaurant.name" th:selected="${completedSortBy == 'restaurant.name'}">Restaurant</option>
+            <label for="sortBy">Sort by:</label>
+            <select id="sortBy" name="sortBy">
+                <option value="name" th:selected="${sortBy == 'name'}">Name</option>
             </select>
-            <label for="completedSortDirection">Sort direction:</label>
-            <select id="completedSortDirection" name="completedSortDirection">
-                <option value="asc" th:selected="${completedSortDirection == 'asc'}">Ascending</option>
-                <option value="desc" th:selected="${completedSortDirection == 'desc'}">Descending</option>
+            <label for="sortDirection">Sort direction:</label>
+            <select id="sortDirection" name="sortDirection">
+                <option value="asc" th:selected="${sortDirection == 'asc'}">Ascending</option>
+                <option value="desc" th:selected="${sortDirection == 'desc'}">Descending</option>
             </select>
-            <label for="completedPageSize">Page size:</label>
-            <select id="completedPageSize" name="completedPageSize">
-                <option value="5" th:selected="${completedPageSize == 5}">5</option>
-                <option value="10" th:selected="${completedPageSize == 10}">10</option>
-                <option value="20" th:selected="${completedPageSize == 20}">20</option>
+            <label for="pageSize">Page size:</label>
+            <select id="pageSize" name="pageSize">
+                <option value="5" th:selected="${pageSize == 5}">5</option>
+                <option value="10" th:selected="${pageSize == 10}">10</option>
+                <option value="20" th:selected="${pageSize == 20}">20</option>
             </select>
             <button type="submit" class="btn btn-info">Apply</button>
         </form>

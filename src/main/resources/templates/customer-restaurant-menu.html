@@ -28,6 +28,7 @@
         display: flex;
         justify-content: center;
     }
+
 </style>
 
 <body>
@@ -85,7 +86,8 @@
     </form>
 
 
-    <form th:action="@{/restaurants/addItems/{restaurantName}(restaurantName=${restaurant.name})}" th:object="${menuItemOrdersDTO}" method="post">
+    <form th:action="@{/restaurants/addItems/{restaurantName}(restaurantName=${restaurant.name})}"
+          th:object="${menuItemOrdersDTO}" method="post">
 
         <table class="table-hover">
             <tr>
@@ -102,7 +104,7 @@
                 <td th:text="${menuItem.category}"></td>
                 <td>
                     <input type="number" th:field="*{orders[__${iterStat.index}__].quantity}" min="0"
-                           class="form-control form-control-lg text-center" style="max-width: 100px;" />
+                           class="form-control form-control-lg text-center" style="max-width: 100px;"/>
                     <input type="hidden" th:field="*{orders[__${iterStat.index}__].menuItem.menuItemId}"
                            th:value="${menuItem.menuItemId}"/>
                     <input type="hidden" th:field="*{orders[__${iterStat.index}__].menuItem.name}"
@@ -130,7 +132,8 @@
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
-                    <li th:each="page : ${pageNumbers}" th:classappend="${page == currentPage} ? 'page-item active' : 'page-item'">
+                    <li th:each="page : ${pageNumbers}"
+                        th:classappend="${page == currentPage} ? 'page-item active' : 'page-item'">
                         <a class="page-link"
                            th:href="@{/restaurants/{restaurantName}(restaurantName=${restaurantName}, pageSize=${pageSize}, sortBy=${sortBy}, sortDirection=${sortDirection}, pageNumber=${page})}"
                            th:text="${page}"></a>
@@ -150,8 +153,8 @@
 
     </form>
 
-
-
+    <br>
+    <iframe th:src="${mapUrl}" th:attr="width=600,height=450"></iframe>
 
 </div>
 

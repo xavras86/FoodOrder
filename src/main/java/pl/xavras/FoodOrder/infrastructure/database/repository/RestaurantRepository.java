@@ -58,16 +58,6 @@ public class RestaurantRepository implements RestaurantDAO {
                 .collect(Collectors.toSet());
     }
 
-//    @Override
-//    public Page<Restaurant> findRestaurantsByStreetNamePaged(String streetName, Pageable pageable) {
-//        var street = streetRepository.findByStreetName(streetName)
-//                .orElseThrow(() -> new RuntimeException(
-//                        "Unfortunately, the given street name [%s] is incorrect, please try again"
-//                                .formatted(streetName)));
-//        var result = street.getRestaurantStreets().stream().map(RestaurantStreet::getRestaurant).toList();
-//
-//
-//    }
 
 
     @Override
@@ -135,8 +125,11 @@ public class RestaurantRepository implements RestaurantDAO {
 
 
 
-
-
+    @Override
+    public Page<Restaurant> findRestaurantsByStreetNamePaged(String streetName, Pageable pageable) {
+        return restaurantJpaRepository.findByRestaurantStreets_Street_StreetName(streetName,pageable)
+                .map(restaurantEntityMapper::mapFromEntity);
+    }
 
 
 }
