@@ -40,7 +40,7 @@ dependencies {
 	annotationProcessor "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
 
 //    //api
-//    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocOpenApiVersion}"
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocOpenApiVersion}"
 //
 //    //powygenerowaniu klienta trzeba będzie dodać poniższe zależności żeby kod się kompilował
 //    implementation "org.openapitools:jackson-databind-nullable:${jacksonDatabindNullableVersion}"

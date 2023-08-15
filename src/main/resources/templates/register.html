@@ -94,19 +94,24 @@
                 <td><input type="text" th:field="${userDTO.email}" required/></td>
             </tr>
         </table>
-
-        <label>Role:</label>
+        <div class="d-flex justify-content-center align-items-center">
+        <label>Role:&nbsp;&nbsp;</label>
         <input type="radio" id="roleOwner" th:field="${userDTO.role}" value="OWNER"/>
-        <label for="roleOwner">Owner</label>
+        <label for="roleOwner">&nbsp;&nbsp;Owner&nbsp;&nbsp;</label>
         <input type="radio" id="roleCustomer" th:field="${userDTO.role}" value="CUSTOMER"/>
-        <label for="roleOwner">Customer</label>
-
+        <label for="roleOwner">&nbsp;Customer</label>
+        </div>
         <br/>
 
         </table>
-        <button type="submit" class="btn btn-success">
-            Register
-        </button>
+
+        <div class="d-flex justify-content-center align-items-center">
+            <button type="submit" class="btn btn-success">
+                Register
+            </button>
+
+        </div>
+
     </form>
 
 

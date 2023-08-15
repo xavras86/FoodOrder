@@ -168,7 +168,7 @@ public class CustomerOrderCreationController {
         }
 
         if (Objects.isNull(session.getAttribute("addressDTO"))){
-            redirectAttributes.addFlashAttribute("message", NO_ADDRESS_NOTIFY);
+            redirectAttributes.addFlashAttribute("messageNoAddress", NO_ADDRESS_NOTIFY);
             return "redirect:/customer/address";}
 
         AddressDTO orderAddressData = (AddressDTO) session.getAttribute("addressDTO");

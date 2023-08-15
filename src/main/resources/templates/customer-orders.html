@@ -46,7 +46,15 @@
         <br>
     </div>
 
+
     <!--    active order table-->
+    <br>
+    <form th:action="@{/customer/orders-form}" method="GET">
+        <label for="orderNumberInput">Find Order by number:</label>
+        <input type="text" id="orderNumberInput" name="orderNumber" required>
+        <button type="submit" class="btn btn-info">Show Details</button>
+    </form>
+
 
     <h1>Active Orders</h1>
 
@@ -110,6 +118,7 @@
             <td th:if="${!entry.key.cancelled}" th:unless="${!entry.value}">
 
 
+
                     <form th:action="@{/customer/orders/cancel/{orderNumber}(orderNumber=${entry.key.orderNumber})}"
                           th:method="PUT">
                         <button type="submit" class="btn btn-warning" onclick="return confirm('Are you sure you want to cancel this order?')">
@@ -121,6 +130,7 @@
                 <span>cancellation period expired</span>
             </td>
             <td>
+
                 <form action="#"
                       th:action="@{/customer/orders/{orderNumber}(orderNumber=${entry.key.orderNumber})}"
                       method="GET">

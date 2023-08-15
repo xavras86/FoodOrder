@@ -61,21 +61,10 @@ public class OwnerOrdersController {
                          @RequestParam(defaultValue = "desc") String completedSortDirection
     ) {
 
-        Pageable activePageable = PageRequest.of(
-                activePageNumber - 1,
-                activePageSize,
-                Sort.by(Sort.Direction.fromString(activeSortDirection), activeSortBy));
 
-        Pageable cancelledPageable = PageRequest.of(
-                cancelledPageNumber - 1,
-                cancelledPageSize,
-                Sort.by(Sort.Direction.fromString(cancelledSortDirection), cancelledSortBy));
-
-        Pageable completedPageable = PageRequest.of(
-                completedPageNumber - 1,
-                completedPageSize,
-                Sort.by(Sort.Direction.fromString(completedSortDirection), completedSortBy));
-
+        Pageable activePageable = utilityService.createPagable(activePageSize, activePageNumber, activeSortBy, activeSortDirection);
+        Pageable cancelledPageable = utilityService.createPagable(cancelledPageSize, cancelledPageNumber, cancelledSortBy, cancelledSortDirection);
+        Pageable completedPageable = utilityService.createPagable(completedPageSize, completedPageNumber, completedSortBy, completedSortDirection);
 
         Owner activeOwner = ownerService.activeOwner();
 

@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface UserDAO {
 
 
-    void registerNewUser(User user);
+    User registerNewUser(User user);
 
 }

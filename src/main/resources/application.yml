@@ -1,7 +1,7 @@
 server:
   port: 8888
   servlet:
-    context-path: /foodOrdering
+    context-path: /foodorder
 
 google:
   maps:

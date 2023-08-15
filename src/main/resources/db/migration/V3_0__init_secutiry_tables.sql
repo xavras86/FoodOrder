@@ -6,7 +6,8 @@ CREATE TABLE food_ordering_user
     password  VARCHAR(128)  NOT NULL,
     active    BOOLEAN       NOT NULL,
     PRIMARY KEY (user_id),
-        UNIQUE (email)
+        UNIQUE (email),
+        UNIQUE (user_name)
 );
 
 CREATE TABLE food_ordering_role

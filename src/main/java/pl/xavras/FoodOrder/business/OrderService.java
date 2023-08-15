@@ -78,7 +78,10 @@ public class OrderService {
     }
 
     public Boolean isCancellable(Order order) {
-        return Duration.between(order.getReceivedDateTime(), OffsetDateTime.now()).toSeconds() <= MAX_CANCEL_SECONDS;
+        long l = Duration.between(order.getReceivedDateTime(), OffsetDateTime.now()).toSeconds();
+        log.info( order.getOrderNumber() +" pozostały czas na anulowanie: " + l );
+        boolean b = l <= MAX_CANCEL_SECONDS;
+        return b;
     }
 
     //creating map with order key and key with flag telling if you still can cancel the order + mapping to order DTO

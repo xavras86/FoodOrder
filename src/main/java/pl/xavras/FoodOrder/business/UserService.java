@@ -20,8 +20,9 @@ public class UserService {
 
 
     @Transactional
-    public void registerNewUser(User user) {
-        userDAO.registerNewUser(user);
+    public User registerNewUser(User user) {
+        User created = userDAO.registerNewUser(user);
+
         if ("OWNER".equals(user.getRole())) {
             Owner owner = Owner.builder()
                     .name(user.getName())
@@ -40,5 +41,7 @@ public class UserService {
                     .build();
             customerService.saveCustomer(customer);
         }
+        return created;
     }
+
 }

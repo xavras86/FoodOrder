@@ -1,5 +1,6 @@
 package pl.xavras.FoodOrder.infrastructure.database.repository;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -51,7 +52,7 @@ public class RestaurantRepository implements RestaurantDAO {
     @Override
     public Set<Restaurant> findRestaurantsByStreetName(String streetName) {
         var street = streetRepository.findByStreetName(streetName)
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow(() -> new EntityNotFoundException(
                         "Unfortunately, the given street name [%s] is incorrect, please try again"
                                 .formatted(streetName)));
         return street.getRestaurantStreets().stream().map(RestaurantStreet::getRestaurant)

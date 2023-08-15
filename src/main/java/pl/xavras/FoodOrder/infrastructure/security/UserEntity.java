@@ -14,6 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+
 @Table(name = "food_ordering_user")
 public class UserEntity {
 
@@ -22,11 +23,11 @@ public class UserEntity {
     @Column(name = "user_id")
     private int id;
 
-    @Column(name = "user_name")
+    @Column(name = "user_name", unique = true)
     @Length(min = 5)
     private String userName;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "password")

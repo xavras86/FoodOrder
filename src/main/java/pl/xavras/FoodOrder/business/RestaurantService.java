@@ -1,5 +1,6 @@
 package pl.xavras.FoodOrder.business;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -36,7 +37,7 @@ public class RestaurantService {
 
     public Restaurant findByName(String restaurantName) {
         return restaurantDAO.findByName(restaurantName)
-                .orElseThrow(() -> new RuntimeException("Restaurant with name [%s] doest not exists"
+                .orElseThrow(() -> new EntityNotFoundException("Restaurant with name [%s] doest not exists"
                         .formatted(restaurantName)));
     }
 

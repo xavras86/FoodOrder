@@ -3,9 +3,7 @@ package pl.xavras.FoodOrder.api.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,11 +22,9 @@ import pl.xavras.FoodOrder.domain.Customer;
 import pl.xavras.FoodOrder.domain.MenuItemOrder;
 import pl.xavras.FoodOrder.domain.Order;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Controller
 @AllArgsConstructor
@@ -37,7 +33,8 @@ public class CustomerOrdersController {
 
     public static final String ORDERS = "/customer/orders";
     public static final String ORDERS_CANCEL = "/customer/orders/cancel/{orderNumber}";
-    public static final String ORDERS_DETAILS = "/customer/orders/{orderNumber}";
+    public static final String CUSTOMER_ORDERS_DETAILS = "/customer/orders/{orderNumber}";
+    public static final String CUSTOMER_ORDERS_DETAILS_FORM = "/customer/orders-form";
     private final OrderService orderService;
     private final CustomerService customerService;
     private final AddressService addressService;
@@ -61,22 +58,9 @@ public class CustomerOrdersController {
                          @RequestParam(defaultValue = "desc") String cancelledSortDirection,
                          @RequestParam(defaultValue = "desc") String completedSortDirection
     ) {
-
-        Pageable activePageable = PageRequest.of(
-                activePageNumber - 1,
-                activePageSize,
-                Sort.by(Sort.Direction.fromString(activeSortDirection), activeSortBy));
-
-        Pageable cancelledPageable = PageRequest.of(
-                cancelledPageNumber - 1,
-                cancelledPageSize,
-                Sort.by(Sort.Direction.fromString(cancelledSortDirection), cancelledSortBy));
-
-        Pageable completedPageable = PageRequest.of(
-                completedPageNumber - 1,
-                completedPageSize,
-                Sort.by(Sort.Direction.fromString(completedSortDirection), completedSortBy));
-
+        Pageable activePageable = utilityService.createPagable(activePageSize, activePageNumber, activeSortBy, activeSortDirection);
+        Pageable cancelledPageable = utilityService.createPagable(cancelledPageSize, cancelledPageNumber, cancelledSortBy, cancelledSortDirection);
+        Pageable completedPageable = utilityService.createPagable(completedPageSize, completedPageNumber, completedSortBy, completedSortDirection);
 
         Customer activeCustomer = customerService.activeCustomer();
 
@@ -126,12 +110,17 @@ public class CustomerOrdersController {
     }
 
 
-
-    @GetMapping(ORDERS_DETAILS)
-    public String orderPlaced(@PathVariable String orderNumber,
-                              Model model) {
+    @GetMapping(CUSTOMER_ORDERS_DETAILS)
+    public String orderDetails(@PathVariable String orderNumber,
+                               Model model) {
 
         Order order = orderService.findByOrderNumber(orderNumber);
+
+        if (!order.getCustomer().equals(customerService.activeCustomer())) {
+            throw new IllegalArgumentException(
+                    String.format("Unfortunately, you cannot view details of order [%s], as it does not belong to you.",
+                            orderNumber));
+        }
         OrderDTO orderDTO = orderMapper.mapToDTO(order);
         AddressDTO deliveryAddressDTO = addressMapper.map(order.getAddress());
         AddressDTO restaurantAddressDTO = addressMapper.map(order.getRestaurant().getAddress());
@@ -148,6 +137,13 @@ public class CustomerOrdersController {
 
         return "customer-order-details";
     }
+
+    @GetMapping(CUSTOMER_ORDERS_DETAILS_FORM)
+    public String orderDetailsForm(@RequestParam String orderNumber, Model model) {
+
+        return orderDetails(orderNumber, model);
+    }
+
 
     @PutMapping(ORDERS_CANCEL)
     public String cancelOrder(@PathVariable String orderNumber) {

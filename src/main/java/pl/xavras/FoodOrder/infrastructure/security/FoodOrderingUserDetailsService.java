@@ -22,8 +22,11 @@ public class FoodOrderingUserDetailsService implements UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String userName) {
         UserEntity user = userRepository.findByUserName(userName);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with username: " + userName);
+        }
         List<GrantedAuthority> authorities = getUserAuthority(user.getRoles());
         return buildUserForAuthentication(user, authorities);
     }

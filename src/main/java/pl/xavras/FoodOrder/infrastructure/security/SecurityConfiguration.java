@@ -44,18 +44,19 @@ public class SecurityConfiguration {
                                 .requestMatchers("/login", "/error", "/images/error.png", "/register").permitAll()
 //                        .requestMatchers(HttpMethod.DELETE).hasAuthority("ADMIN")
                                 .requestMatchers("/**").hasAnyAuthority("OWNER", "CUSTOMER")
-
+//do ustawienia /customer/** - dla customer /owner** - dla ownera
                 )
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
+                        .failureUrl("/login?error=true")
                         .permitAll()
                         .defaultSuccessUrl("/", true))
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                                .logoutSuccessUrl("/login?logout")
-                                .invalidateHttpSession(true)
-                                .deleteCookies("JSESSIONID")
-                                .permitAll()
+                        .logoutSuccessUrl("/login")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll()
                 )
                 .build();
     }
