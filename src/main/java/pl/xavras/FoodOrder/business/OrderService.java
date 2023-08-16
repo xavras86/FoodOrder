@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.xavras.FoodOrder.api.dto.OrderDTO;
 import pl.xavras.FoodOrder.api.dto.mapper.OrderMapper;
 import pl.xavras.FoodOrder.business.dao.OrderDAO;
@@ -42,11 +43,11 @@ public class OrderService {
     }
 
 
-    public Page<Order> findByCustomerAndCancelledAndCompletedPaged(Pageable pageable, Customer activeCustomer, Boolean cancelled, Boolean completed){
+    public Page<Order> findByCustomerAndCancelledAndCompletedPaged(Pageable pageable, Customer activeCustomer, Boolean cancelled, Boolean completed) {
         return orderDAO.findByCustomerAndCancelledAndCompletedPaged(pageable, activeCustomer, cancelled, completed);
     }
 
-    public Page<Order> findByOwnerAndCancelledAndCompletedPaged(Pageable pageable, Owner activeOwner, Boolean cancelled, Boolean completed){
+    public Page<Order> findByOwnerAndCancelledAndCompletedPaged(Pageable pageable, Owner activeOwner, Boolean cancelled, Boolean completed) {
         return orderDAO.findByOwnerAndCancelledAndCompletedPaged(pageable, activeOwner, cancelled, completed);
     }
 
@@ -54,13 +55,19 @@ public class OrderService {
     public Set<Order> findByOwnerEmail(String ownerEmail) {
         return orderDAO.findOrdersByOwnerEmail(ownerEmail);
     }
-    public  Order findByOrderNumber(String orderNumber) {
+
+    public Order findByOrderNumber(String orderNumber) {
         Optional<Order> byOrderNumber = orderDAO.findByOrderNumber(orderNumber);
         if (byOrderNumber.isEmpty()) {
             throw new NotFoundException("Could not find order with orderNumber: [%s]".formatted(orderNumber));
         }
         return byOrderNumber.get();
     }
+
+    public Optional<Order> findOptByOrderNumber(String orderNumber) {
+        return orderDAO.findByOrderNumber(orderNumber);
+    }
+
 
     public void completeOrder(Order orderToComplete) {
         if ((orderToComplete.getCompleted() && Objects.nonNull(orderToComplete.getCompletedDateTime()))
@@ -78,10 +85,7 @@ public class OrderService {
     }
 
     public Boolean isCancellable(Order order) {
-        long l = Duration.between(order.getReceivedDateTime(), OffsetDateTime.now()).toSeconds();
-        log.info( order.getOrderNumber() +" pozostały czas na anulowanie: " + l );
-        boolean b = l <= MAX_CANCEL_SECONDS;
-        return b;
+        return Duration.between(order.getReceivedDateTime(), OffsetDateTime.now()).toSeconds() <= MAX_CANCEL_SECONDS;
     }
 
     //creating map with order key and key with flag telling if you still can cancel the order + mapping to order DTO
@@ -148,4 +152,12 @@ public class OrderService {
         );
     }
 
+    public Set<Order> findByRestaurantName(String restaurantName) {
+        return orderDAO.findByRestaurantName(restaurantName);
+    }
+
+    @Transactional
+    public void deleteByOrderNumber(String orderNumber) {
+        orderDAO.deleteByOrderNumber(orderNumber);
+    }
 }

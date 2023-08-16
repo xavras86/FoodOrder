@@ -97,8 +97,6 @@ public class CustomerOrderCreationController {
 
         model.addAttribute("restaurants", restaurantPage.getContent());
         model.addAttribute("addresses", addresses);
-        String attributeValue = "AIzaSyDvwTDMi-cXeamefAssYo3ZmhtHXnnZO9g";
-        model.addAttribute("apiKey", attributeValue);
         model.addAttribute("street", street);
         model.addAttribute("totalPages", restaurantPage.getTotalPages());
         model.addAttribute("currentPage", pageNumber);
@@ -117,10 +115,10 @@ public class CustomerOrderCreationController {
                                      @RequestParam(defaultValue = "name") String sortBy,
                                      @RequestParam(defaultValue = "asc") String sortDirection,
                                      Model model) {
-//todo refactor!
+
         var restaurant = restaurantService.findByName(restaurantName);
-        var addressDTO = addressMapper.map(restaurant.getAddress());
-        var owner = ownerMapper.map(restaurant.getOwner());
+        RestaurantDTO restaurantDTO = restaurantMapper.map(restaurant);
+
 
         Pageable pageable = utilityService.createPagable(pageSize, pageNumber, sortBy, sortDirection);
         Page<MenuItemDTO> menuItemsPage = menuItemService.getAvailableMenuItemsByRestaurant(restaurant, pageable)
@@ -131,11 +129,9 @@ public class CustomerOrderCreationController {
                 .map(a -> new MenuItemOrderDTO(0, a))
                 .toList());
 
-        String mapUrl = addressService.createMapUrlPoint(addressDTO);
+        String mapUrl = addressService.createMapUrlPoint(restaurant.getAddress());
 
-        model.addAttribute("restaurant", restaurant);
-        model.addAttribute("address", addressDTO);
-        model.addAttribute("owner", owner);
+        model.addAttribute("restaurant", restaurantDTO);
         model.addAttribute("menuItems", menuItemsPage.getContent());
         model.addAttribute("menuItemOrdersDTO", menuItemOrdersDTO);
         model.addAttribute("totalPages", menuItemsPage.getTotalPages());
@@ -180,10 +176,6 @@ public class CustomerOrderCreationController {
         Order placedOrder = orderService.placeOrder(deliveryAddress, restaurantName, menuItemOrdersToOrder);
         String orderNumber = placedOrder.getOrderNumber();
 
-//        OrderDTO placed = orderMapper.mapToDTO(placedOrder);
-//        session.setAttribute("placedOrder", placed);
-//        session.setAttribute("orderNumber", orderNumber);
-
         redirectAttributes.addAttribute("orderNumber", orderNumber);
 
         return "redirect:/customer/orders/thanks/{orderNumber}";
@@ -192,13 +184,13 @@ public class CustomerOrderCreationController {
 
     private Set<MenuItemOrder> getMenuItemOrders(List<MenuItemOrderDTO> menuItemOrderDTOList) {
         if(Objects.nonNull(menuItemOrderDTOList)) {
-            Set<MenuItemOrder> menuItemOrdersToOrder = menuItemOrderDTOList.stream()
+            return menuItemOrderDTOList.stream()
                     .filter(a -> a.getQuantity() > 0)
                     .map(menuItemOrderMapper::map)
                     .collect(Collectors.toSet());
-            return menuItemOrdersToOrder;
         }else return Collections.emptySet();
     }
+
 
     @GetMapping(RESTAURANT_MENU_ITEM_DETAILS)
     public String showMenuItemDetails(@PathVariable Integer menuItemId,
@@ -222,17 +214,19 @@ public class CustomerOrderCreationController {
     public String orderPlaced(@PathVariable String orderNumber,
                               Model model) {
 
+
         Order order = orderService.findByOrderNumber(orderNumber);
         OrderDTO orderDTO = orderMapper.mapToDTO(order);
-        AddressDTO deliveryAddressDTO = orderDTO.getAddress();
-        AddressDTO restaurantAddressDTO = addressMapper.map(order.getRestaurant().getAddress());
+        Address restaurantAddress = order.getAddress();
+        Address deliveryAddress = order.getRestaurant().getAddress();
         Set<MenuItemOrder> menuItemOrders = order.getMenuItemOrders();
         String status = orderService.orderStatus(order);
-        String mapUrl = addressService.createMapUrl(restaurantAddressDTO, deliveryAddressDTO);
+        String mapUrl = addressService.createMapUrl(restaurantAddress, deliveryAddress);
+
 
         model.addAttribute("order", orderDTO);
-        model.addAttribute("deliveryAddress", deliveryAddressDTO);
-        model.addAttribute("restaurantAddress", restaurantAddressDTO);
+        model.addAttribute("deliveryAddress", addressMapper.map(restaurantAddress));
+        model.addAttribute("restaurantAddress", addressMapper.map(deliveryAddress));
         model.addAttribute("menuItemOrders", menuItemOrders);
         model.addAttribute("status", status);
         model.addAttribute("mapUrl", mapUrl);

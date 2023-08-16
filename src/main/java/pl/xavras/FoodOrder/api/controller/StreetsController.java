@@ -40,6 +40,8 @@ public class StreetsController {
                 pageSize,
                 Sort.by(Sort.Direction.fromString(sortDirection), sortBy));
         Page<Street> streetPage = streetService.findAll(pageable);
+
+
         List<Integer> pageNumbers = utilityService.generatePageNumbers(pageNumber, streetPage.getTotalPages());
 
         model.addAttribute("streets", streetPage.getContent());

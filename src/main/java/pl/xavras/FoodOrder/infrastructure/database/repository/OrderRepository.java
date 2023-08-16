@@ -1,15 +1,13 @@
 package pl.xavras.FoodOrder.infrastructure.database.repository;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import pl.xavras.FoodOrder.business.dao.OrderDAO;
-import pl.xavras.FoodOrder.domain.Customer;
-import pl.xavras.FoodOrder.domain.MenuItemOrder;
-import pl.xavras.FoodOrder.domain.Order;
-import pl.xavras.FoodOrder.domain.Owner;
+import pl.xavras.FoodOrder.domain.*;
 import pl.xavras.FoodOrder.infrastructure.database.entity.*;
 import pl.xavras.FoodOrder.infrastructure.database.repository.jpa.OrderJpaRepository;
 import pl.xavras.FoodOrder.infrastructure.database.repository.jpa.RestaurantJpaRepository;
@@ -35,6 +33,8 @@ public class OrderRepository implements OrderDAO {
 
     private final CustomerEntityMapper customerEntityMapper;
     private final OwnerEntityMapper ownerEntityMapper;
+
+    private final RestaurantEntityMapper restaurantEntityMapper;
 
 
     private final RestaurantJpaRepository restaurantJpaRepository;
@@ -76,6 +76,17 @@ public class OrderRepository implements OrderDAO {
     }
 
     @Override
+    public Set<Order> findByRestaurantName(String restaurantName) {
+        return orderJpaRepository.findByRestaurantName(restaurantName).stream()
+                .map(orderEntityMapper::mapFromEntity).collect(Collectors.toSet());
+    }
+
+    @Override
+    public void deleteByOrderNumber(String orderNumber) {
+        orderJpaRepository.deleteByOrderNumber(orderNumber);
+    }
+
+    @Override
     public Optional<Order> findByOrderNumber(String orderNumber) {
         return orderJpaRepository.findByOrderNumber(orderNumber)
                 .map(orderEntityMapper::mapFromEntity);
@@ -95,14 +106,13 @@ public class OrderRepository implements OrderDAO {
         OrderEntity toSave = orderEntityMapper.mapToEntity(order);
         RestaurantEntity restaurant = restaurantJpaRepository.findByName(restaurantName)
                 .orElseThrow(() -> new RuntimeException("Could not find restaurant with name: [%s]"
-                .formatted(restaurantName)));  //chyba lepiej cały obiekt niz sama string przekazywac do przemyslenia
+                .formatted(restaurantName)));
 
         //weryfikacja czy przekazany adres jest już w bazie
         AddressEntity address = addressRepository.findExistingAddress(order.getAddress())
                 .orElseGet(() -> addressEntityMapper.mapToEntity(order.getAddress()));
 
         toSave.setAddress(address);
-
         toSave.setRestaurant(restaurant);
         Set<MenuItemOrderEntity> menuItemOrderEntities = menuItemOrderEntityMapper.mapToEntity(menuItemOrders);
         menuItemOrderEntities.forEach(a -> a.setOrder(toSave));

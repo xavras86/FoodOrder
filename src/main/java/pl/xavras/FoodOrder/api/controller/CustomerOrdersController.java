@@ -6,10 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import pl.xavras.FoodOrder.api.dto.AddressDTO;
 import pl.xavras.FoodOrder.api.dto.OrderDTO;
 import pl.xavras.FoodOrder.api.dto.mapper.AddressMapper;
@@ -18,6 +15,7 @@ import pl.xavras.FoodOrder.business.AddressService;
 import pl.xavras.FoodOrder.business.CustomerService;
 import pl.xavras.FoodOrder.business.OrderService;
 import pl.xavras.FoodOrder.business.UtilityService;
+import pl.xavras.FoodOrder.domain.Address;
 import pl.xavras.FoodOrder.domain.Customer;
 import pl.xavras.FoodOrder.domain.MenuItemOrder;
 import pl.xavras.FoodOrder.domain.Order;
@@ -122,15 +120,15 @@ public class CustomerOrdersController {
                             orderNumber));
         }
         OrderDTO orderDTO = orderMapper.mapToDTO(order);
-        AddressDTO deliveryAddressDTO = addressMapper.map(order.getAddress());
-        AddressDTO restaurantAddressDTO = addressMapper.map(order.getRestaurant().getAddress());
+        Address restaurantAddress = order.getAddress();
+        Address deliveryAddress = order.getRestaurant().getAddress();
         Set<MenuItemOrder> menuItemOrders = order.getMenuItemOrders();
         String status = orderService.orderStatus(order);
-        String mapUrl = addressService.createMapUrl(restaurantAddressDTO, deliveryAddressDTO);
+        String mapUrl = addressService.createMapUrl(restaurantAddress, deliveryAddress);
 
         model.addAttribute("order", orderDTO);
-        model.addAttribute("deliveryAddress", deliveryAddressDTO);
-        model.addAttribute("restaurantAddress", restaurantAddressDTO);
+        model.addAttribute("deliveryAddress", addressMapper.map(restaurantAddress));
+        model.addAttribute("restaurantAddress", addressMapper.map(deliveryAddress));
         model.addAttribute("menuItemOrders", menuItemOrders);
         model.addAttribute("status", status);
         model.addAttribute("mapUrl", mapUrl);
@@ -145,7 +143,7 @@ public class CustomerOrdersController {
     }
 
 
-    @PutMapping(ORDERS_CANCEL)
+    @PatchMapping(ORDERS_CANCEL)
     public String cancelOrder(@PathVariable String orderNumber) {
         Order orderToCancel = orderService.findByOrderNumber(orderNumber);
 

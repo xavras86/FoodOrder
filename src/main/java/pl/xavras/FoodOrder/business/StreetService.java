@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.xavras.FoodOrder.business.dao.StreetDAO;
+import pl.xavras.FoodOrder.domain.Restaurant;
+import pl.xavras.FoodOrder.domain.RestaurantStreet;
 import pl.xavras.FoodOrder.domain.Street;
 
 import java.util.ArrayList;
@@ -49,6 +51,13 @@ public class StreetService {
                         (existingValue, newValue) -> existingValue,
                         LinkedHashMap::new
                 ));
+    }
+
+    public List<Street> findStreetsByRestaurantName(String restaurantName) {
+        Restaurant byName = restaurantService.findByName(restaurantName);
+        List<Street> streets = byName.getRestaurantStreets().stream()
+                .map(RestaurantStreet::getStreet).toList();
+        return streets;
     }
 
 }

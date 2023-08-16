@@ -28,6 +28,11 @@
 
         margin-right: 10px;
     }
+        body {
+
+    background-repeat: no-repeat;
+    background-size: cover;
+    }
     form-group input {
         flex: 3;
         text-align: right;
@@ -59,6 +64,9 @@
     text-align: center;
         margin-top: 40px;
     }
+           .table tbody tr {
+      background-color: rgba(255, 193, 7, 0.20);
+    }
 
 
 
@@ -66,7 +74,7 @@
 </style>
 
 <body th:style="'background-image: url('+@{/images/background.jpg}+');'">
-<h1>Login</h1>
+<h1>Register new user</h1>
 <div class="container">
 
     <form action="#" th:action="@{/register}" method="POST">

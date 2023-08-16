@@ -69,17 +69,18 @@ public class RestaurantRepository implements RestaurantDAO {
     }
 
     @Override
-    public Restaurant createNewRestaurant(Restaurant newRestaurant, Address newAddress) {
+    public Restaurant createNewRestaurant(Restaurant newRestaurant) {
 
         Restaurant restaurant = newRestaurant.withOwner(ownerRepository.findLoggedOwner());
+        Address address = restaurant.getAddress();
         RestaurantEntity restaurantEntity = restaurantEntityMapper.mapToEntity(restaurant);
 
         //weryfikacja czy przekazany adres jest już w bazie
-        Optional<AddressEntity> existingAddress = addressRepository.findExistingAddress(newAddress);
+        Optional<AddressEntity> existingAddress = addressRepository.findExistingAddress(address);
         if (existingAddress.isPresent()) {
             restaurantEntity.setAddress(existingAddress.get());
         } else {
-            restaurantEntity.setAddress(addressEntityMapper.mapToEntity(newAddress));
+            restaurantEntity.setAddress(addressEntityMapper.mapToEntity(address));
         }
         return restaurantEntityMapper.mapFromEntity(restaurantJpaRepository.save(restaurantEntity));
     }
@@ -130,6 +131,19 @@ public class RestaurantRepository implements RestaurantDAO {
     public Page<Restaurant> findRestaurantsByStreetNamePaged(String streetName, Pageable pageable) {
         return restaurantJpaRepository.findByRestaurantStreets_Street_StreetName(streetName,pageable)
                 .map(restaurantEntityMapper::mapFromEntity);
+    }
+
+    @Override
+    public Restaurant editRestaurant(String currentName, String name, String phone, String email) {
+        RestaurantEntity restaurantEntity = restaurantJpaRepository.findByName(currentName)
+                .orElseThrow(() -> new EntityNotFoundException("Could not find restaurant with name: [%s]"
+                        .formatted(currentName)));
+        restaurantEntity.setName(name);
+        restaurantEntity.setPhone(phone);
+        restaurantEntity.setEmail(email);
+        RestaurantEntity save = restaurantJpaRepository.save(restaurantEntity);
+
+        return restaurantEntityMapper.mapFromEntity(save);
     }
 
 

@@ -8,10 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import pl.xavras.FoodOrder.api.dto.AddressDTO;
 import pl.xavras.FoodOrder.api.dto.OrderDTO;
 import pl.xavras.FoodOrder.api.dto.mapper.AddressMapper;
@@ -36,7 +33,7 @@ public class OwnerOrdersController {
 
 
     public static final String ORDERS_OWNER = "/owner/orders";
-    public static final String ORDERS_COMPLETE = "/orders/complete/{orderNumber}";
+    public static final String ORDERS_COMPLETE = "/owner/orders/complete/{orderNumber}";
     public static final String ORDERS_DETAILS = "/owner/orders/{orderNumber}";
     private final OrderService orderService;
     private final OwnerService ownerService;
@@ -119,15 +116,16 @@ public class OwnerOrdersController {
                               Model model) {
 
         Order order = orderService.findByOrderNumber(orderNumber);
-        AddressDTO deliveryAddressDTO = addressMapper.map(order.getAddress());
-        AddressDTO restaurantAddressDTO = addressMapper.map(order.getRestaurant().getAddress());
+        OrderDTO orderDTO = orderMapper.mapToDTO(order);
+        Address restaurantAddress = order.getAddress();
+        Address deliveryAddress = order.getRestaurant().getAddress();
         Set<MenuItemOrder> menuItemOrders = order.getMenuItemOrders();
         String status = orderService.orderStatus(order);
-        String mapUrl = addressService.createMapUrl(restaurantAddressDTO, deliveryAddressDTO);
+        String mapUrl = addressService.createMapUrl(restaurantAddress, deliveryAddress);
 
-        model.addAttribute("order", order);
-        model.addAttribute("deliveryAddress", deliveryAddressDTO);
-        model.addAttribute("restaurantAddress", restaurantAddressDTO);
+        model.addAttribute("order", orderDTO);
+        model.addAttribute("deliveryAddress", addressMapper.map(restaurantAddress));
+        model.addAttribute("restaurantAddress", addressMapper.map(deliveryAddress));
         model.addAttribute("menuItemOrders", menuItemOrders);
         model.addAttribute("status", status);
         model.addAttribute("mapUrl",  mapUrl);
@@ -135,7 +133,7 @@ public class OwnerOrdersController {
         return "owner-order-details";
     }
 
-    @PutMapping(ORDERS_COMPLETE)
+    @PatchMapping(ORDERS_COMPLETE)
     public String completeOrder(@PathVariable String orderNumber) {
         Order orderToComplete = orderService.findByOrderNumber(orderNumber);
         if (!orderToComplete.getCompleted() && Objects.isNull(orderToComplete.getCompletedDateTime())) {

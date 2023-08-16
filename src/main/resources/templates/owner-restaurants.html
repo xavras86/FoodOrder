@@ -20,6 +20,8 @@
             text-align: center;
             font-size: 20px;
             margin: 10px;
+            background-repeat: no-repeat;
+            background-size: cover;
         }
         form-group {
             justify-content:center;
@@ -28,6 +30,10 @@
                                 .pagination-centered {
         display: flex;
         justify-content: center;
+        }
+               .table tbody tr {
+      background-color: rgba(255, 193, 7, 0.20);
+    }
 
 
 </style>
@@ -66,17 +72,23 @@
         <button type="submit" class="btn btn-info">Apply</button>
     </form>
 
-    <table class="table table-striped table-hover">
+    <table class="table table-hover">
         <tr>
             <th>Name</th>
             <th>Phone</th>
             <th>Email</th>
+            <th>City</th>
+            <th>Street</th>
+            <th>Building no.</th>
 
         </tr>
         <tr th:each="restaurant : ${restaurants}">
             <td th:text="${restaurant.name}"></td>
             <td th:text="${restaurant.phone}"></td>
             <td th:text="${restaurant.email}"></td>
+            <td th:text="${restaurant.city}"></td>
+            <td th:text="${restaurant.street}"></td>
+            <td th:text="${restaurant.buildingNumber}"></td>
 
             <td>
                 <form action="#"
@@ -124,10 +136,10 @@
             Name: <input type="text" th:field="${restaurantDTO.name}"  required/><br>
             Phone: <input type="text" th:field="${restaurantDTO.phone}" required/><br>
             Email: <input type="text" th:field="${restaurantDTO.email}" required/><br>
-            Country: <input type="text" th:field="${addressDTO.country}" required/><br>
-            City: <input type="text" th:field="${addressDTO.city}" required/><br>
-            Street: <input type="text" th:field="${addressDTO.street}" required/><br>
-            Building no.: <input type="text" th:field="${addressDTO.buildingNumber}" required/><br>
+            Country: <input type="text" th:field="${restaurantDTO.country}" required/><br>
+            City: <input type="text" th:field="${restaurantDTO.city}" required/><br>
+            Street: <input type="text" th:field="${restaurantDTO.street}" required/><br>
+            Building no.: <input type="text" th:field="${restaurantDTO.buildingNumber}" required/><br>
 
         </div>
 

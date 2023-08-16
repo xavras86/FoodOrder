@@ -40,7 +40,7 @@ public class MenuItemService {
     }
 
     @Transactional
-    public void changeAvailability(MenuItem menuItem) {
+    public void alternateAvailability(MenuItem menuItem) {
         menuItemDAO.changeAvailability(menuItem);
     }
 

@@ -11,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import pl.xavras.FoodOrder.api.dto.AddressDTO;
 import pl.xavras.FoodOrder.api.dto.MenuItemDTO;
 import pl.xavras.FoodOrder.api.dto.RestaurantDTO;
 import pl.xavras.FoodOrder.api.dto.mapper.AddressMapper;
@@ -19,11 +18,14 @@ import pl.xavras.FoodOrder.api.dto.mapper.MenuItemMapper;
 import pl.xavras.FoodOrder.api.dto.mapper.OwnerMapper;
 import pl.xavras.FoodOrder.api.dto.mapper.RestaurantMapper;
 import pl.xavras.FoodOrder.business.*;
-import pl.xavras.FoodOrder.domain.*;
+import pl.xavras.FoodOrder.domain.MenuItem;
+import pl.xavras.FoodOrder.domain.Owner;
+import pl.xavras.FoodOrder.domain.Restaurant;
+import pl.xavras.FoodOrder.domain.Street;
 
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -62,10 +64,8 @@ public class OwnerRestaurantsController {
                 pageSize,
                 Sort.by(Sort.Direction.fromString(sortDirection), sortBy));
         Owner activeOwner = ownerService.activeOwner();
-        Page<Restaurant> restaurantPage = restaurantService.findByOwner(pageable, activeOwner);
+        Page<RestaurantDTO> restaurantPage = restaurantService.findByOwner(pageable, activeOwner).map(restaurantMapper::map);
         List<Integer> pageNumbers = utilityService.generatePageNumbers(pageNumber, restaurantPage.getTotalPages());
-
-
 
 
         model.addAttribute("restaurants", restaurantPage.getContent());
@@ -75,20 +75,16 @@ public class OwnerRestaurantsController {
         model.addAttribute("sortBy", sortBy);
         model.addAttribute("sortDirection", sortDirection);
         model.addAttribute("pageNumbers", pageNumbers);
-
         model.addAttribute("restaurantDTO", new RestaurantDTO());
-        model.addAttribute("addressDTO", new AddressDTO());
         return "owner-restaurants";
     }
 
     @PostMapping(RESTAURANT_OWNER_ADD_RESTAURANT)
     public String addNewRestaurant(
-            @ModelAttribute("restaurantDTO") RestaurantDTO restaurantDTO,
-            @ModelAttribute("addressDTO") AddressDTO addressDTO
+            @ModelAttribute("restaurantDTO") RestaurantDTO restaurantDTO
     ) {
         Restaurant newRestaurant = restaurantMapper.map(restaurantDTO);
-        Address newAddress = addressMapper.map(addressDTO);
-        restaurantService.saveNewRestaurant(newRestaurant, newAddress);
+        restaurantService.saveNewRestaurant(newRestaurant);
 
         return "redirect:/owner/restaurants";
     }
@@ -105,20 +101,14 @@ public class OwnerRestaurantsController {
 
 
         var restaurant = restaurantService.findByName(restaurantName);
-        var address = addressMapper.map(restaurant.getAddress());
-        var owner = ownerMapper.map(restaurant.getOwner());
-//        var menuItems = new ArrayList<>(menuItemMapper.map(restaurant.getMenuItems()));
+        RestaurantDTO restaurantDTO = restaurantMapper.map(restaurant);
 
-
-        Pageable pageable = utilityService.createPagable(pageSize,pageNumber,sortBy,sortDirection);
+        Pageable pageable = utilityService.createPagable(pageSize, pageNumber, sortBy, sortDirection);
         Page<MenuItem> menuItemsPage = menuItemService.getMenuItemsByRestaurantPaged(restaurant, pageable);
         List<Integer> pageNumbers = utilityService.generatePageNumbers(pageNumber, menuItemsPage.getTotalPages());
 
-        model.addAttribute("restaurant", restaurant);
-        model.addAttribute("address", address);
-        model.addAttribute("owner", owner);
+        model.addAttribute("restaurant", restaurantDTO);
         model.addAttribute("newMenuItem", new MenuItemDTO());
-
         model.addAttribute("menuItems", menuItemsPage.getContent());
         model.addAttribute("totalPages", menuItemsPage.getTotalPages());
         model.addAttribute("currentPage", pageNumber);
@@ -145,9 +135,6 @@ public class OwnerRestaurantsController {
         return "owner-menu-item-details";
     }
 
-
-
-
     @PostMapping(RESTAURANT_OWNER_ADD)
     public String editMenuItem(
             @ModelAttribute("newMenuItem") MenuItemDTO menuItemDTO,
@@ -168,13 +155,13 @@ public class OwnerRestaurantsController {
         return "redirect:/owner/restaurants/{restaurantName}";
     }
 
-    @PostMapping(RESTAURANT_OWNER_EDIT)
+    @PatchMapping(RESTAURANT_OWNER_EDIT)
     public String editMenuItem(@PathVariable Integer menuItemId,
                                @RequestParam("restaurantName") String restaurantName,
                                RedirectAttributes redirectAttributes) {
 
         MenuItem menuItemToEdit = menuItemService.findById(menuItemId);
-        menuItemService.changeAvailability(menuItemToEdit);
+        menuItemService.alternateAvailability(menuItemToEdit);
         redirectAttributes.addAttribute("restaurantName", restaurantName);
         return "redirect:/owner/restaurants/{restaurantName}";
     }
@@ -210,7 +197,7 @@ public class OwnerRestaurantsController {
     }
 
 
-    @PostMapping(RESTAURANT_OWNER_RANGE_EDIT)
+    @PatchMapping(RESTAURANT_OWNER_RANGE_EDIT)
     public String editMenuItem(@PathVariable String restaurantName,
                                @PathVariable Integer streetId
 

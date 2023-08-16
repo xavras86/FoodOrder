@@ -53,8 +53,8 @@ public class RestaurantService {
     }
 
     @Transactional
-    public Restaurant saveNewRestaurant(Restaurant newRestaurant, Address newAddress) {
-        return restaurantDAO.createNewRestaurant(newRestaurant, newAddress);
+    public Restaurant saveNewRestaurant(Restaurant newRestaurant) {
+        return restaurantDAO.createNewRestaurant(newRestaurant);
     }
 
     @Transactional
@@ -75,6 +75,10 @@ public class RestaurantService {
         return restaurantDAO.findByOwner(pageable, activeOwner);
     }
 
+    @Transactional
+    public Restaurant editRestaurant(String currentName, String name, String phone, String email) {
+        return restaurantDAO.editRestaurant(currentName, name, phone, email);
 
+    }
 }
 

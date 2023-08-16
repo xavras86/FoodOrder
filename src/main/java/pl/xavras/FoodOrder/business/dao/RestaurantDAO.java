@@ -2,7 +2,6 @@ package pl.xavras.FoodOrder.business.dao;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import pl.xavras.FoodOrder.domain.Address;
 import pl.xavras.FoodOrder.domain.Owner;
 import pl.xavras.FoodOrder.domain.Restaurant;
 import pl.xavras.FoodOrder.domain.Street;
@@ -22,7 +21,7 @@ public interface RestaurantDAO {
 
     Set<Restaurant> findRestaurantsByOwner(String ownerEmail);
 
-    Restaurant createNewRestaurant(Restaurant newRestaurant, Address newAddress);
+    Restaurant createNewRestaurant(Restaurant newRestaurant);
 
     void alternateCoverageStateForStreet(String restaurantName, Street street);
 
@@ -32,4 +31,7 @@ public interface RestaurantDAO {
 
 
     Page<Restaurant> findRestaurantsByStreetNamePaged(String streetName, Pageable pageable);
+
+
+    Restaurant editRestaurant(String currentName, String name, String phone, String email);
 }

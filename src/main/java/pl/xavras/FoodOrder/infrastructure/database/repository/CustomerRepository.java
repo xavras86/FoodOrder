@@ -50,8 +50,8 @@ public class CustomerRepository implements CustomerDAO {
         var loggedEmail = userRepository.findByUserName(username).getEmail();
         return customerJpaRepository.findByEmail(loggedEmail)
                 .map(customerEntityMapper::mapFromEntity)
-                .orElseThrow(() -> new RuntimeException("something went terribly wrong with security :( no customer related to current user email [%s] "
-                        .formatted(loggedEmail)));
+                .orElseThrow(() -> new SecurityException("Something went terribly wrong with security :( no customer related to current username [%s] "
+                        .formatted(username)));
     }
 
 

@@ -19,7 +19,9 @@
         font-size: 15px;
         margin-left: 20px;
         margin-right: 20px;
-    }
+        background-repeat: no-repeat;
+        background-size: cover;
+     }
 
     .container {
         padding: 10px;
@@ -68,6 +70,9 @@
         justify-content: center;
         margin-top: 20px;
     }
+           .table tbody tr {
+      background-color: rgba(255, 193, 7, 0.20);
+    }
 
 
 </style>
@@ -81,7 +86,7 @@
     <p><strong>Restaurant:</strong> <span th:text="${order.restaurant.name}"></span></p>
 
     <h1>Order items:</h1>
-    <table class="table-hover">
+    <table class="table-hover ">
         <tr>
             <th>Name</th>
             <th>Price</th>

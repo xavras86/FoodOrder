@@ -19,7 +19,8 @@
             text-align: center;
             font-size: 20px;
             margin: 10px;
-
+            background-repeat: no-repeat;
+            background-size: cover;
         }
         form-group {
             justify-content:center;
@@ -28,6 +29,10 @@
                         .pagination-centered {
         display: flex;
         justify-content: center;
+        }
+               .table tbody tr {
+      background-color: rgba(255, 193, 7, 0.20);
+    }
 
 </style>
 
@@ -46,24 +51,20 @@
 
     <h1>Restaurant details: &nbsp <span th:if="${restaurant.name}" th:text="${restaurant.name}"></span></h1>
 
-    <table class="table table-striped mx-auto">
+    <table class="table table-hover">
         <tr>
             <th>Phone</th>
             <th>Email</th>
             <th>City</th>
             <th>Street</th>
             <th>Number</th>
-            <th>Owner Name</th>
-            <th>Owner Surname</th>
         </tr>
         <tr>
             <td th:text="${restaurant.phone}"></td>
             <td th:text="${restaurant.email}"></td>
-            <td th:text="${address.city}"></td>
-            <td th:text="${address.street}"></td>
-            <td th:text="${address.buildingNumber}"></td>
-            <td th:text="${owner.name}"></td>
-            <td th:text="${owner.surname}"></td>
+            <td th:text="${restaurant.city}"></td>
+            <td th:text="${restaurant.street}"></td>
+            <td th:text="${restaurant.buildingNumber}"></td>
             <td>
                 <a th:href="@{'/owner/restaurants/range/' + ${restaurant.name}}"
                    class="btn btn-primary" role="button">Adjust delivery range</a>
@@ -92,7 +93,7 @@
         <button type="submit" class="btn btn-info">Apply</button>
     </form>
 
-    <table class="table-striped">
+    <table class="table table-hover">
         <tr>
             <th>Name</th>
             <th>Price</th>
@@ -111,7 +112,7 @@
                 th:text="${menuItem.available ? 'In Menu' : 'Removed'}"></td>
             <td>
                 <form th:action="@{/owner/restaurants/edit-menu-item/{menuItemId}(menuItemId=${menuItem.menuItemId})}"
-                      th:method="POST">
+                      th:method="PATCH">
                     <button type="submit" th:class="${menuItem.available} ? 'btn btn-danger' : 'btn btn-success'">
                         <span th:text="${menuItem.available ? 'Remove' : 'Restore'}"></span>
                     </button>

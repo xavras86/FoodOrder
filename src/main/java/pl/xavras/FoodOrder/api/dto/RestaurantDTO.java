@@ -17,4 +17,9 @@ public class RestaurantDTO {
     private String phone;
     private String email;
 
+    private String country;
+    private String city;
+    private String street;
+    private String buildingNumber;
+
 }

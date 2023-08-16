@@ -27,14 +27,14 @@ public class AddressService {
         return addressDAO.saveAddress(address);
     }
 
-    public String createMapUrl(AddressDTO restaurant, AddressDTO delivery) {
+    public String createMapUrl(Address restaurant, Address delivery) {
 
         String origin = restaurant.getCountry() + " " + restaurant.getCity() + " " + restaurant.getStreet() + " " + restaurant.getBuildingNumber();
         String destination = delivery.getCountry() + " " + delivery.getCity() + " " + delivery.getStreet() + " " + delivery.getBuildingNumber();
         return "https://www.google.com/maps/embed/v1/directions?key=" + googleMapsApiKey + "&origin=" + origin + "&destination=" + destination;
     }
 
-    public String createMapUrlPoint(AddressDTO restaurant) {
+    public String createMapUrlPoint(Address restaurant) {
 
         String origin = restaurant.getCountry() + " " + restaurant.getCity() + " " + restaurant.getStreet() + " " + restaurant.getBuildingNumber();
 

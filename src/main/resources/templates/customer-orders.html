@@ -19,6 +19,8 @@
             text-align: center;
             font-size: 20px;
             margin: 10px;
+            background-repeat: no-repeat;
+            background-size: cover;
         }
         form-group {
             justify-content:center;
@@ -27,6 +29,9 @@
                 .pagination-centered {
         display: flex;
         justify-content: center;
+    }
+           .table tbody tr {
+      background-color: rgba(255, 193, 7, 0.20);
     }
 
 </style>
@@ -120,7 +125,7 @@
 
 
                     <form th:action="@{/customer/orders/cancel/{orderNumber}(orderNumber=${entry.key.orderNumber})}"
-                          th:method="PUT">
+                          th:method="PATCH">
                         <button type="submit" class="btn btn-warning" onclick="return confirm('Are you sure you want to cancel this order?')">
                             Anuluj
                         </button>

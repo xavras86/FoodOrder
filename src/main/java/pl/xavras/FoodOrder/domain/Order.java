@@ -1,9 +1,6 @@
 package pl.xavras.FoodOrder.domain;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Value;
-import lombok.With;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -13,6 +10,7 @@ import java.util.Set;
 @Value
 @Builder
 @Data
+@Getter
 public class Order {
 
     String orderNumber;

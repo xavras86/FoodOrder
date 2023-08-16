@@ -29,4 +29,8 @@ public interface OrderDAO {
     void completeOrder(Order order);
 
     Page<Order> findByOwnerAndCancelledAndCompletedPaged(Pageable pageable, Owner activeOwner, Boolean cancelled, Boolean completed);
+
+    Set<Order> findByRestaurantName(String restaurantName);
+
+    void deleteByOrderNumber(String orderNumber);
 }

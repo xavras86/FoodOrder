@@ -52,5 +52,9 @@ public interface OrderJpaRepository extends JpaRepository<OrderEntity, Integer> 
 
     Page<OrderEntity> findByRestaurantOwnerAndCancelledAndCompleted(Pageable pageable, OwnerEntity customer, boolean cancelled, boolean completed);
 
+    Set<OrderEntity> findByRestaurantName(String restaurantName);
+
+    void deleteByOrderNumber(String orderNumber);
 }
+
 
