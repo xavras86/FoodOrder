@@ -9,7 +9,9 @@ import pl.xavras.FoodOrder.business.dao.StreetDAO;
 import pl.xavras.FoodOrder.domain.Street;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -19,6 +21,8 @@ import java.util.stream.IntStream;
 public class StreetService {
 
     private final StreetDAO streetDAO;
+
+    private final RestaurantService restaurantService;
 
 
     public List<Street> findAll() {
@@ -37,13 +41,14 @@ public class StreetService {
 
     }
 
-    public List<Integer> generatePageNumbers(int currentPage, int totalPages) {
-        int numToShow = 5;
-        int start = Math.max(1, currentPage - numToShow / 2);
-        int end = Math.min(totalPages, start + numToShow - 1);
-
-        return IntStream.rangeClosed(start, end)
-                .boxed()
-                .collect(Collectors.toList());
+    public Map<Street, Boolean> createStreetStatusMap(String restaurantName, Page<Street> streetPage) {
+        return streetPage.stream()
+                .collect(Collectors.toMap(
+                        street -> street,
+                        street -> restaurantService.checkStreetCoverageForRestaurant(restaurantName, street),
+                        (existingValue, newValue) -> existingValue,
+                        LinkedHashMap::new
+                ));
     }
+
 }

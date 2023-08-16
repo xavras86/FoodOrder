@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,7 +25,7 @@ public class FoodOrderingUserDetailsService implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String userName) {
         UserEntity user = userRepository.findByUserName(userName);
-        if (user == null) {
+        if (Objects.isNull(user)) {
             throw new UsernameNotFoundException("User not found with username: " + userName);
         }
         List<GrantedAuthority> authorities = getUserAuthority(user.getRoles());

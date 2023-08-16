@@ -22,14 +22,14 @@ import java.util.List;
 @Slf4j
 public class CustomerRestaurantsController {
 
-    public static final String RESTAURANT = "/restaurants";
+    public static final String RESTAURANTS = "/customer/restaurants";
 
 
     private final RestaurantService restaurantService;
     private final UtilityService utilityService;
 
 
-    @GetMapping(RESTAURANT)
+    @GetMapping(RESTAURANTS)
     public String restaurants(Model model,
                               @RequestParam(defaultValue = "10") int pageSize,
                               @RequestParam(defaultValue = "1") int pageNumber,
@@ -48,7 +48,7 @@ public class CustomerRestaurantsController {
         model.addAttribute("sortBy", sortBy);
         model.addAttribute("sortDirection", sortDirection);
         model.addAttribute("pageNumbers", pageNumbers);
-        return "restaurants";
+        return "customer-restaurants";
     }
 
 

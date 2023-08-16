@@ -27,18 +27,34 @@
         }
 </style>
 
-<body>
+<body th:style="'background-image: url('+@{/images/background.jpg}+');'">
 
 <div class="container">
     <div class="page-header" id="banner">
         <br>
         <a class="btn btn-success btn-lg" th:href="@{/owner/restaurants}">Your restaurants</a>
         <a class="btn btn-secondary btn-lg" th:href="@{/owner/orders}">Your orders</a>
-        <a class="btn btn-warning btn-lg" th:href="@{/}">Back to home</a>
+        <a class="btn btn-warning btn-lg" th:href="@{/home}">Back to home</a>
         <a class="btn btn-dark btn-lg" th:href="@{/logout}">Logout</a>
         <br>
-        <h1>Owner Panel</h1>
-        <br>
+        <header>
+            <h1>Welcome, Restaurant Owner!</h1>
+            <p>Manage your restaurants and orders with ease.</p>
+        </header>
+        <main>
+            <section class="restaurants-section">
+                <h1>Your Restaurants</h1>
+                <p>Manage your menus, and delivery zones in the <a href="/foodorder/owner/restaurants">Your Restaurants</a> section.</p>
+            </section>
+
+
+            <section class="orders-section">
+                <h1>Order Management</h1>
+                <p>Stay organized by managing orders from your customers in the <a href="/foodorder/owner/orders">Your Orders</a> section.</p>
+            </section>
+
+
+
     </div>
 </div>
 <footer th:fragment="footer" class="text-center">&copy; 2023 FoodOrder</footer>

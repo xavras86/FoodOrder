@@ -32,14 +32,14 @@
 
 </style>
 
-<body>
+<body th:style="'background-image: url('+@{/images/background.jpg}+');'">
 
 <div class="container">
     <div class="page-header" id="banner">
         <br>
         <a class="btn btn-success btn-lg" th:href="@{/owner/restaurants}">Your restaurants</a>
         <a class="btn btn-secondary btn-lg" th:href="@{/owner/orders}">Your orders</a>
-        <a class="btn btn-warning btn-lg" th:href="@{/}">Back to home</a>
+        <a class="btn btn-warning btn-lg" th:href="@{/home}">Back to home</a>
         <a class="btn btn-dark btn-lg" th:href="@{/logout}">Logout</a>
         <br>
     </div>
@@ -121,13 +121,13 @@
     <form action="#" th:action="@{/owner/restaurants/add-restaurant}" th:method="POST">
         <div class="form-group">
 
-            Name: <input type="text" th:field="${restaurantDTO.name}"/><br>
-            Phone: <input type="text" th:field="${restaurantDTO.phone}"/><br>
-            Email: <input type="text" th:field="${restaurantDTO.email}"/><br>
-            Country: <input type="text" th:field="${addressDTO.country}"/><br>
-            City: <input type="text" th:field="${addressDTO.city}"/><br>
-            Street: <input type="text" th:field="${addressDTO.street}"/><br>
-            Building no.: <input type="text" th:field="${addressDTO.buildingNumber}"/><br>
+            Name: <input type="text" th:field="${restaurantDTO.name}"  required/><br>
+            Phone: <input type="text" th:field="${restaurantDTO.phone}" required/><br>
+            Email: <input type="text" th:field="${restaurantDTO.email}" required/><br>
+            Country: <input type="text" th:field="${addressDTO.country}" required/><br>
+            City: <input type="text" th:field="${addressDTO.city}" required/><br>
+            Street: <input type="text" th:field="${addressDTO.street}" required/><br>
+            Building no.: <input type="text" th:field="${addressDTO.buildingNumber}" required/><br>
 
         </div>
 

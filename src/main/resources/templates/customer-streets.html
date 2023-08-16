@@ -34,16 +34,16 @@
     }
 </style>
 
-<body>
+<body th:style="'background-image: url('+@{/images/background.jpg}+');'">
 
 <div class="container">
     <div class="page-header" id="banner">
         <br>
         <a class="btn btn-success btn-lg" th:href="@{/customer/address}">Order some food</a>
-        <a class="btn btn-primary btn-lg" th:href="@{/restaurants}">All restaurants</a>
-        <a class="btn btn-success btn-lg" th:href="@{/streets}">Restaurants by delivery street </a>
+        <a class="btn btn-primary btn-lg" th:href="@{/customer/restaurants}">All restaurants</a>
+        <a class="btn btn-success btn-lg" th:href="@{/customer/streets}">Restaurants by delivery street </a>
         <a class="btn btn-secondary btn-lg" th:href="@{/customer/orders}">Your orders</a>
-        <a class="btn btn-warning btn-lg" th:href="@{/}">Back to main page</a>
+        <a class="btn btn-warning btn-lg" th:href="@{/home}">Back to main page</a>
         <a class="btn btn-dark btn-lg" th:href="@{/logout}">Logout</a>
         <br>
     </div>
@@ -51,7 +51,7 @@
     <h1>Check who delivers food to selected streets:</h1>
 
 
-    <form action="#" th:action="@{/streets}" method="GET">
+    <form action="#" th:action="@{/customer/streets}" method="GET">
         <select id="sortBy" name="sortBy">
         <option value="city" th:selected="${sortBy == 'city'}">City</option>
         <option value="streetName" th:selected="${sortBy == 'streetName'}">Street</option>
@@ -82,7 +82,7 @@
             <td th:text="${street.streetName}"></td>
             <td>
                 <form action="#"
-                      th:action="@{restaurants/street/{streetName}(streetName=${street.streetName})}" method="GET">
+                      th:action="@{/customer/restaurants/street/{streetName}(streetName=${street.streetName})}" method="GET">
                     <button type="submit" class="btn btn-info">Show</button>
                 </form>
             </td>
@@ -94,7 +94,7 @@
             <ul class="pagination pagination-centered">
                 <li th:class="${currentPage == 1} ? 'page-item disabled' : 'page-item'">
                     <a class="page-link"
-                       th:href="@{/streets(pageSize=${pageSize}, sortBy=${sortBy}, sortDirection=${sortDirection},pageNumber=${currentPage - 1})}"
+                       th:href="@{/customer/streets(pageSize=${pageSize}, sortBy=${sortBy}, sortDirection=${sortDirection},pageNumber=${currentPage - 1})}"
                        aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
@@ -102,12 +102,12 @@
                 <li th:each="page : ${pageNumbers}"
                     th:classappend="${page == currentPage} ? 'page-item active' : 'page-item'">
                     <a class="page-link"
-                       th:href="@{/streets(pageSize=${pageSize}, sortBy=${sortBy}, sortDirection=${sortDirection}, pageNumber=${page})}"
+                       th:href="@{/customer/streets(pageSize=${pageSize}, sortBy=${sortBy}, sortDirection=${sortDirection}, pageNumber=${page})}"
                        th:text="${page}"></a>
                 </li>
                 <li th:class="${currentPage == totalPages} ? 'page-item disabled' : 'page-item'">
                     <a class="page-link"
-                       th:href="@{/streets(pageSize=${pageSize}, sortBy=${sortBy}, sortDirection=${sortDirection}, pageNumber=${currentPage + 1})}"
+                       th:href="@{/customer/streets(pageSize=${pageSize}, sortBy=${sortBy}, sortDirection=${sortDirection}, pageNumber=${currentPage + 1})}"
                        aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>

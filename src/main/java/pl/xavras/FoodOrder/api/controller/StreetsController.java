@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import pl.xavras.FoodOrder.business.StreetService;
+import pl.xavras.FoodOrder.business.UtilityService;
 import pl.xavras.FoodOrder.domain.Street;
 
 import java.util.ArrayList;
@@ -21,8 +22,10 @@ import java.util.List;
 @Slf4j
 public class StreetsController {
 
-    public static final String STREETS = "/streets";
+    public static final String STREETS = "/customer/streets";
     private final StreetService streetService;
+
+    private final UtilityService utilityService;
 
 
     @GetMapping(STREETS)
@@ -37,7 +40,7 @@ public class StreetsController {
                 pageSize,
                 Sort.by(Sort.Direction.fromString(sortDirection), sortBy));
         Page<Street> streetPage = streetService.findAll(pageable);
-        List<Integer> pageNumbers = streetService.generatePageNumbers(pageNumber, streetPage.getTotalPages());
+        List<Integer> pageNumbers = utilityService.generatePageNumbers(pageNumber, streetPage.getTotalPages());
 
         model.addAttribute("streets", streetPage.getContent());
         model.addAttribute("totalPages", streetPage.getTotalPages());

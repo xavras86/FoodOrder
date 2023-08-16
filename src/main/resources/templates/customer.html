@@ -7,7 +7,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
+
 <style type=text/css>
+
         h1 {
             justify-content:center;
             display: flex;
@@ -15,6 +17,7 @@
         }
         body {
             margin: 10px;
+            background-image: url('/images/background.jpg');
             background-color: Azure;
             text-align: center;
             font-size: 20px;
@@ -24,20 +27,44 @@
             justify-content:center;
             display: flex;
         }
+
+
+
 </style>
 
-<body>
+<body th:style="'background-image: url('+@{/images/background.jpg}+');'">
 
 <div class="container">
     <div class="page-header" id="banner">
         <br>
         <a class="btn btn-success btn-lg" th:href="@{/customer/address}">Order some food</a>
-        <a class="btn btn-primary btn-lg" th:href="@{/restaurants}">All restaurants</a>
-        <a class="btn btn-success btn-lg" th:href="@{/streets}">Restaurants by delivery street </a>
+        <a class="btn btn-primary btn-lg" th:href="@{/customer/restaurants}">All restaurants</a>
+        <a class="btn btn-success btn-lg" th:href="@{/customer/streets}">Restaurants by delivery street </a>
         <a class="btn btn-secondary btn-lg" th:href="@{/customer/orders}">Your orders</a>
         <a class="btn btn-dark btn-lg" th:href="@{/logout}">Logout</a>
-        <h1>CUSTOMER PANEL:</h1>
+
         <br>
+
+        <header>
+            <h1>Welcome to Food Order!</h1>
+            <p>Your favorite restaurants, delivered to your doorstep.</p>
+        </header>
+        <main>
+            <section class="address-section">
+                <h1>Discover Restaurants Near You</h1>
+                <p>To see restaurants that deliver food to your address, please enter your delivery address in <a
+                        href="/foodorder/customer/address">Order some food</a> section. </p>
+
+                <p>Not sure what to order? Browse the menu of our <a href="/foodorder/customer/restaurants">Restaurants</a> and
+                    enjoy the variety of delicious dishes.</p>
+            </section>
+
+            <section class="orders-section">
+                <h1>Your Orders</h1>
+                <p>Want to check your previous orders? Visit the <a href="/foodorder/customer/orders">Your Orders</a> section to
+                    see your order history.</p>
+            </section>
+        </main>
 
     </div>
 </div>

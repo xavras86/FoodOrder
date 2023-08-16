@@ -64,8 +64,8 @@
 
 </style>
 
-<body>
-<h1>Welcome</h1>
+<body th:style="'background-image: url('+@{/images/background.jpg}+');'">
+<h1>Login to FoodOrder</h1>
 <div class="container">
 
 
@@ -77,6 +77,9 @@
     <form th:action="@{/login}" method="post">
         <div th:if="${param.error}" class="text-center">
             <p style="color: red;">Invalid username or password</p>
+        </div>
+        <div th:if="${param.logout}" class="text-center">
+            <p style="color: green;">You have been successfully logged out</p>
         </div>
         <table>
             <tr>

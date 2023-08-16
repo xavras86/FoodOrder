@@ -31,13 +31,13 @@
 
 </style>
 
-<body>
+<body th:style="'background-image: url('+@{/images/background.jpg}+');'">
 <div class="container">
     <div class="page-header" id="banner">
         <br>
         <a class="btn btn-success btn-lg" th:href="@{/owner/restaurants}">Your restaurants</a>
         <a class="btn btn-secondary btn-lg" th:href="@{/owner/orders}">Your orders</a>
-        <a class="btn btn-warning btn-lg" th:href="@{/}">Back to home</a>
+        <a class="btn btn-warning btn-lg" th:href="@{/home}">Back to home</a>
         <a class="btn btn-dark btn-lg" th:href="@{/logout}">Logout</a>
 
         <br>
@@ -66,7 +66,7 @@
             <td th:text="${owner.surname}"></td>
             <td>
                 <a th:href="@{'/owner/restaurants/range/' + ${restaurant.name}}"
-                   class="btn btn-primary" role="button">Adjust deliery range</a>
+                   class="btn btn-primary" role="button">Adjust delivery range</a>
             </td>
         </tr>
     </table>
@@ -92,7 +92,7 @@
         <button type="submit" class="btn btn-info">Apply</button>
     </form>
 
-    <table class="table-bordered mx-auto">
+    <table class="table-striped">
         <tr>
             <th>Name</th>
             <th>Price</th>
@@ -111,7 +111,7 @@
                 th:text="${menuItem.available ? 'In Menu' : 'Removed'}"></td>
             <td>
                 <form th:action="@{/owner/restaurants/edit-menu-item/{menuItemId}(menuItemId=${menuItem.menuItemId})}"
-                      th:method="PUT">
+                      th:method="POST">
                     <button type="submit" th:class="${menuItem.available} ? 'btn btn-danger' : 'btn btn-success'">
                         <span th:text="${menuItem.available ? 'Remove' : 'Restore'}"></span>
                     </button>
@@ -157,8 +157,8 @@
           enctype="multipart/form-data">
         <div class="form-group">
             <input type="hidden" name="restaurantName" th:value="${restaurant.name}"/>
-            Name: <input type="text" th:field="*{name}"/><br>
-            Price: <input type="text" th:field="*{price}"/><br>
+            Name: <input type="text" th:field="*{name}" required/><br>
+            Price: <input type="text" th:field="*{price}" required/><br>
             Category:
             <select th:field="*{category}">
                 <option th:each="category : ${T(pl.xavras.FoodOrder.infrastructure.database.entity.MealCategory).values()}"

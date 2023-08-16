@@ -28,7 +28,7 @@
         }
 </style>
 
-<body>
+<body th:style="'background-image: url('+@{/images/background.jpg}+');'">
     <div class="container">
         <h1>Opsiee, an error occured</h1>
         <b><span th:if="${errorMessage}" th:text="${errorMessage}">Error</span></b>

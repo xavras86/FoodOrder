@@ -14,7 +14,10 @@ import pl.xavras.FoodOrder.api.dto.mapper.*;
 import pl.xavras.FoodOrder.business.*;
 import pl.xavras.FoodOrder.domain.*;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
@@ -23,17 +26,15 @@ import java.util.stream.Collectors;
 public class CustomerOrderCreationController {
 
 
-    public static final String RESTAURANTS_BY_STREET = "/restaurants/street/{street}";
-    private static final String RESTAURANT_BY_NAME = "/restaurants/{restaurantName}";
-    private static final String RESTAURANT_ADD_ITEMS = "/restaurants/addItems/{restaurantName}";
-    private static final String DELIVERY_ADDRESS = "/customer/address";
-    private static final String RESTAURANT_MENU_ITEM_DETAILS = "/restaurants/{restaurantName}/menu/{menuItemId}";
-    private static final String ORDER_THANKS = "/customer/orders/thanks/{orderNumber}";
-
-    private static final String SUBMIT_ADDRESS = "/customer/submit-address";
-
+    public static final String RESTAURANTS_BY_STREET = "/customer/restaurants/street/{street}";
     public static final String NO_ADDRESS_NOTIFY = "It looks like you haven't given us a delivery address yet, please complete it so we can tell you which restaurants deliver to your address.";
-
+    public static final String NO_ITEMS_IN_ORDER = "Your order does not contain any items, please try again.";
+    private static final String RESTAURANT_BY_NAME = "/customer/restaurants/{restaurantName}";
+    private static final String RESTAURANT_ADD_ITEMS = "/customer/restaurants/addItems/{restaurantName}";
+    private static final String DELIVERY_ADDRESS = "/customer/address";
+    private static final String RESTAURANT_MENU_ITEM_DETAILS = "/customer/restaurants/{restaurantName}/menu/{menuItemId}";
+    private static final String ORDER_THANKS = "/customer/orders/thanks/{orderNumber}";
+    private static final String SUBMIT_ADDRESS = "/customer/submit-address";
     private final RestaurantService restaurantService;
     private final OrderService orderService;
 
@@ -52,10 +53,9 @@ public class CustomerOrderCreationController {
     private final StreetMapper streetMapper;
 
 
-
     @GetMapping(DELIVERY_ADDRESS)
     public String showAddressForm(Model model) {
-        var all =  streetMapper.map(streetService.findAll());
+        var all = streetMapper.map(streetService.findAll());
         List<String> allCountries = List.of("Polska");
         List<String> allCities = List.of("Poznań");
         List<String> allStreets = all.stream().map(StreetDTO::getStreetName).toList();
@@ -74,7 +74,7 @@ public class CustomerOrderCreationController {
 
         session.setAttribute("addressDTO", addressDTO);
         redirectAttributes.addAttribute("street", addressDTO.getStreet());
-        return "redirect:/restaurants/street/{street}";
+        return "redirect:/customer/restaurants/street/{street}";
     }
 
     @GetMapping(RESTAURANTS_BY_STREET)
@@ -85,7 +85,7 @@ public class CustomerOrderCreationController {
                                           @RequestParam(defaultValue = "asc") String sortDirection,
                                           Model model) {
 
-        Pageable pageable = utilityService.createPagable(pageSize,pageNumber,sortBy,sortDirection);
+        Pageable pageable = utilityService.createPagable(pageSize, pageNumber, sortBy, sortDirection);
         Page<Restaurant> restaurantsByStreetNamePaged = restaurantService.findRestaurantsByStreetNamePaged(street, pageable);
         Page<RestaurantDTO> restaurantPage = restaurantsByStreetNamePaged
                 .map(restaurantMapper::map);
@@ -116,14 +116,13 @@ public class CustomerOrderCreationController {
                                      @RequestParam(defaultValue = "1") int pageNumber,
                                      @RequestParam(defaultValue = "name") String sortBy,
                                      @RequestParam(defaultValue = "asc") String sortDirection,
-                                     Model model){
+                                     Model model) {
 //todo refactor!
         var restaurant = restaurantService.findByName(restaurantName);
         var addressDTO = addressMapper.map(restaurant.getAddress());
         var owner = ownerMapper.map(restaurant.getOwner());
-        Set<MenuItemDTO> menuItemDTOs = menuItemMapper.map(restaurantService.getAvailableMenuItems(restaurant));
 
-        Pageable pageable = utilityService.createPagable(pageSize,pageNumber,sortBy,sortDirection);
+        Pageable pageable = utilityService.createPagable(pageSize, pageNumber, sortBy, sortDirection);
         Page<MenuItemDTO> menuItemsPage = menuItemService.getAvailableMenuItemsByRestaurant(restaurant, pageable)
                 .map(menuItemMapper::map);
         List<Integer> pageNumbers = utilityService.generatePageNumbers(pageNumber, menuItemsPage.getTotalPages());
@@ -145,7 +144,7 @@ public class CustomerOrderCreationController {
         model.addAttribute("sortBy", sortBy);
         model.addAttribute("sortDirection", sortDirection);
         model.addAttribute("pageNumbers", pageNumbers);
-        model.addAttribute("mapUrl",  mapUrl);
+        model.addAttribute("mapUrl", mapUrl);
 
         return "customer-restaurant-menu";
     }
@@ -159,17 +158,20 @@ public class CustomerOrderCreationController {
     ) {
 
         List<MenuItemOrderDTO> menuItemOrderDTOList = menuItemOrdersDTO.getOrders();
-        Set<MenuItemOrder> menuItemOrdersToOrder = new HashSet<>();
-        if(Objects.nonNull(menuItemOrderDTOList)) {
-            menuItemOrdersToOrder = menuItemOrderDTOList.stream()
-                    .filter(a -> a.getQuantity() > 0)
-                    .map(menuItemOrderMapper::map)
-                    .collect(Collectors.toSet());
-        }
 
-        if (Objects.isNull(session.getAttribute("addressDTO"))){
+
+        Set<MenuItemOrder> menuItemOrdersToOrder = getMenuItemOrders(menuItemOrderDTOList);
+
+        if (menuItemOrdersToOrder.isEmpty()) {
+            redirectAttributes.addAttribute("restaurantName", restaurantName);
+            redirectAttributes.addFlashAttribute("noItemsOrdered", NO_ITEMS_IN_ORDER);
+            return "redirect:/customer/restaurants/{restaurantName}";
+        }
+        if (Objects.isNull(session.getAttribute("addressDTO"))) {
+
             redirectAttributes.addFlashAttribute("messageNoAddress", NO_ADDRESS_NOTIFY);
-            return "redirect:/customer/address";}
+            return "redirect:/customer/address";
+        }
 
         AddressDTO orderAddressData = (AddressDTO) session.getAttribute("addressDTO");
 
@@ -178,15 +180,24 @@ public class CustomerOrderCreationController {
         Order placedOrder = orderService.placeOrder(deliveryAddress, restaurantName, menuItemOrdersToOrder);
         String orderNumber = placedOrder.getOrderNumber();
 
-        OrderDTO placed = orderMapper.mapToDTO(placedOrder);
-
-        session.setAttribute("placedOrder", placed);
-        session.setAttribute("orderNumber", orderNumber);
+//        OrderDTO placed = orderMapper.mapToDTO(placedOrder);
+//        session.setAttribute("placedOrder", placed);
+//        session.setAttribute("orderNumber", orderNumber);
 
         redirectAttributes.addAttribute("orderNumber", orderNumber);
 
         return "redirect:/customer/orders/thanks/{orderNumber}";
 
+    }
+
+    private Set<MenuItemOrder> getMenuItemOrders(List<MenuItemOrderDTO> menuItemOrderDTOList) {
+        if(Objects.nonNull(menuItemOrderDTOList)) {
+            Set<MenuItemOrder> menuItemOrdersToOrder = menuItemOrderDTOList.stream()
+                    .filter(a -> a.getQuantity() > 0)
+                    .map(menuItemOrderMapper::map)
+                    .collect(Collectors.toSet());
+            return menuItemOrdersToOrder;
+        }else return Collections.emptySet();
     }
 
     @GetMapping(RESTAURANT_MENU_ITEM_DETAILS)
@@ -205,15 +216,6 @@ public class CustomerOrderCreationController {
         return "customer-menu-item-details";
     }
 
-    private Set<MenuItemOrder> getMenuItemOrders(List<MenuItemOrderDTO> menuItemOrderDTOList) {
-        if(Objects.nonNull(menuItemOrderDTOList)) {
-            return menuItemOrderDTOList.stream()
-                    .filter(a -> a.getQuantity() > 0)
-                    .map(menuItemOrderMapper::map)
-                    .collect(Collectors.toSet());
-        }
-        return Collections.emptySet();
-    }
 
     @GetMapping(ORDER_THANKS)
 
@@ -233,7 +235,7 @@ public class CustomerOrderCreationController {
         model.addAttribute("restaurantAddress", restaurantAddressDTO);
         model.addAttribute("menuItemOrders", menuItemOrders);
         model.addAttribute("status", status);
-        model.addAttribute("mapUrl",  mapUrl);
+        model.addAttribute("mapUrl", mapUrl);
 
         return "customer-thank-you";
     }

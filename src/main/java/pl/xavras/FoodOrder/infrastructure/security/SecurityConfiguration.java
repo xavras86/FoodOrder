@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,21 +40,23 @@ public class SecurityConfiguration {
     @ConditionalOnProperty(value = "spring.security.enabled", havingValue = "true", matchIfMissing = true)
     SecurityFilterChain securityEnabled(HttpSecurity http) throws Exception {
         return http
-                .csrf((csrf) -> csrf.configure(http))// or method reference
+                .csrf(AbstractHttpConfigurer::disable)// or method reference
+//                .csrf((csrf) -> csrf.configure(http))// or method reference
                 .authorizeHttpRequests(requests -> requests
-                                .requestMatchers("/login", "/error", "/images/error.png", "/register").permitAll()
+                                .requestMatchers( "/home", "/login", "/error", "/images/error.png","/images/foodDefault.jpg","/images/background.jpg", "/register").permitAll()
 //                        .requestMatchers(HttpMethod.DELETE).hasAuthority("ADMIN")
-                                .requestMatchers("/**").hasAnyAuthority("OWNER", "CUSTOMER")
-//do ustawienia /customer/** - dla customer /owner** - dla ownera
+//                                .requestMatchers("/**").hasAnyAuthority("OWNER", "CUSTOMER")
+                                .requestMatchers("/customer/**").hasAnyAuthority("CUSTOMER")
+                                .requestMatchers("/owner/**", "/api/**").hasAnyAuthority("OWNER")
                 )
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
                         .failureUrl("/login?error=true")
                         .permitAll()
-                        .defaultSuccessUrl("/", true))
+                        .defaultSuccessUrl("/home", true))
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login")
+                        .logoutSuccessUrl("/login?logout=true")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .permitAll()
@@ -83,16 +86,16 @@ public class SecurityConfiguration {
 //        return http.build();
 //    }
 
-    @Bean
-    @ConditionalOnProperty(value = "spring.security.enabled", havingValue = "false")
-    SecurityFilterChain securityDisabled(HttpSecurity http) throws Exception {
-        http.csrf()
-                .disable()
-                .authorizeHttpRequests()
-                .anyRequest()
-                .permitAll();
-
-        return http.build();
-    }
+//    @Bean
+//    @ConditionalOnProperty(value = "spring.security.enabled", havingValue = "false")
+//    SecurityFilterChain securityDisabled(HttpSecurity http) throws Exception {
+//        http.csrf()
+//                .disable()
+//                .authorizeHttpRequests()
+//                .anyRequest()
+//                .permitAll();
+//
+//        return http.build();
+//    }
 
 }

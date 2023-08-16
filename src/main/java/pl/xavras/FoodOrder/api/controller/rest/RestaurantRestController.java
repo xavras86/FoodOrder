@@ -1,16 +1,26 @@
 package pl.xavras.FoodOrder.api.controller.rest;
 
-import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+import pl.xavras.FoodOrder.api.dto.AddressDTO;
+import pl.xavras.FoodOrder.api.dto.CustomerDTO;
 import pl.xavras.FoodOrder.api.dto.RestaurantDTO;
 import pl.xavras.FoodOrder.api.dto.RestaurantsDTO;
+import pl.xavras.FoodOrder.api.dto.mapper.AddressMapper;
+import pl.xavras.FoodOrder.api.dto.mapper.CustomerMapper;
 import pl.xavras.FoodOrder.api.dto.mapper.RestaurantMapper;
+import pl.xavras.FoodOrder.business.CustomerService;
+import pl.xavras.FoodOrder.business.OwnerService;
 import pl.xavras.FoodOrder.business.RestaurantService;
+import pl.xavras.FoodOrder.domain.Address;
+import pl.xavras.FoodOrder.domain.Customer;
+import pl.xavras.FoodOrder.domain.Restaurant;
+
+import java.net.URI;
 
 @RestController
 @Slf4j
@@ -18,25 +28,85 @@ import pl.xavras.FoodOrder.business.RestaurantService;
 @AllArgsConstructor
 public class RestaurantRestController {
     public static final String RESTAURANTS = "/api/restaurants";
-    public static final String RESTAURANTS_ID = "/api/restaurants/{restaurantName}";
+    public static final String RESTAURANTS_NAME = "/api/restaurants/{restaurantName}";
 
     private final RestaurantService restaurantService;
 
+    private final CustomerMapper customerMapper;
+
+    private final CustomerService customerService;
+
+
     private final RestaurantMapper restaurantMapper;
+
+    private final AddressMapper addressMapper;
 
     //localhost:8888/foodorder/api/restaurants
     @GetMapping(RESTAURANTS)
     public RestaurantsDTO restaurantsList() {
-        return RestaurantsDTO.of( restaurantService.findAll().stream()
+        return RestaurantsDTO.of(restaurantService.findAll().stream()
                 .map(restaurantMapper::map)
                 .toList());
     }
     //localhost:8888/foodorder/api/restaurants{restaurantName}
-    @GetMapping(RESTAURANTS_ID)
-    public RestaurantDTO restaurantDetails(@PathVariable String restaurantName ) {
+
+    @GetMapping(RESTAURANTS_NAME)
+    public RestaurantDTO restaurantDetails(@PathVariable String restaurantName) {
         return restaurantMapper.map(restaurantService.findByName(restaurantName));
 
     }
+
+    @PostMapping("/api")
+    public ResponseEntity<Restaurant> addRestaurant(
+            @RequestBody RestaurantDTO restaurantDTO) {
+
+        Restaurant newRestaurant = restaurantMapper.map(restaurantDTO);
+//        Address newAddress = addressMapper.map(addressDTO);
+        Restaurant restaurant = restaurantService.saveNewRestaurant(newRestaurant, Address.builder().country("Polska").city("Wroclaw").street("Polna").buildingNumber("22").build());
+        return ResponseEntity
+                .created(URI.create(RESTAURANTS + "/" + restaurant.getRestaurantId()))
+                .build();
+    }
+
+    @PostMapping("/api/customer")
+    public ResponseEntity<Customer> addCustomer(
+            @RequestBody CustomerDTO customerDTO) {
+
+        Customer newCustomer = customerMapper.map(customerDTO);
+        Customer customer = customerService.saveCustomer(newCustomer);
+        return ResponseEntity
+                .created(URI.create("/api/customer/" + customer.getCustomerId()))
+                .build();
+    }
+
+
+
+
+    //"reczne" tworzenie ResponseEntity
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add("Location",EMPLOYEES + EMPLOYEE_ID_RESULT.formatted(created.getEmployeeId()));
+//
+//        return new ResponseEntity<>(
+//                headers,
+//                HttpStatus.CREATED
+//        );
+
+
+//    @GetMapping(RESTAURANTS_NAME
+//
+//    )
+//    public RestaurantDTO restaurantDetails(@PathVariable String restaurantName ) {
+//        return restaurantMapper.map(restaurantService.findByName(restaurantName));
+//
+//    }
+
+//    //localhost:8888/foodorder/api/restaurants{restaurantName}
+//    @GetMapping(RESTAURANTS_ID)
+//    public OrdersDTO ordersCompleted(@PathVariable String restaurantName ) {
+//        return restaurantMapper.map(restaurantService.findByName(restaurantName));
+//
+//    }
+
 
 //    //localhost:8190/zajavka/employees/{employeeId}
 //    @GetMapping(value = EMPLOYEE_ID) //domyślenia zwraca JSON

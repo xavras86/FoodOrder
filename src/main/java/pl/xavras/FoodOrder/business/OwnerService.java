@@ -15,8 +15,6 @@ public class OwnerService {
 
     private final OwnerDAO ownerDAO;
 
-
-
     public Owner findByEmail(String email) {
         return ownerDAO.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Owner with email [%s] doest don't exists".formatted(email)));
@@ -32,7 +30,5 @@ public class OwnerService {
     public Owner activeOwner(){
         return ownerDAO.findLoggedOwner();
     }
-
-
 
 }

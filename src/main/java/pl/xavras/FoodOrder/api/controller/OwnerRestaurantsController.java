@@ -168,7 +168,7 @@ public class OwnerRestaurantsController {
         return "redirect:/owner/restaurants/{restaurantName}";
     }
 
-    @PutMapping(RESTAURANT_OWNER_EDIT)
+    @PostMapping(RESTAURANT_OWNER_EDIT)
     public String editMenuItem(@PathVariable Integer menuItemId,
                                @RequestParam("restaurantName") String restaurantName,
                                RedirectAttributes redirectAttributes) {
@@ -195,14 +195,7 @@ public class OwnerRestaurantsController {
         List<Integer> pageNumbers = utilityService.generatePageNumbers(pageNumber, streetPage.getTotalPages());
 
 
-//
-        Map<Street, Boolean> streetStatusMap = streetPage.stream()
-                .collect(Collectors.toMap(
-                        street -> street,
-                        street -> restaurantService.checkStreetCoverageForRestaurant(restaurantName, street),
-                        (existingValue, newValue) -> existingValue,
-                        LinkedHashMap::new
-                ));
+        Map<Street, Boolean> streetStatusMap = streetService.createStreetStatusMap(restaurantName, streetPage);
 
         model.addAttribute("restaurantName", restaurantName);
         model.addAttribute("streetStatusMap", streetStatusMap);
@@ -217,12 +210,11 @@ public class OwnerRestaurantsController {
     }
 
 
-    @PutMapping(RESTAURANT_OWNER_RANGE_EDIT)
+    @PostMapping(RESTAURANT_OWNER_RANGE_EDIT)
     public String editMenuItem(@PathVariable String restaurantName,
                                @PathVariable Integer streetId
 
     ) {
-        Restaurant restaurant = restaurantService.findByName(restaurantName);
         Street street = streetService.findById(streetId);
 
         restaurantService.alternateCoverageStateForStreet(restaurantName, street);

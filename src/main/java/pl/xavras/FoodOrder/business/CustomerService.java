@@ -27,8 +27,8 @@ public class CustomerService {
     }
 
     @Transactional
-    public void saveCustomer(Customer customer) {
-        customerDAO.saveCustomer(customer);
+    public Customer saveCustomer(Customer customer) {
+         return customerDAO.saveCustomer(customer);
     }
 
     public Customer activeCustomer(){

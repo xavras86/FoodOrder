@@ -38,7 +38,7 @@
 
 </style>
 
-<body>
+<body th:style="'background-image: url('+@{/images/background.jpg}+');'">
 <h1>Thank You for Your Order!</h1>
 
 <div class="container">
@@ -92,7 +92,7 @@
     </div>
 
     <p>
-        <a th:href="@{/}" class="btn btn-primary" role="button">Back to the main page</a>
+        <a th:href="@{/home}" class="btn btn-primary" role="button">Back to the main page</a>
     </p>
     <br>
 </div>

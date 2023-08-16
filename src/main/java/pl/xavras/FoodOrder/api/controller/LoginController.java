@@ -31,7 +31,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public class LoginController {
 
-    public static final String HOME = "/";
+    public static final String HOME = "/home";
 
     public static final String CONGRATULATIONS = """
             Hello %s,

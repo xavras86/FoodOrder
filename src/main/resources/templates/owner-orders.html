@@ -30,7 +30,7 @@
     }
 </style>
 
-<body>
+<body th:style="'background-image: url('+@{/images/background.jpg}+');'">
 
 
 <div class="container">
@@ -38,7 +38,7 @@
         <br>
         <a class="btn btn-success btn-lg" th:href="@{/owner/restaurants}">Your restaurants</a>
         <a class="btn btn-secondary btn-lg" th:href="@{/owner/orders}">Your orders</a>
-        <a class="btn btn-warning btn-lg" th:href="@{/}">Back to home</a>
+        <a class="btn btn-warning btn-lg" th:href="@{/home}">Back to home</a>
         <a class="btn btn-dark btn-lg" th:href="@{/logout}">Logout</a>
         <br>
     </div>

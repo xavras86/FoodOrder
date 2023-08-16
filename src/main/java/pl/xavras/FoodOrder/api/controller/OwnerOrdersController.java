@@ -119,7 +119,6 @@ public class OwnerOrdersController {
                               Model model) {
 
         Order order = orderService.findByOrderNumber(orderNumber);
-        OrderDTO orderDTO = orderMapper.mapToDTO(order);
         AddressDTO deliveryAddressDTO = addressMapper.map(order.getAddress());
         AddressDTO restaurantAddressDTO = addressMapper.map(order.getRestaurant().getAddress());
         Set<MenuItemOrder> menuItemOrders = order.getMenuItemOrders();
