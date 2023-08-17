@@ -2,6 +2,7 @@ package pl.xavras.FoodOrder.api.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -70,29 +71,13 @@ public class LoginController {
                         .orElseThrow(() -> new SecurityException("Something went terribly wrong with security. There is no role assigned to the user"))
                 .toString();
                 log.info("LOGGED USER ROLE: "+ authorities);
-//        var username = SecurityContextHolder.getContext().getAuthentication().getName();
-//        var role = userRepository.findByUserName(username).getRoles().stream().toList().get(0).getRole();
-//        userDetailsService.loadUserByUsername(username);
-        //to jest jakaś lipa - trzeba to przerobić ;)
+
         return switch (authorities) {
             case "CUSTOMER" -> "customer";
             case "OWNER" -> "owner";
             default ->
                     throw new SecurityException("Something went terribly wrong with security. No valid role assigned to the current user");
         };
-
-
-//        String authorities = authentication.getAuthorities()
-//                .stream()
-//                .findFirst()
-//                .orElseThrow(() -> new SecurityException("Something went terribly wrong with security. There is no role assigned to the user"))
-//                .toString();
-//
-//        return switch (authorities) {
-//            case "CUSTOMER" -> "customer";
-//            case "OWNER" -> "owner";
-//            default ->
-//                    throw new SecurityException("Something went terribly wrong with security. No valid role assigned to the current user");
     }
 
 
@@ -107,7 +92,7 @@ public class LoginController {
 
     @PostMapping(REGISTER)
     public String registerUser(
-            @ModelAttribute("userDTO") UserDTO userDTO,
+            @Valid @ModelAttribute("userDTO") UserDTO userDTO,
             RedirectAttributes redirectAttributes) {
 
         User user = userMapper.map(userDTO);

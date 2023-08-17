@@ -1,6 +1,9 @@
 package pl.xavras.FoodOrder.api.controller;
 
+
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,6 +24,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ModelAndView handleException(Exception ex) {
         String message = String.format("Other exception occurred: [%s]", ex.getMessage());
+        log.error(message, ex);
+        ModelAndView modelView = new ModelAndView("error");
+        modelView.addObject("errorMessage", message);
+        return modelView;
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ModelAndView handleException(DataIntegrityViolationException ex) {
+        String message = String.format("The provided value is already taken. Please choose a different value.  [%s]", ex.getMessage());
         log.error(message, ex);
         ModelAndView modelView = new ModelAndView("error");
         modelView.addObject("errorMessage", message);

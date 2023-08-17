@@ -1,5 +1,6 @@
 package pl.xavras.FoodOrder.api.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -81,7 +82,7 @@ public class OwnerRestaurantsController {
 
     @PostMapping(RESTAURANT_OWNER_ADD_RESTAURANT)
     public String addNewRestaurant(
-            @ModelAttribute("restaurantDTO") RestaurantDTO restaurantDTO
+            @Valid @ModelAttribute("restaurantDTO") RestaurantDTO restaurantDTO
     ) {
         Restaurant newRestaurant = restaurantMapper.map(restaurantDTO);
         restaurantService.saveNewRestaurant(newRestaurant);

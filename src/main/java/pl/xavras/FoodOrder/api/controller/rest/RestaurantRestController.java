@@ -1,6 +1,8 @@
 package pl.xavras.FoodOrder.api.controller.rest;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -44,12 +46,16 @@ public class RestaurantRestController {
     }
     @Operation(summary = "Fetching information about a restaurant based on its name.")
     @GetMapping(RESTAURANT_NAME)
-    public RestaurantDTO restaurantDetails(@PathVariable String restaurantName) {
+    public RestaurantDTO restaurantDetails(
+            @Parameter(description = "Name of the restaurant.")
+            @PathVariable String restaurantName) {
         return restaurantMapper.map(restaurantService.findByName(restaurantName));
     }
     @Operation(summary = "Fetching a list of streets where delivery services are provided by a restaurant based on its name.")
     @GetMapping(RESTAURANT_STREETS)
-    public StreetsDTO deliveryStreets(@PathVariable String restaurantName) {
+    public StreetsDTO deliveryStreets(
+            @Parameter(description = "Name of the restaurant.")
+            @PathVariable String restaurantName) {
 
         List<Street> streetsByRestaurantName = streetService.findStreetsByRestaurantName(restaurantName);
         return StreetsDTO.of(streetsByRestaurantName.stream()
@@ -59,7 +65,8 @@ public class RestaurantRestController {
     @Operation(summary = "Editing the name, phone number, and email address for a restaurant based on its current name.")
     @PostMapping(RESTAURANT_ADD)
     public ResponseEntity<RestaurantDTO> addRestaurant(
-            @RequestBody RestaurantDTO restaurantDTO) {
+            @Parameter(description = "Details of the new restaurant according to the names of the fields.")
+            @Valid @RequestBody RestaurantDTO restaurantDTO) {
 
         Restaurant restaurant = restaurantService.saveNewRestaurant(restaurantMapper.map(restaurantDTO));
         return ResponseEntity
@@ -69,10 +76,14 @@ public class RestaurantRestController {
     @Operation(summary = "Creating a new restaurant based on the name, contact information, and address. The owner is assigned based on the logged-in user.")
     @PatchMapping(RESTAURANT_EDIT)
     public ResponseEntity<?> editRestaurantData(
+            @Parameter(description = "Current name of the restaurant.")
             @PathVariable String restaurantName,
+            @Parameter(description = "New name of the restaurant.")
             @RequestParam(required = true) String newName,
-            @RequestParam(required = true) String newPhone,
-            @RequestParam(required = true) String newEmail
+            @Parameter(description = "New phone number of the restaurant.")
+            @Valid @RequestParam(required = true) String newPhone,
+            @Parameter(description = "New email address of the restaurant.")
+            @Valid @RequestParam(required = true) String newEmail
     ) {
         restaurantService.editRestaurant(restaurantName, newName, newPhone, newEmail);
         return ResponseEntity.ok().build();

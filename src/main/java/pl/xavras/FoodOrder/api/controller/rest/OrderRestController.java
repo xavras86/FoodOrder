@@ -1,6 +1,8 @@
 package pl.xavras.FoodOrder.api.controller.rest;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -36,33 +38,47 @@ public class OrderRestController {
                 .stream().map(orderMapper::mapToDTO).toList());
 
     }
+
     @Operation(summary = "Retrieving a list of all completed orders from the system, for a restaurant based on the name.")
     @GetMapping(ORDERS_RESTAURANT_NAME_COMPLETED)
-    public OrdersDTO completedOrdersListByRestaurant(@PathVariable String restaurantName) {
+    public OrdersDTO completedOrdersListByRestaurant(
+            @Parameter(description = "Name of the restaurant.")
+            @PathVariable String restaurantName) {
 
         return OrdersDTO.of(orderService.findByRestaurantName(restaurantName).stream()
                 .filter(Order::getCompleted)
                 .map(orderMapper::mapToDTO).toList());
     }
+
     @Operation(summary = "Retrieving a list of all canceled orders from the system, for a restaurant based on the name.")
     @GetMapping(ORDERS_RESTAURANT_NAME_CANCELED)
-    public OrdersDTO cancelledOrdersListByRestaurant(@PathVariable String restaurantName) {
+    public OrdersDTO cancelledOrdersListByRestaurant(
+            @Parameter(description = "Name of the restaurant.")
+            @PathVariable String restaurantName) {
 
         return OrdersDTO.of(orderService.findByRestaurantName(restaurantName).stream()
                 .filter(Order::getCancelled)
                 .map(orderMapper::mapToDTO).toList());
     }
+
     @Operation(summary = "Retrieving a list of all active orders from the system, for a restaurant based on the name.")
     @GetMapping(ORDERS_RESTAURANT_NAME_ACTIVE)
-    public OrdersDTO activeOrdersListByRestaurant(@PathVariable String restaurantName) {
+    public OrdersDTO activeOrdersListByRestaurant(
+            @Parameter(description = "Name of the restaurant.")
+            @PathVariable String restaurantName) {
 
         return OrdersDTO.of(orderService.findByRestaurantName(restaurantName).stream()
                 .filter(a -> ("Waiting".equals(orderService.orderStatus(a))))
                 .map(orderMapper::mapToDTO).toList());
     }
+
     @Operation(summary = "Fetching a map of fulfilled order numbers and their values for a specific restaurant based on the name within a specified time range (number of days ago).")
     @GetMapping(ORDERS_RESTAURANT_COMPLETED_ORDERS_VALUES_OVER_PERIOD)
-    public OrdersValueDTO completedOrderAndValues(@PathVariable String restaurantName, Integer periodDays) {
+    public OrdersValueDTO completedOrderAndValues(
+            @Parameter(description = "Name of the restaurant.")
+            @PathVariable String restaurantName,
+            @Parameter(description = "Number of days back from which values will be counted.")
+            @PathVariable Integer periodDays) {
         OffsetDateTime startMoment = OffsetDateTime.now().minus(periodDays, ChronoUnit.DAYS);
 
         return OrdersValueDTO.of(orderService.findByRestaurantName(restaurantName).stream()
@@ -70,9 +86,18 @@ public class OrderRestController {
                 .filter(order -> order.getCompletedDateTime().isAfter(startMoment))
                 .collect(Collectors.toMap(Order::getOrderNumber, Order::getTotalValue)));
     }
+
     @Operation(summary = "Deleting a canceled order based on the order number.")
+    @ApiResponse(responseCode = "404",
+            description = "The order with provided number was not found.")
+    @ApiResponse(responseCode = "400",
+            description = "The order with provided number is not canceled.")
+    @ApiResponse(responseCode = "204",
+            description = "The order has been deleted.")
     @DeleteMapping(ORDERS_RESTAURANT_CANCELED_DELETE)
-    public ResponseEntity<?> deleteCanceledOrder(@PathVariable String orderNumber) {
+    public ResponseEntity<?> deleteCanceledOrder(
+            @Parameter(description = "Number of the canceled order")
+            @PathVariable String orderNumber) {
 
         var byOrderNumber = orderService.findOptByOrderNumber(orderNumber);
         if (byOrderNumber.isEmpty()) {
