@@ -60,14 +60,14 @@ public class MenuItemService {
         return imageBase64;
     }
 
-    public Map<MenuItemDTO, Integer> createMenuItemQuantityMap(Page<MenuItem> menuItemDTOs) {
-        return  menuItemDTOs.stream()
-                .collect(Collectors.toMap(
-                        menuItemMapper::map,
-                        menuItem -> 0,
-                        (existingValue, newValue) -> existingValue,
-                        LinkedHashMap::new
-                ));
-    }
+//    public Map<MenuItemDTO, Integer> createMenuItemQuantityMap(Page<MenuItem> menuItemDTOs) {
+//        return  menuItemDTOs.stream()
+//                .collect(Collectors.toMap(
+//                        menuItemMapper::map,
+//                        menuItem -> 0,
+//                        (existingValue, newValue) -> existingValue,
+//                        LinkedHashMap::new
+//                ));
+//    }
 
 }

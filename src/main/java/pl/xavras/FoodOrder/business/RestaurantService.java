@@ -26,9 +26,9 @@ public class RestaurantService {
         return restaurantDAO.findAll();
     }
 
-    public Set<Restaurant> findRestaurantsByStreetName(String streetName) {
-        return restaurantDAO.findRestaurantsByStreetName(streetName);
-    }
+//    public Set<Restaurant> findRestaurantsByStreetName(String streetName) {
+//        return restaurantDAO.findRestaurantsByStreetName(streetName);
+//    }
 
     public Page<Restaurant> findRestaurantsByStreetNamePaged(String streetName, Pageable pageable) {
         return restaurantDAO.findRestaurantsByStreetNamePaged(streetName, pageable);
@@ -41,16 +41,10 @@ public class RestaurantService {
                         .formatted(restaurantName)));
     }
 
-    public Set<Restaurant> findByOwnerEmail(String ownerEmail) {
-        return restaurantDAO.findRestaurantsByOwner(ownerEmail);
-    }
+//    public Set<Restaurant> findByOwnerEmail(String ownerEmail) {
+//        return restaurantDAO.findRestaurantsByOwner(ownerEmail);
+//    }
 
-
-    public Set<MenuItem> getAvailableMenuItems(Restaurant restaurant) {
-        return restaurant.getMenuItems().stream()
-                .filter(a -> a.getAvailable())
-                .collect(Collectors.toSet());
-    }
 
     @Transactional
     public Restaurant saveNewRestaurant(Restaurant newRestaurant) {

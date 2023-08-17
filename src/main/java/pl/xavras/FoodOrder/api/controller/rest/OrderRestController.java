@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.xavras.FoodOrder.api.dto.OrdersDTO;
@@ -32,7 +33,7 @@ public class OrderRestController {
     private final OrderMapper orderMapper;
 
     @Operation(summary = "Retrieving a list of all orders from the system.")
-    @GetMapping(ORDERS)
+    @GetMapping(value = ORDERS, produces = MediaType.APPLICATION_JSON_VALUE)
     public OrdersDTO ordersList() {
         return OrdersDTO.of(orderService.findAll()
                 .stream().map(orderMapper::mapToDTO).toList());
@@ -40,7 +41,7 @@ public class OrderRestController {
     }
 
     @Operation(summary = "Retrieving a list of all completed orders from the system, for a restaurant based on the name.")
-    @GetMapping(ORDERS_RESTAURANT_NAME_COMPLETED)
+    @GetMapping(value = ORDERS_RESTAURANT_NAME_COMPLETED, produces = MediaType.APPLICATION_JSON_VALUE)
     public OrdersDTO completedOrdersListByRestaurant(
             @Parameter(description = "Name of the restaurant.")
             @PathVariable String restaurantName) {
@@ -51,7 +52,7 @@ public class OrderRestController {
     }
 
     @Operation(summary = "Retrieving a list of all canceled orders from the system, for a restaurant based on the name.")
-    @GetMapping(ORDERS_RESTAURANT_NAME_CANCELED)
+    @GetMapping(value = ORDERS_RESTAURANT_NAME_CANCELED, produces = MediaType.APPLICATION_JSON_VALUE)
     public OrdersDTO cancelledOrdersListByRestaurant(
             @Parameter(description = "Name of the restaurant.")
             @PathVariable String restaurantName) {
@@ -62,7 +63,7 @@ public class OrderRestController {
     }
 
     @Operation(summary = "Retrieving a list of all active orders from the system, for a restaurant based on the name.")
-    @GetMapping(ORDERS_RESTAURANT_NAME_ACTIVE)
+    @GetMapping(value = ORDERS_RESTAURANT_NAME_ACTIVE, produces = MediaType.APPLICATION_JSON_VALUE)
     public OrdersDTO activeOrdersListByRestaurant(
             @Parameter(description = "Name of the restaurant.")
             @PathVariable String restaurantName) {
@@ -73,7 +74,7 @@ public class OrderRestController {
     }
 
     @Operation(summary = "Fetching a map of fulfilled order numbers and their values for a specific restaurant based on the name within a specified time range (number of days ago).")
-    @GetMapping(ORDERS_RESTAURANT_COMPLETED_ORDERS_VALUES_OVER_PERIOD)
+    @GetMapping(value = ORDERS_RESTAURANT_COMPLETED_ORDERS_VALUES_OVER_PERIOD, produces = MediaType.APPLICATION_JSON_VALUE)
     public OrdersValueDTO completedOrderAndValues(
             @Parameter(description = "Name of the restaurant.")
             @PathVariable String restaurantName,
@@ -94,7 +95,7 @@ public class OrderRestController {
             description = "The order with provided number is not canceled.")
     @ApiResponse(responseCode = "204",
             description = "The order has been deleted.")
-    @DeleteMapping(ORDERS_RESTAURANT_CANCELED_DELETE)
+    @DeleteMapping(value = ORDERS_RESTAURANT_CANCELED_DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> deleteCanceledOrder(
             @Parameter(description = "Number of the canceled order")
             @PathVariable String orderNumber) {

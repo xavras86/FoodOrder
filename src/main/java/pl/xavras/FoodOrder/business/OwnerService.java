@@ -15,11 +15,11 @@ public class OwnerService {
 
     private final OwnerDAO ownerDAO;
 
-    public Owner findByEmail(String email) {
-        return ownerDAO.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Owner with email [%s] doest don't exists".formatted(email)));
-
-    }
+//    public Owner findByEmail(String email) {
+//        return ownerDAO.findByEmail(email)
+//                .orElseThrow(() -> new RuntimeException("Owner with email [%s] doest don't exists".formatted(email)));
+//
+//    }
 
     @Transactional
     public void saveOwner(Owner owner) {

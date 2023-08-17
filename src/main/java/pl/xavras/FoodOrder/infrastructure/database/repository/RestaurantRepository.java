@@ -27,13 +27,11 @@ public class RestaurantRepository implements RestaurantDAO {
     private final AddressEntityMapper addressEntityMapper;
 
     private final OwnerEntityMapper ownerEntityMapper;
-
     private final RestaurantStreetEntityMapper restaurantStreetEntityMapper;
 
     private final OwnerRepository ownerRepository;
     private final StreetRepository streetRepository;
     private final AddressRepository addressRepository;
-
     private final RestaurantStreetRepository restaurantStreetRepository;
 
 
@@ -59,8 +57,6 @@ public class RestaurantRepository implements RestaurantDAO {
                 .collect(Collectors.toSet());
     }
 
-
-
     @Override
     public Set<Restaurant> findRestaurantsByOwner(String ownerEmail) {
 
@@ -85,11 +81,10 @@ public class RestaurantRepository implements RestaurantDAO {
         return restaurantEntityMapper.mapFromEntity(restaurantJpaRepository.save(restaurantEntity));
     }
 
-
     public void alternateCoverageStateForStreet(String restaurantName, Street street) {
 
         RestaurantEntity restaurantEntity = restaurantJpaRepository.findByName(restaurantName)
-                .orElseThrow(() -> new RuntimeException(" No restaurant with name [%s]".formatted(restaurantName)));
+                .orElseThrow(() -> new RuntimeException("No restaurant with name [%s]".formatted(restaurantName)));
         Set<RestaurantStreetEntity> restaurantStreetEntities = restaurantEntity.getRestaurantStreets();
 
         RestaurantStreet restaurantStreet = RestaurantStreet.builder()
@@ -110,6 +105,7 @@ public class RestaurantRepository implements RestaurantDAO {
         RestaurantEntity save = restaurantJpaRepository.save(restaurantEntity);
 
     }
+
 
     @Override
     public Page<Restaurant> findAll(Pageable pageable) {

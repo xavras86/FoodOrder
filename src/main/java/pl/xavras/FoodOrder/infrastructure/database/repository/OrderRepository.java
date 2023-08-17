@@ -34,9 +34,6 @@ public class OrderRepository implements OrderDAO {
     private final CustomerEntityMapper customerEntityMapper;
     private final OwnerEntityMapper ownerEntityMapper;
 
-    private final RestaurantEntityMapper restaurantEntityMapper;
-
-
     private final RestaurantJpaRepository restaurantJpaRepository;
 
 

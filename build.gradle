@@ -30,6 +30,7 @@ dependencies {
 
 	//db
 	implementation 'org.flywaydb:flyway-core'
+	implementation 'junit:junit:4.13.1'
 	runtimeOnly 'org.postgresql:postgresql'
 
 	// annotations
@@ -47,25 +48,26 @@ dependencies {
 //    implementation "javax.annotation:javax.annotation-api:${javaxAnnotationApiVersion}"
 //    implementation "io.swagger:swagger-annotations:${swaggerAnnotationsVersion}"
 
-	//warning: unknown enum constant When.MAYBE
-	//reason: class file for javax.annotation.meta.When not found
-//    implementation "com.google.code.findbugs:jsr305:${jsr305Version}"
+//	warning: unknown enum constant When.MAYBE
+//	reason: class file for javax.annotation.meta.When not found
+    implementation "com.google.code.findbugs:jsr305:${jsr305Version}"
 
 	// test
-//    testRuntimeOnly 'com.h2database:h2'
-//    testCompileOnly 'org.projectlombok:lombok'
-//    testAnnotationProcessor 'org.projectlombok:lombok'
-//    testImplementation 'org.springframework.security:spring-security-test'
-//    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-//    testImplementation 'org.testcontainers:junit-jupiter'
-//    testImplementation 'org.testcontainers:postgresql'
+    testRuntimeOnly 'com.h2database:h2'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.testcontainers:postgresql'
+
 
 	//testy integracyjne
-//    testImplementation "io.rest-assured:rest-assured:${restAssuredVersion}"
-////    testImplementation "com.github.tomakehurst:wiremock:${wiremockVersion}" - nie działa ze spring boot 3
-//    testImplementation "org.slf4j:slf4j-api:${wiremockSlf4jVersion}"
-//    //trzeba było dodac osobno slf4j przed wiremock-standalone bo się mieszał z tym dostarczanym przez wiremock
-//    testImplementation "com.github.tomakehurst:wiremock-standalone:${wiremockVersion}"
+    testImplementation "io.rest-assured:rest-assured:${restAssuredVersion}"
+//    testImplementation "com.github.tomakehurst:wiremock:${wiremockVersion}" - nie działa ze spring boot 3
+    testImplementation "org.slf4j:slf4j-api:${wiremockSlf4jVersion}"
+    //trzeba było dodac osobno slf4j przed wiremock-standalone bo się mieszał z tym dostarczanym przez wiremock
+    testImplementation "com.github.tomakehurst:wiremock-standalone:${wiremockVersion}"
 
 }
 

@@ -51,7 +51,6 @@ public class OrderService {
         return orderDAO.findByOwnerAndCancelledAndCompletedPaged(pageable, activeOwner, cancelled, completed);
     }
 
-
     public Set<Order> findByOwnerEmail(String ownerEmail) {
         return orderDAO.findOrdersByOwnerEmail(ownerEmail);
     }

@@ -28,21 +28,16 @@ public class AddressRepository implements AddressDAO {
         );
     }
 
-
-    @Override
-    public Optional<Address> findByAddressId(Integer id) {
-        return addressJpaRepository.findById(id)
-                .map(addressEntityMapper::mapFromEntity);
-    }
-
+//    @Override
+//    public Optional<Address> findByAddressId(Integer id) {
+//        return addressJpaRepository.findById(id)
+//                .map(addressEntityMapper::mapFromEntity);
+//    }
 
     @Override
     public Address saveAddress(Address address) {
         AddressEntity toSave = addressEntityMapper.mapToEntity(address);
         AddressEntity saved = addressJpaRepository.saveAndFlush(toSave);
         return addressEntityMapper.mapFromEntity(saved);
-
     }
-
-
 }
