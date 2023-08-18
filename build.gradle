@@ -78,34 +78,21 @@ dependencyManagement {
 }
 
 
-//openApiGenerate {
-//    generatorName = "java"
-//    library = "webclient"
-//    configOptions = [
-//            serializableModel : "true",
-//            dateLibrary : "java8",
-//            serializationLibrary: "jackson"
-//    ]
-//
-//    outputDir = "$buildDir/generated-sources/openapi".toString()
-//    inputSpec = "$rootDir/src/main/resources/contracts/cepik-1.1.3.json".toString()
-//    apiPackage = "pl.zajavka.infrastructure.cepik.api"
-//    modelPackage = "pl.zajavka.infrastructure.cepik.model"
-//}
-//
-//sourceSets{
-//    main{
-//        java.srcDirs += "$buildDir/generated-sources/openapi/src/main/java"
-//    }
-//}
-//
-//compileJava.dependsOn tasks.openApiGenerate
 
 test {
 	useJUnitPlatform()
 	testLogging {
 		events "passed", "skipped", "failed"
 	}
+}
+
+bootJar {
+	archiveFileName = "foodorder.${archiveExtension.get()}"
+}
+
+jar {
+	enabled = false
+
 }
 
 compileJava.options.encoding = 'UTF-8'

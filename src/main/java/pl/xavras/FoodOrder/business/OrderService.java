@@ -34,9 +34,9 @@ public class OrderService {
         return orderDAO.findAll();
     }
 
-    public Set<Order> findByCustomerEmail(String email) {
-        return orderDAO.findOrdersByCustomerEmail(email);
-    }
+//    public Set<Order> findByCustomerEmail(String email) {
+//        return orderDAO.findOrdersByCustomerEmail(email);
+//    }
 
     public Page<Order> findOrdersByCustomerPaged(Pageable pageable, Customer activeCustomer) {
         return orderDAO.findOrdersByCustomerPaged(pageable, activeCustomer);
@@ -51,9 +51,9 @@ public class OrderService {
         return orderDAO.findByOwnerAndCancelledAndCompletedPaged(pageable, activeOwner, cancelled, completed);
     }
 
-    public Set<Order> findByOwnerEmail(String ownerEmail) {
-        return orderDAO.findOrdersByOwnerEmail(ownerEmail);
-    }
+//    public Set<Order> findByOwnerEmail(String ownerEmail) {
+//        return orderDAO.findOrdersByOwnerEmail(ownerEmail);
+//    }
 
     public Order findByOrderNumber(String orderNumber) {
         Optional<Order> byOrderNumber = orderDAO.findByOrderNumber(orderNumber);

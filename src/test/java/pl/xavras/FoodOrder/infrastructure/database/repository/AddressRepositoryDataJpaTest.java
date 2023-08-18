@@ -4,6 +4,7 @@ package pl.xavras.FoodOrder.infrastructure.database.repository;
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import pl.xavras.FoodOrder.domain.Address;
 import pl.xavras.FoodOrder.infrastructure.database.entity.AddressEntity;
 import pl.xavras.FoodOrder.infrastructure.database.repository.jpa.AddressJpaRepository;
@@ -25,7 +26,7 @@ class AddressRepositoryDataJpaTest extends AbstractIT {
     @Test
     void thatAddressCanBeSavedCorrectly() {
         //given
-        var addresses = List.of(someAddress1(), someAddress2(), someAddress3());
+        var addresses = List.of(someAddress1(), someAddress2());
         int sizeBefore = addressJpaRepository.findAll().size();
         addresses.forEach(a -> addressRepository.saveAddress(a));
 
@@ -34,14 +35,15 @@ class AddressRepositoryDataJpaTest extends AbstractIT {
         int sizeAfter = addressJpaRepository.findAll().size();
 
         //then
-        assertThat(sizeBefore).isEqualTo(sizeAfter - 3);
+        assertThat(sizeBefore).isEqualTo(sizeAfter - 2);
 
     }
+
 
     @Test
     void testThatFindExistingAddressWorksCorrectly() {
         //given
-        Address address = someAddress1();
+        Address address = someAddress3();
         Address addressSaved = addressRepository.saveAddress(address);
 
         //when

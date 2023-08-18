@@ -17,7 +17,7 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/foodOrdering
+    url: jdbc:postgresql://localhost:5432/foodorder
     username: postgres
     password: postgres
     hikari:
