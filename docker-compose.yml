@@ -3,7 +3,7 @@ services:
   backend:
     build: .
     ports:
-      - 8191:8191
+      - 8888:8888
     environment:
       - SPRING_PROFILES_ACTIVE=local
       - SPRING_DATASOURCE_URL=jdbc:postgresql://PostgreSQL:5432/foodorder
