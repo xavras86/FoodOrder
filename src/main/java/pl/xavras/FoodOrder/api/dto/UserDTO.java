@@ -7,6 +7,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -22,4 +26,16 @@ public class UserDTO {
     @Email
     private String email;
     private String role;
+
+    public Map<String, String> asMap() {
+        Map<String, String> result = new HashMap<>();
+        Optional.ofNullable(name).ifPresent(value -> result.put("name", value));
+        Optional.ofNullable(surname).ifPresent(value -> result.put("surname", value));
+        Optional.ofNullable(phone).ifPresent(value -> result.put("phone", value));
+        Optional.ofNullable(email).ifPresent(value -> result.put("email", value));
+        Optional.ofNullable(role).ifPresent(value -> result.put("role", value));
+        Optional.ofNullable(username).ifPresent(value -> result.put("username", value));
+        Optional.ofNullable(password).ifPresent(value -> result.put("password", value));
+        return result;
+    }
 }

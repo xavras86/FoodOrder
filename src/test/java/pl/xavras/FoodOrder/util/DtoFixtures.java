@@ -2,6 +2,7 @@ package pl.xavras.FoodOrder.util;
 
 import lombok.experimental.UtilityClass;
 import pl.xavras.FoodOrder.api.dto.*;
+import pl.xavras.FoodOrder.domain.Order;
 
 import java.util.List;
 
@@ -99,5 +100,8 @@ public class DtoFixtures {
                 .city("Poznań")
                 .streetName("Warszawska")
                 .build();
+    }
+    public static OrderDTO someOrderDTO() {
+        return OrderDTO.builder().build();
     }
 }

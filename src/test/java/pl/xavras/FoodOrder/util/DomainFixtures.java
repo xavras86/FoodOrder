@@ -122,14 +122,27 @@ public class DomainFixtures {
                 .build();
     }
 
-        public static RestaurantStreet someRestaurantStreet2() {
-            return RestaurantStreet.builder()
-                    .street(someStreet2())
-                    .restaurant(someRestaurant1())
-                    .build();
+    public static RestaurantStreet someRestaurantStreet2() {
+        return RestaurantStreet.builder()
+                .street(someStreet2())
+                .restaurant(someRestaurant1())
+                .build();
 
-        }
     }
+
+    public static MenuItem someMenuItem() {
+        return MenuItem.builder().build();
+    }
+
+    public static MenuItemOrder someMenuItemOrder() {
+        return MenuItemOrder.builder().build();
+    }
+
+    public static Order someOrder() {
+        return Order.builder().build();
+    }
+
+}
 
 
 

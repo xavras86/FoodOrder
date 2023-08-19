@@ -33,8 +33,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(controllers = RestaurantRestController.class)
+@AutoConfigureMockMvc(addFilters = false)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class RestaurantRestControllerWebMvcTest {
 
@@ -52,6 +52,33 @@ public class RestaurantRestControllerWebMvcTest {
 
     @MockBean
     private RestaurantMapper restaurantMapper;
+
+    @Test
+    void thatRestaurantCanBeRetrieverCorrectly() throws Exception {
+        //given
+        String restaurantName = "Some name";
+        Restaurant restaurant = DomainFixtures.someRestaurant1().withName(restaurantName);
+        RestaurantDTO restaurantDTO = DtoFixtures.someRestaurantDTO1().withName(restaurantName);
+
+        Mockito.when(restaurantService.findByName(restaurantName)).thenReturn(restaurant);
+        Mockito.when(restaurantMapper.map(ArgumentMatchers.any(Restaurant.class))).thenReturn(restaurantDTO);
+
+        //when, then
+
+        String endpoint = RestaurantRestController.RESTAURANT + "/" + restaurant.getName();
+
+
+        mockMvc.perform(get(endpoint, restaurantName))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is(restaurantDTO.getName())))
+                .andExpect(jsonPath("$.phone", is(restaurantDTO.getPhone())))
+                .andExpect(jsonPath("$.email", is(restaurantDTO.getEmail())))
+                .andExpect(jsonPath("$.country", is(restaurantDTO.getCountry())))
+                .andExpect(jsonPath("$.city", is(restaurantDTO.getCity())))
+                .andExpect(jsonPath("$.street", is(restaurantDTO.getStreet())))
+                .andExpect(jsonPath("$.buildingNumber", is(restaurantDTO.getBuildingNumber())));
+    }
 
     public static Stream<Arguments> thatPhoneValidationWorksCorrectly() {
         return Stream.of(
@@ -81,33 +108,6 @@ public class RestaurantRestControllerWebMvcTest {
     }
 
     @Test
-    void thatRestaurantCanBeRetrieverCorrectly() throws Exception {
-        //given
-        String restaurantName = "Some name";
-        Restaurant restaurant = DomainFixtures.someRestaurant1().withName(restaurantName);
-        RestaurantDTO restaurantDTO = DtoFixtures.someRestaurantDTO1().withName(restaurantName);
-
-        Mockito.when(restaurantService.findByName(restaurantName)).thenReturn(restaurant);
-        Mockito.when(restaurantMapper.map(ArgumentMatchers.any(Restaurant.class))).thenReturn(restaurantDTO);
-
-        //when, then
-
-        String endpoint = RestaurantRestController.RESTAURANT + "/" + restaurant.getName();
-
-
-        mockMvc.perform(get(endpoint, restaurantName))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", is(restaurantDTO.getName())))
-                .andExpect(jsonPath("$.phone", is(restaurantDTO.getPhone())))
-                .andExpect(jsonPath("$.email", is(restaurantDTO.getEmail())))
-                .andExpect(jsonPath("$.country", is(restaurantDTO.getCountry())))
-                .andExpect(jsonPath("$.city", is(restaurantDTO.getCity())))
-                .andExpect(jsonPath("$.street", is(restaurantDTO.getStreet())))
-                .andExpect(jsonPath("$.buildingNumber", is(restaurantDTO.getBuildingNumber())));
-    }
-
-    @Test
     void thatEmailValidationWorksCorrectly() throws Exception {
         //given
         final var request = """
@@ -133,7 +133,6 @@ public class RestaurantRestControllerWebMvcTest {
                     "phone": "%s"
                 }
                 """.formatted(phone);
-
 
 
         when(restaurantService.saveNewRestaurant(any(Restaurant.class)))

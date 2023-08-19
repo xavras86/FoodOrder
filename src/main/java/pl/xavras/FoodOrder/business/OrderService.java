@@ -30,12 +30,14 @@ public class OrderService {
     private final OrderMapper orderMapper;
 
 
+
+
     public List<Order> findAll() {
         return orderDAO.findAll();
     }
-
 //    public Set<Order> findByCustomerEmail(String email) {
 //        return orderDAO.findOrdersByCustomerEmail(email);
+
 //    }
 
     public Page<Order> findOrdersByCustomerPaged(Pageable pageable, Customer activeCustomer) {
@@ -50,9 +52,9 @@ public class OrderService {
     public Page<Order> findByOwnerAndCancelledAndCompletedPaged(Pageable pageable, Owner activeOwner, Boolean cancelled, Boolean completed) {
         return orderDAO.findByOwnerAndCancelledAndCompletedPaged(pageable, activeOwner, cancelled, completed);
     }
-
 //    public Set<Order> findByOwnerEmail(String ownerEmail) {
 //        return orderDAO.findOrdersByOwnerEmail(ownerEmail);
+
 //    }
 
     public Order findByOrderNumber(String orderNumber) {
@@ -88,6 +90,7 @@ public class OrderService {
     }
 
     //creating map with order key and key with flag telling if you still can cancel the order + mapping to order DTO
+
     public LinkedHashMap<OrderDTO, Boolean> createOrderCancellationMap(Page<Order> activeOrders) {
         return activeOrders.stream()
                 .collect(Collectors.toMap(
@@ -126,7 +129,19 @@ public class OrderService {
                 .build();
     }
 
-    private BigDecimal calculateTotalOrderValue(Set<MenuItemOrder> menuItemOrders) {
+    public String generateOrderNumber(OffsetDateTime when) {
+        return "%s.%s.%s-%s.%s.%s.%s".formatted(
+                when.getYear(),
+                when.getMonth().getValue(),
+                when.getDayOfMonth(),
+                when.getHour(),
+                when.getMinute(),
+                when.getSecond(),
+                (new Random().nextInt(90) + 10)
+        );
+    }
+
+    public BigDecimal calculateTotalOrderValue(Set<MenuItemOrder> menuItemOrders) {
         return menuItemOrders.stream()
                 .map(this::calculateOrderEntryValue)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -139,17 +154,7 @@ public class OrderService {
     }
 
 
-    private String generateOrderNumber(OffsetDateTime when) {
-        return "%s.%s.%s-%s.%s.%s.%s".formatted(
-                when.getYear(),
-                when.getMonth().getValue(),
-                when.getDayOfMonth(),
-                when.getHour(),
-                when.getMinute(),
-                when.getSecond(),
-                (new Random().nextInt(90) + 10)
-        );
-    }
+
 
     public Set<Order> findByRestaurantName(String restaurantName) {
         return orderDAO.findByRestaurantName(restaurantName);

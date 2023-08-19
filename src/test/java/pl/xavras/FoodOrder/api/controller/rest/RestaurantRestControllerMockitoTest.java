@@ -9,8 +9,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import pl.xavras.FoodOrder.api.dto.RestaurantDTO;
 import pl.xavras.FoodOrder.api.dto.RestaurantsDTO;
 import pl.xavras.FoodOrder.api.dto.StreetsDTO;
+import pl.xavras.FoodOrder.api.dto.mapper.OrderMapper;
 import pl.xavras.FoodOrder.api.dto.mapper.RestaurantMapper;
 import pl.xavras.FoodOrder.api.dto.mapper.StreetMapper;
+import pl.xavras.FoodOrder.business.OrderService;
 import pl.xavras.FoodOrder.business.RestaurantService;
 import pl.xavras.FoodOrder.business.StreetService;
 import pl.xavras.FoodOrder.domain.Restaurant;
@@ -24,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 class RestaurantRestControllerMockitoTest {
+
 
     @Mock
     private RestaurantService restaurantService;
@@ -39,22 +42,6 @@ class RestaurantRestControllerMockitoTest {
 
     @InjectMocks
     private RestaurantRestController restaurantRestController;
-
-    @Test
-    void thatRetrievingRestaurantWorksCorrectly() {
-        //given
-        String restaurantName = "some_name1";
-        Restaurant restaurant = DomainFixtures.someRestaurant1();
-
-        Mockito.when(restaurantService.findByName(restaurantName)).thenReturn(restaurant);
-        Mockito.when(restaurantMapper.map(restaurant)).thenReturn(DtoFixtures.someRestaurantDTO1());
-
-        //when
-        RestaurantDTO result = restaurantRestController.restaurantDetails(restaurantName);
-
-        //then
-        assertThat(result).isEqualTo(DtoFixtures.someRestaurantDTO1());
-    }
 
     @Test
     void thatRetrievingRestaurantListWorksCorrectly() {
@@ -73,6 +60,22 @@ class RestaurantRestControllerMockitoTest {
 
         //then
         assertThat(result).isEqualTo(DtoFixtures.someRestaurantsDTO());
+    }
+
+    @Test
+    void thatRetrievingRestaurantWorksCorrectly() {
+        //given
+        String restaurantName = "some_name1";
+        Restaurant restaurant = DomainFixtures.someRestaurant1();
+
+        Mockito.when(restaurantService.findByName(restaurantName)).thenReturn(restaurant);
+        Mockito.when(restaurantMapper.map(restaurant)).thenReturn(DtoFixtures.someRestaurantDTO1());
+
+        //when
+        RestaurantDTO result = restaurantRestController.restaurantDetails(restaurantName);
+
+        //then
+        assertThat(result).isEqualTo(DtoFixtures.someRestaurantDTO1());
     }
 
     @Test

@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface RestaurantEntityMapper {
 
-    Restaurant mapFromEntity (RestaurantEntity entity);
+     Restaurant mapFromEntity (RestaurantEntity entity);
 
     @Mapping(target = "restaurant.restaurantStreets", ignore = true)
     @Mapping(target = "street.restaurantStreets", ignore = true)

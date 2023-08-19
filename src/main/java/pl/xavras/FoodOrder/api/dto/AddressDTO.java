@@ -1,10 +1,8 @@
 package pl.xavras.FoodOrder.api.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+@With
 @Data
 @Builder
 @NoArgsConstructor

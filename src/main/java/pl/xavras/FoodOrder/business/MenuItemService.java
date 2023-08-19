@@ -24,7 +24,6 @@ public class MenuItemService {
 
     private final MenuItemDAO menuItemDAO;
 
-    private final MenuItemMapper menuItemMapper;
 
     @Transactional
     public MenuItem saveMenuItem(MenuItem menuItemToSave, Restaurant restaurant) {
@@ -60,14 +59,5 @@ public class MenuItemService {
         return imageBase64;
     }
 
-//    public Map<MenuItemDTO, Integer> createMenuItemQuantityMap(Page<MenuItem> menuItemDTOs) {
-//        return  menuItemDTOs.stream()
-//                .collect(Collectors.toMap(
-//                        menuItemMapper::map,
-//                        menuItem -> 0,
-//                        (existingValue, newValue) -> existingValue,
-//                        LinkedHashMap::new
-//                ));
-//    }
 
 }

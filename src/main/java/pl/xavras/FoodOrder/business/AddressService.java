@@ -37,7 +37,6 @@ public class AddressService {
     public String createMapUrlPoint(Address restaurant) {
 
         String origin = restaurant.getCountry() + " " + restaurant.getCity() + " " + restaurant.getStreet() + " " + restaurant.getBuildingNumber();
-
         return "https://www.google.com/maps/embed/v1/place?key=" + googleMapsApiKey  +"&q=" + origin;
     }
 }

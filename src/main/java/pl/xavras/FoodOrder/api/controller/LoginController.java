@@ -44,12 +44,12 @@ public class LoginController {
             Best regards,
             The Food Order Team
                         """;
-    private final FoodOrderingUserDetailsService userDetailsService;
+
     private final UserService userService;
 
     private final UserMapper userMapper;
 
-    private final UserRepository userRepository;
+
 
     @GetMapping(LOGIN)
     public String showLoginForm() {

@@ -48,8 +48,6 @@ public class OwnerRestaurantsController {
     private final StreetService streetService;
     private final RestaurantMapper restaurantMapper;
     private final MenuItemMapper menuItemMapper;
-    private final AddressMapper addressMapper;
-    private final OwnerMapper ownerMapper;
     private final UtilityService utilityService;
 
 

@@ -56,8 +56,8 @@ public class CustomerOrderCreationController {
     @GetMapping(DELIVERY_ADDRESS)
     public String showAddressForm(Model model) {
         var all = streetMapper.map(streetService.findAll());
-        List<String> allCountries = List.of("Polska");
-        List<String> allCities = List.of("Poznań");
+        List<String> allCountries = List.of("Polska"); //ograniczamy zasieg działania ;)
+        List<String> allCities = List.of("Poznań"); //ograniczamy zasieg działania ;)
         List<String> allStreets = all.stream().map(StreetDTO::getStreetName).toList();
         model.addAttribute("addressDTO", new AddressDTO());
         model.addAttribute("countries", allCountries);
