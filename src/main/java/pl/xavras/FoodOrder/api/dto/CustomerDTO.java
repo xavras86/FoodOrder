@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerDTO {  //do wywalenia caly obiekt + mapper
+public class CustomerDTO {
 
     private String name;
     private String surname;

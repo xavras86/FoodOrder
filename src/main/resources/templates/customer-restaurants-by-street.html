@@ -50,6 +50,12 @@
         </div>
 
 
+        <div th:if="${addressOutOfRange}" class="alert alert-primary">
+            <p th:text="${addressOutOfRange}"></p>
+        </div>
+
+
+
     <h1>Restaurants delivering to street:&nbsp; <span th:if="${street}" th:text="${street}"></span></h1>
 
         <form action="#" th:action="@{/customer/restaurants/street/{street}(street=${street})}" method="GET">

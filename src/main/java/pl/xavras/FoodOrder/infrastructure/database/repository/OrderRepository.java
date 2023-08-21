@@ -26,7 +26,6 @@ public class OrderRepository implements OrderDAO {
 
     private final OrderJpaRepository orderJpaRepository;
     private final OrderEntityMapper orderEntityMapper;
-
     private final AddressRepository addressRepository;
     private final MenuItemOrderEntityMapper menuItemOrderEntityMapper;
     private final AddressEntityMapper addressEntityMapper;
@@ -102,7 +101,7 @@ public class OrderRepository implements OrderDAO {
 
         OrderEntity toSave = orderEntityMapper.mapToEntity(order);
         RestaurantEntity restaurant = restaurantJpaRepository.findByName(restaurantName)
-                .orElseThrow(() -> new RuntimeException("Could not find restaurant with name: [%s]"
+                .orElseThrow(() -> new EntityNotFoundException("Could not find restaurant with name: [%s]"
                 .formatted(restaurantName)));
 
         //weryfikacja czy przekazany adres jest już w bazie
@@ -121,7 +120,7 @@ public class OrderRepository implements OrderDAO {
     @Override
     public void cancelOrder(Order order) {
         OrderEntity orderEntity = orderJpaRepository.findByOrderNumber(order.getOrderNumber())
-                .orElseThrow(() -> new RuntimeException("Could not find order with orderNumber: [%s]"
+                .orElseThrow(() -> new EntityNotFoundException("Could not find order with orderNumber: [%s]"
                 .formatted(order.getOrderNumber())));
         orderEntity.setCancelled(true);
         orderJpaRepository.save(orderEntity);
@@ -130,7 +129,7 @@ public class OrderRepository implements OrderDAO {
     @Override
     public void completeOrder(Order order) {
         OrderEntity orderEntity = orderJpaRepository.findByOrderNumber(order.getOrderNumber())
-                .orElseThrow(() -> new RuntimeException("Could not find order with orderNumber: [%s]"
+                .orElseThrow(() -> new EntityNotFoundException("Could not find order with orderNumber: [%s]"
                         .formatted(order.getOrderNumber())));
         orderEntity.setCompleted(true);
         orderEntity.setCompletedDateTime(OffsetDateTime.now());

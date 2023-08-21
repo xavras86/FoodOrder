@@ -25,10 +25,8 @@ public class RestaurantRepository implements RestaurantDAO {
     private final RestaurantJpaRepository restaurantJpaRepository;
     private final RestaurantEntityMapper restaurantEntityMapper;
     private final AddressEntityMapper addressEntityMapper;
-
     private final OwnerEntityMapper ownerEntityMapper;
     private final RestaurantStreetEntityMapper restaurantStreetEntityMapper;
-
     private final OwnerRepository ownerRepository;
     private final StreetRepository streetRepository;
     private final AddressRepository addressRepository;
@@ -84,7 +82,7 @@ public class RestaurantRepository implements RestaurantDAO {
     public void alternateCoverageStateForStreet(String restaurantName, Street street) {
 
         RestaurantEntity restaurantEntity = restaurantJpaRepository.findByName(restaurantName)
-                .orElseThrow(() -> new RuntimeException("No restaurant with name [%s]".formatted(restaurantName)));
+                .orElseThrow(() -> new EntityNotFoundException("No restaurant with name [%s]".formatted(restaurantName)));
         Set<RestaurantStreetEntity> restaurantStreetEntities = restaurantEntity.getRestaurantStreets();
 
         RestaurantStreet restaurantStreet = RestaurantStreet.builder()

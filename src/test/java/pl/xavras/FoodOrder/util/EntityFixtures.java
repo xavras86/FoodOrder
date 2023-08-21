@@ -2,8 +2,10 @@ package pl.xavras.FoodOrder.util;
 
 import lombok.experimental.UtilityClass;
 import pl.xavras.FoodOrder.infrastructure.database.entity.*;
-import pl.xavras.FoodOrder.infrastructure.security.UserEntity;
 
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.HashSet;
 
 
@@ -19,6 +21,26 @@ public class EntityFixtures {
                 .address(someAddressEntity1())
                 .owner(someOwnerEntity1())
                 .restaurantStreets(new HashSet<>())
+                .build();
+    }
+
+    public static CustomerEntity someCustomerEntity() {
+        return CustomerEntity.builder()
+                .customerId(1)
+                .name("Customer")
+                .surname("Testowy")
+                .phone("+48 000 000 000")
+                .email("testowy@customer.pl")
+                .build();
+    }
+
+    public static OwnerEntity someOwnerEntity() {
+        return OwnerEntity.builder()
+                .ownerId(1)
+                .name("Owner")
+                .surname("Testowy")
+                .phone("+48 111 111 111")
+                .email("testowy@owner.pl")
                 .build();
     }
 
@@ -75,6 +97,7 @@ public class EntityFixtures {
 
     public static OwnerEntity someOwnerEntity1() {
         return OwnerEntity.builder()
+                .ownerId(1)
                 .name("Jan")
                 .surname("Kowalski")
                 .email("jan@kowalski.pl")
@@ -119,6 +142,28 @@ public class EntityFixtures {
         return RestaurantStreetEntity.builder()
                 .street(someStreetEntity2())
                 .restaurant(someRestaurantEntity1())
+                .build();
+
+    }
+
+    public static MenuItemEntity someMenuItemEntity() {
+        return MenuItemEntity.builder().build();
+    }
+
+    public static OrderEntity someOrderEntity() {
+        return OrderEntity.builder()
+                .orderId(13)
+                .orderNumber("123")
+                .address(EntityFixtures.someAddressEntity1())
+                .restaurant(EntityFixtures.someRestaurantEntity1())
+                .completed(false)
+                .cancelled(false)
+                .customer(EntityFixtures.someCustomerEntity())
+                .receivedDateTime(OffsetDateTime.of(
+                        2022, 12, 12, 1, 1, 1, 1, ZoneOffset.UTC))
+                .totalValue(null)
+                .totalValue(new BigDecimal("123.12"))
+                .restaurant(EntityFixtures.someRestaurantEntity1())
                 .build();
 
     }

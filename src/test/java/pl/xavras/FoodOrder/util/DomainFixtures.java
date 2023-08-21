@@ -2,12 +2,23 @@ package pl.xavras.FoodOrder.util;
 
 import lombok.experimental.UtilityClass;
 import pl.xavras.FoodOrder.domain.*;
+import pl.xavras.FoodOrder.infrastructure.database.entity.CustomerEntity;
 
 import java.util.HashSet;
 
 
 @UtilityClass
 public class DomainFixtures {
+
+    public static Customer someCustomer() {
+        return Customer.builder()
+                .customerId(666)
+                .name("Customer")
+                .surname("Testowy")
+                .phone("+48 000 000 000")
+                .email("testowy@customer.pl")
+                .build();
+    }
 
     public static Restaurant someRestaurant1() {
         return Restaurant.builder()

@@ -1,5 +1,5 @@
-insert into OWNER (name, surname, phone, email) values ('Jonh', 'Doe', '571 731 7592', 'owner@gmail.com');
-insert into CUSTOMER (name, surname, phone, email) values ('Tomasz', 'Nowak', '417 595 1397', 'customer@gmail.com');
+insert into OWNER (name, surname, phone, email) values ('Jonh', 'Doe', '+48 571 731 7592', 'owner@gmail.com');
+insert into CUSTOMER (name, surname, phone, email) values ('Tomasz', 'Nowak', ' +48 417 595 1397', 'customer@gmail.com');
 
 
 

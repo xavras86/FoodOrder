@@ -37,13 +37,11 @@ public class SecurityConfiguration {
                 .and()
                 .build();
     }
-
     @Bean
     @ConditionalOnProperty(value = "spring.security.enabled", havingValue = "true", matchIfMissing = true)
     SecurityFilterChain securityEnabled(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)// or method reference
-//                .csrf((csrf) -> csrf.configure(http))// or method reference
                 .authorizeHttpRequests(requests -> requests
                                 .requestMatchers( "/home", "/login", "/error", "/images/error.png","/images/foodDefault.jpg","/images/background.jpg", "/register").permitAll()
                         .requestMatchers(HttpMethod.DELETE).hasAuthority("OWNER")
@@ -66,38 +64,17 @@ public class SecurityConfiguration {
                 .build();
     }
 
-//    @Bean
-//    @ConditionalOnProperty(value = "spring.security.enabled", havingValue = "true", matchIfMissing = true)
-//    SecurityFilterChain securityEnabled(HttpSecurity http) throws Exception {
-//        http.csrf()
-//            .disable()
-//            .authorizeHttpRequests()
-//            .requestMatchers("/login", "/error").permitAll()
-//            .requestMatchers("/**").hasAnyAuthority("OWNER")
-//            .requestMatchers("/**").hasAnyAuthority("CUSTOMER")
-//            .and()
-//            .formLogin()
-//            .permitAll()
-//            .and()
-//            .logout()
-//            .logoutSuccessUrl("/login")
-//            .invalidateHttpSession(true)
-//            .deleteCookies("JSESSIONID")
-//            .permitAll();
-//
-//        return http.build();
-//    }
 
-//    @Bean
-//    @ConditionalOnProperty(value = "spring.security.enabled", havingValue = "false")
-//    SecurityFilterChain securityDisabled(HttpSecurity http) throws Exception {
-//        http.csrf()
-//                .disable()
-//                .authorizeHttpRequests()
-//                .anyRequest()
-//                .permitAll();
-//
-//        return http.build();
-//    }
+    @Bean
+    @ConditionalOnProperty(value = "spring.security.enabled", havingValue = "false")
+    SecurityFilterChain securityDisabled(HttpSecurity http) throws Exception {
+        http.csrf()
+                .disable()
+                .authorizeHttpRequests()
+                .anyRequest()
+                .permitAll();
+
+        return http.build();
+    }
 
 }

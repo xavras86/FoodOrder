@@ -21,30 +21,19 @@ public class RestaurantService {
 
     private final RestaurantDAO restaurantDAO;
 
-
     public List<Restaurant> findAll() {
         return restaurantDAO.findAll();
     }
 
-//    public Set<Restaurant> findRestaurantsByStreetName(String streetName) {
-//        return restaurantDAO.findRestaurantsByStreetName(streetName);
-//    }
-
     public Page<Restaurant> findRestaurantsByStreetNamePaged(String streetName, Pageable pageable) {
         return restaurantDAO.findRestaurantsByStreetNamePaged(streetName, pageable);
     }
-
 
     public Restaurant findByName(String restaurantName) {
         return restaurantDAO.findByName(restaurantName)
                 .orElseThrow(() -> new EntityNotFoundException("Restaurant with name [%s] doest not exists"
                         .formatted(restaurantName)));
     }
-
-//    public Set<Restaurant> findByOwnerEmail(String ownerEmail) {
-//        return restaurantDAO.findRestaurantsByOwner(ownerEmail);
-//    }
-
 
     @Transactional
     public Restaurant saveNewRestaurant(Restaurant newRestaurant) {

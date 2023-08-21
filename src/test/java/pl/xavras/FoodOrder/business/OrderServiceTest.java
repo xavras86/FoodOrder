@@ -1,5 +1,7 @@
 package pl.xavras.FoodOrder.business;
 
+import jakarta.persistence.EntityNotFoundException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -127,20 +129,6 @@ class OrderServiceTest {
         assertEquals("Waiting", status);
     }
 
-    @Test
-    void testFindByOrderNumberExistingOrder() {
-        // Given
-
-        Order order = someOrder().withOrderNumber("1234");
-        when(orderDAO.findByOrderNumber("1234")).thenReturn(Optional.of(order));
-
-        // When
-        Order foundOrder = orderService.findByOrderNumber("1234");
-
-        // Then
-        assertNotNull(foundOrder);
-        assertEquals(order, foundOrder);
-    }
 
     @Test
     void testFindByOrderNumberNonExistingOrder() {
@@ -149,8 +137,26 @@ class OrderServiceTest {
         when(orderDAO.findByOrderNumber(orderNumber)).thenReturn(Optional.empty());
 
         // When, Then
-        assertThrows(NotFoundException.class, () -> orderService.findByOrderNumber(orderNumber));
+        Throwable exception = assertThrows(NotFoundException.class, () -> orderService.findByOrderNumber(orderNumber));
+        Assertions.assertEquals(String.format("Could not find order with orderNumber: [%s]", orderNumber), exception.getMessage());
     }
+
+    @Test
+    public void testFindByOrderNumberOrderExists() {
+        // Given
+        String orderNumber = "123456";
+        Order order = DomainFixtures.someOrder().withOrderNumber(orderNumber);
+        when(orderDAO.findByOrderNumber(orderNumber)).thenReturn(Optional.of(order));
+
+        // When
+        Order result = orderService.findByOrderNumber(orderNumber);
+
+        // Then
+        assertNotNull(result);
+        assertEquals(orderNumber, (result.getOrderNumber()));
+    }
+
+
 
 }
 

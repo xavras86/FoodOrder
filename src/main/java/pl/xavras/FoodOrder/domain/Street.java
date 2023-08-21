@@ -7,7 +7,7 @@ import java.util.Set;
 @With
 @Value
 @Builder
-@EqualsAndHashCode(of = "streetId")
+@EqualsAndHashCode(of = {"city","streetName"})
 @ToString(of = {"city", "streetName" })
 public class Street {
 

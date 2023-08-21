@@ -34,8 +34,8 @@ public class AddressEntity {
     @Column(name = "building_number")
     private String buildingNumber;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "address",cascade = CascadeType.ALL)
-    private RestaurantEntity restaurant;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "address")
+    private Set<RestaurantEntity> restaurants;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "address")
     private Set<OrderEntity> orders;

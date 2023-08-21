@@ -14,10 +14,7 @@ import pl.xavras.FoodOrder.api.dto.mapper.*;
 import pl.xavras.FoodOrder.business.*;
 import pl.xavras.FoodOrder.domain.*;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -29,6 +26,7 @@ public class CustomerOrderCreationController {
     public static final String RESTAURANTS_BY_STREET = "/customer/restaurants/street/{street}";
     public static final String NO_ADDRESS_NOTIFY = "It looks like you haven't given us a delivery address yet, please complete it so we can tell you which restaurants deliver to your address.";
     public static final String NO_ITEMS_IN_ORDER = "Your order does not contain any items, please try again.";
+    public static final String ADDRESS_OUT_OF_RANGE = "Unfortunately, we cannot accept your order as the selected restaurant does not deliver food to the address you've chosen. Please select a restaurant from the list of available options.";
     private static final String RESTAURANT_BY_NAME = "/customer/restaurants/{restaurantName}";
     private static final String RESTAURANT_ADD_ITEMS = "/customer/restaurants/addItems/{restaurantName}";
     private static final String DELIVERY_ADDRESS = "/customer/address";
@@ -44,7 +42,6 @@ public class CustomerOrderCreationController {
     private final UtilityService utilityService;
     private final RestaurantMapper restaurantMapper;
     private final AddressMapper addressMapper;
-    private final OwnerMapper ownerMapper;
     private final MenuItemOrderMapper menuItemOrderMapper;
     private final MenuItemMapper menuItemMapper;
     private final OrderMapper orderMapper;
@@ -119,7 +116,6 @@ public class CustomerOrderCreationController {
         var restaurant = restaurantService.findByName(restaurantName);
         RestaurantDTO restaurantDTO = restaurantMapper.map(restaurant);
 
-
         Pageable pageable = utilityService.createPagable(pageSize, pageNumber, sortBy, sortDirection);
         Page<MenuItemDTO> menuItemsPage = menuItemService.getAvailableMenuItemsByRestaurant(restaurant, pageable)
                 .map(menuItemMapper::map);
@@ -149,6 +145,7 @@ public class CustomerOrderCreationController {
     @PostMapping(RESTAURANT_ADD_ITEMS)
     public String addMenuItems(@PathVariable String restaurantName,
                                @ModelAttribute MenuItemOrdersDTO menuItemOrdersDTO,
+                               @ModelAttribute List<Street> streetsRange,
                                HttpSession session,
                                RedirectAttributes redirectAttributes
     ) {
@@ -158,20 +155,27 @@ public class CustomerOrderCreationController {
 
         Set<MenuItemOrder> menuItemOrdersToOrder = getMenuItemOrders(menuItemOrderDTOList);
 
+        //czy pusty "koszyk"
         if (menuItemOrdersToOrder.isEmpty()) {
             redirectAttributes.addAttribute("restaurantName", restaurantName);
             redirectAttributes.addFlashAttribute("noItemsOrdered", NO_ITEMS_IN_ORDER);
             return "redirect:/customer/restaurants/{restaurantName}";
         }
-        if (Objects.isNull(session.getAttribute("addressDTO"))) {
+        AddressDTO deliveryAddressDTO = (AddressDTO) session.getAttribute("addressDTO");
 
+        //czy brak podanego adresu
+        if (Objects.isNull(deliveryAddressDTO)) {
             redirectAttributes.addFlashAttribute("messageNoAddress", NO_ADDRESS_NOTIFY);
             return "redirect:/customer/address";
         }
+        Address deliveryAddress = addressMapper.map(deliveryAddressDTO);
+        //address poza zasięgiem
+        if(!streetService.isDeliveryStreetInRange(restaurantName, deliveryAddress)) {
+            redirectAttributes.addFlashAttribute("addressOutOfRange", ADDRESS_OUT_OF_RANGE);
+            redirectAttributes.addAttribute("street", deliveryAddressDTO.getStreet());
+            return "/customer/restaurants/street/{street}";
+        }
 
-        AddressDTO orderAddressData = (AddressDTO) session.getAttribute("addressDTO");
-
-        Address deliveryAddress = addressMapper.map(orderAddressData);
 
         Order placedOrder = orderService.placeOrder(deliveryAddress, restaurantName, menuItemOrdersToOrder);
         String orderNumber = placedOrder.getOrderNumber();
@@ -190,6 +194,7 @@ public class CustomerOrderCreationController {
                     .collect(Collectors.toSet());
         }else return Collections.emptySet();
     }
+
 
 
     @GetMapping(RESTAURANT_MENU_ITEM_DETAILS)

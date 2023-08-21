@@ -1,5 +1,6 @@
 package pl.xavras.FoodOrder.business;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class CustomerService {
 
     public Customer findByEmail(String email) {
         return customerDAO.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Customer with email [%s] doest don't exists".formatted(email)));
+                .orElseThrow(() -> new EntityNotFoundException("Customer with email [%s] doest don't exists".formatted(email)));
 
     }
 

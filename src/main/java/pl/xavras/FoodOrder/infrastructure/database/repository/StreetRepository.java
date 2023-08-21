@@ -21,7 +21,6 @@ public class StreetRepository implements StreetDAO {
     private final StreetJpaRepository streetJpaRepository;
     private final StreetEntityMapper streetEntityMapper;
 
-
     @Override
     public List<Street> findAll() {
         return streetJpaRepository.findAll().stream()

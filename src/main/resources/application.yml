@@ -1,5 +1,5 @@
 server:
-  port: 8888
+  port: 8190
   servlet:
     context-path: /foodorder
 
@@ -10,8 +10,6 @@ google:
 
 
 spring:
-#  main:
-#    allow-circular-references: true
 #  security:
 #    enabled: false
   datasource:
@@ -22,7 +20,7 @@ spring:
     password: postgres
     hikari:
       idle-timeout: 10000
-      connectionTimeout: 20000
+      connectionTimeout: 2000
       minimumIdle: 10
       maximumPoolSize: 20
   jpa:

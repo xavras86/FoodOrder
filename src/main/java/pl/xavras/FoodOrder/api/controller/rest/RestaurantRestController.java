@@ -20,13 +20,14 @@ import pl.xavras.FoodOrder.domain.Street;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @Slf4j
 @RequestMapping
 @AllArgsConstructor
 public class RestaurantRestController {
-    public static final String RESTAURANT = "/api/restaurant";
+    public static final String RESTAURANT = "/api/restaurants";
     public static final String RESTAURANT_NAME = "/api/restaurant/{restaurantName}";
     public static final String RESTAURANT_ADD = "/api/restaurant/add";
     public static final String RESTAURANT_EDIT = "/api/restaurant/edit/{restaurantName}";
@@ -58,7 +59,7 @@ public class RestaurantRestController {
             @Parameter(description = "Name of the restaurant.")
             @PathVariable String restaurantName) {
 
-        List<Street> streetsByRestaurantName = streetService.findStreetsByRestaurantName(restaurantName);
+        Set<Street> streetsByRestaurantName = streetService.findStreetsByRestaurantName(restaurantName);
         return StreetsDTO.of(streetsByRestaurantName.stream()
                 .map(streetMapper::map)
                 .toList());

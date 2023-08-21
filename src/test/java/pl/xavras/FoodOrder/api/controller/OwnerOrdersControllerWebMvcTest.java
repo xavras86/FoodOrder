@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class OwnerOrdersControllerWebMvcTest {
 
-    private final MockMvc mockMvc;
+    private MockMvc mockMvc;
     @Mock
     private OrderService orderService;
     @Mock

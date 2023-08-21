@@ -21,6 +21,7 @@ import pl.xavras.FoodOrder.util.DomainFixtures;
 import pl.xavras.FoodOrder.util.DtoFixtures;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -86,7 +87,7 @@ class RestaurantRestControllerMockitoTest {
         Street street2 = DomainFixtures.someStreet2();
         Street street3 = DomainFixtures.someStreet3();
 
-        Mockito.when(streetService.findStreetsByRestaurantName(restaurantName)).thenReturn(List.of(street1, street2, street3));
+        Mockito.when(streetService.findStreetsByRestaurantName(restaurantName)).thenReturn(Set.of(street1, street2, street3));
         Mockito.when(streetMapper.map(street1)).thenReturn(DtoFixtures.someStreetDTO1());
         Mockito.when(streetMapper.map(street2)).thenReturn(DtoFixtures.someStreetDTO2());
         Mockito.when(streetMapper.map(street3)).thenReturn(DtoFixtures.someStreetDTO3());

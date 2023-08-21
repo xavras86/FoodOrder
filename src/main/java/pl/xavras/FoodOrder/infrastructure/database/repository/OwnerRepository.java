@@ -39,8 +39,6 @@ public class OwnerRepository implements OwnerDAO {
                         .formatted(username)));
     }
 
-
-
     @Override
     public Owner saveOwner(Owner owner) {
         OwnerEntity toSave = ownerEntityMapper.mapToEntity(owner);

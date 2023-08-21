@@ -3,6 +3,7 @@ package pl.xavras.FoodOrder.infrastructure.database.repository.jpa;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import pl.xavras.FoodOrder.domain.MenuItem;
 import pl.xavras.FoodOrder.infrastructure.database.entity.MenuItemEntity;
 import pl.xavras.FoodOrder.infrastructure.database.entity.RestaurantEntity;
 
@@ -16,4 +17,6 @@ public interface MenuItemJpaRepository extends JpaRepository<MenuItemEntity, Int
     Page<MenuItemEntity> findByRestaurant(RestaurantEntity restaurant, Pageable pageable);
 
     Page<MenuItemEntity> findByRestaurantAndAvailable(RestaurantEntity restaurantEntity, boolean available, Pageable pageable);
+
+
 }

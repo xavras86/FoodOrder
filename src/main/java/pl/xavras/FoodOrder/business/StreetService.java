@@ -1,19 +1,18 @@
 package pl.xavras.FoodOrder.business;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.xavras.FoodOrder.business.dao.StreetDAO;
+import pl.xavras.FoodOrder.domain.Address;
 import pl.xavras.FoodOrder.domain.Restaurant;
 import pl.xavras.FoodOrder.domain.RestaurantStreet;
 import pl.xavras.FoodOrder.domain.Street;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -34,7 +33,7 @@ public class StreetService {
 
     public Street findById(Integer streetId) {
         return streetDAO.findByStreetId(streetId)
-                .orElseThrow(() -> new RuntimeException("Street with name [%s] doest not exists"
+                .orElseThrow(() -> new EntityNotFoundException("Street with name [%s] doest not exists"
                         .formatted(streetId)));
     }
 
@@ -53,11 +52,19 @@ public class StreetService {
                 ));
     }
 
-    public List<Street> findStreetsByRestaurantName(String restaurantName) {
+    public Set<Street> findStreetsByRestaurantName(String restaurantName) {
         Restaurant byName = restaurantService.findByName(restaurantName);
-        List<Street> streets = byName.getRestaurantStreets().stream()
-                .map(RestaurantStreet::getStreet).toList();
-        return streets;
+        return byName.getRestaurantStreets().stream()
+                .map(RestaurantStreet::getStreet).collect(Collectors.toSet());
+    }
+
+    public Boolean isDeliveryStreetInRange(String restaurantName, Address deliveryAddress){
+        Set<Street> deliveryRange = new HashSet<>(findStreetsByRestaurantName(restaurantName));
+        Street deliveryStreet = Street.builder()
+                .city(deliveryAddress.getCity())
+                .streetName(deliveryAddress.getStreet())
+                .build();
+        return deliveryRange.contains(deliveryStreet);
     }
 
 }
