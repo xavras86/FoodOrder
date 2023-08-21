@@ -47,17 +47,24 @@ http://localhost:8190/foodorder/
 http://localhost:8190/foodorder/swagger-ui/index.html
 ```
 5. Przy uruchomieniu aplikacja jest napełniana danymi rozruchowymi. Tworzone są również przykładowe konta dla właściciela i klienta
-```Właściciel - login: owner password: test```
-```Kliet - login: customer password: test```
+```
+Właściciel - login: owner password: test
+```
+
+```
+Kliet - login: customer password: test
+```
 
  ## Wykorzystane technologie
 
 1.Aplikacja została przygotowana z wykorzystaniem Spring Boot i bazy danych PostgreSQL. Schemat przedstawia tabele wraz z konfiguracją relacji.
-![schemat_bazy](https://github.com/xavras86/FoodOrder/assets/99759304/f12ac45d-05ce-48f2-ba95-0a57d2fa485a)
+
+![](https://github.com/xavras86/FoodOrder/assets/99759304/f12ac45d-05ce-48f2-ba95-0a57d2fa485a)
 
 2. Struktura samej aplikacji po stronie Java opiera się o model warstwowy z wyszczególnioną warstwą repozytoriów, serwisó i kontrollerów wraz z odpowiadającymi im warstwami obiektów
 tj. encji, obiektów domenowych i DTO, mapowania między poszczególnymi warstwami zostały zrealizowane z wykorzystaniem Mapstruct.
-![image](https://github.com/xavras86/FoodOrder/assets/99759304/2b93f9fb-186c-4301-8ec0-62341c4deaaa)
+
+![](https://github.com/xavras86/FoodOrder/assets/99759304/2b93f9fb-186c-4301-8ec0-62341c4deaaa)
 
 3. Dane rozruchowe są ładowane do aplikacji przy uruchopmieniu z wykorzystaniem skryptów migracyjnych Flyway.
 
