@@ -9,9 +9,6 @@ import pl.xavras.FoodOrder.domain.Restaurant;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface RestaurantMapper {
 
-
-
-
     default RestaurantDTO map(Restaurant restaurant){
         return RestaurantDTO.builder()
                 .name(restaurant.getName())

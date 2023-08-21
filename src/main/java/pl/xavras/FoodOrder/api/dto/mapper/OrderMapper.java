@@ -43,19 +43,4 @@ public interface OrderMapper extends OffsetDateTimeMapper {
 
     }
 
-//    @Mapping(source = "receivedDateTime", target = "receivedDateTime", qualifiedByName = "mapOffsetDateTimeToString")
-//    @Mapping(source = "completedDateTime", target = "completedDateTime", qualifiedByName = "mapOffsetDateTimeToString")
-//    default Order mapFromDTO(OrderDTO dto) {
-//
-//        return Order.builder()
-//                .address(Address.builder()
-//                        .country(dto.getAddress().getCountry())
-//                        .city(dto.getAddress().getCity())
-//                        .street(dto.getAddress().getStreet())
-//                        .buildingNumber(dto.getAddress().getBuildingNumber())
-//                        .build())
-//                .build();
-//        //pozostałe pola wyliczane w serwisie
-//    }
-
 }

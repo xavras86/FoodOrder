@@ -37,7 +37,7 @@ class MenuItemRepositoryDataJpaTest {
 
         //given
         MenuItemEntity menuItem = EntityFixtures.someMenuItemEntity()
-                .withMenuItemId(333)
+                .withMenuItemId(80)
                 .withName("Some beverage")
                 .withPrice(new BigDecimal("33.55"))
                 .withCategory(MealCategory.BEVERAGES)
@@ -52,7 +52,7 @@ class MenuItemRepositoryDataJpaTest {
 
         //then
         assertThat(foundMenuItem).isPresent();
-        assertThat(foundMenuItem.get().getMenuItemId()).isEqualTo(333);
+        assertThat(foundMenuItem.get().getMenuItemId()).isEqualTo(80);
         assertThat(foundMenuItem.get().getName()).isEqualTo("Some beverage");
         assertThat(foundMenuItem.get().getCategory()).isEqualTo(MealCategory.BEVERAGES);
         assertThat(foundMenuItem.get().getDescription()).isEqualTo("Some description");

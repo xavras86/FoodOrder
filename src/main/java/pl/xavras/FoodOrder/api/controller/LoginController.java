@@ -70,7 +70,7 @@ public class LoginController {
                 .findFirst()
                         .orElseThrow(() -> new SecurityException("Something went terribly wrong with security. There is no role assigned to the user"))
                 .toString();
-                log.info("LOGGED USER ROLE: "+ authorities);
+                log.info("Current user role: "+ authorities);
 
         return switch (authorities) {
             case "CUSTOMER" -> "customer";
@@ -79,9 +79,6 @@ public class LoginController {
                     throw new SecurityException("Something went terribly wrong with security. No valid role assigned to the current user");
         };
     }
-
-
-
 
 
     @GetMapping(REGISTER)
@@ -97,8 +94,6 @@ public class LoginController {
 
         User user = userMapper.map(userDTO);
         User createdUser = userService.registerNewUser(user);
-        log.info("user email" + userDTO.getEmail());
-
 
         if (Objects.nonNull(createdUser)) {
             redirectAttributes.addFlashAttribute("registrationCongratulation", CONGRATULATIONS

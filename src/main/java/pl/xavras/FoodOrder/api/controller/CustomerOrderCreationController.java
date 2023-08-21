@@ -145,7 +145,6 @@ public class CustomerOrderCreationController {
     @PostMapping(RESTAURANT_ADD_ITEMS)
     public String addMenuItems(@PathVariable String restaurantName,
                                @ModelAttribute MenuItemOrdersDTO menuItemOrdersDTO,
-                               @ModelAttribute List<Street> streetsRange,
                                HttpSession session,
                                RedirectAttributes redirectAttributes
     ) {
@@ -171,9 +170,9 @@ public class CustomerOrderCreationController {
         Address deliveryAddress = addressMapper.map(deliveryAddressDTO);
         //address poza zasięgiem
         if(!streetService.isDeliveryStreetInRange(restaurantName, deliveryAddress)) {
-            redirectAttributes.addFlashAttribute("addressOutOfRange", ADDRESS_OUT_OF_RANGE);
             redirectAttributes.addAttribute("street", deliveryAddressDTO.getStreet());
-            return "/customer/restaurants/street/{street}";
+            redirectAttributes.addFlashAttribute("addressOutOfRange", ADDRESS_OUT_OF_RANGE);
+            return "redirect:/customer/restaurants/street/{street}";
         }
 
 
