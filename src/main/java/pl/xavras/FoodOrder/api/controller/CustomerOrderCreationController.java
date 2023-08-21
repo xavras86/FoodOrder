@@ -22,25 +22,19 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CustomerOrderCreationController {
 
-
-    public static final String RESTAURANTS_BY_STREET = "/customer/restaurants/street/{street}";
     public static final String NO_ADDRESS_NOTIFY = "It looks like you haven't given us a delivery address yet, please complete it so we can tell you which restaurants deliver to your address.";
     public static final String NO_ITEMS_IN_ORDER = "Your order does not contain any items, please try again.";
     public static final String ADDRESS_OUT_OF_RANGE = "Unfortunately, we cannot accept your order as the selected restaurant does not deliver food to the address you've chosen. Please select a restaurant from the list of available options.";
-    private static final String RESTAURANT_BY_NAME = "/customer/restaurants/{restaurantName}";
     private static final String RESTAURANT_ADD_ITEMS = "/customer/restaurants/addItems/{restaurantName}";
     private static final String DELIVERY_ADDRESS = "/customer/address";
     private static final String RESTAURANT_MENU_ITEM_DETAILS = "/customer/restaurants/{restaurantName}/menu/{menuItemId}";
     private static final String ORDER_THANKS = "/customer/orders/thanks/{orderNumber}";
     private static final String SUBMIT_ADDRESS = "/customer/submit-address";
-    private final RestaurantService restaurantService;
     private final OrderService orderService;
 
     private final StreetService streetService;
     private final MenuItemService menuItemService;
 
-    private final UtilityService utilityService;
-    private final RestaurantMapper restaurantMapper;
     private final AddressMapper addressMapper;
     private final MenuItemOrderMapper menuItemOrderMapper;
     private final MenuItemMapper menuItemMapper;
@@ -74,74 +68,6 @@ public class CustomerOrderCreationController {
         return "redirect:/customer/restaurants/street/{street}";
     }
 
-    @GetMapping(RESTAURANTS_BY_STREET)
-    public String showRestaurantsByStreet(@PathVariable String street,
-                                          @RequestParam(defaultValue = "10") int pageSize,
-                                          @RequestParam(defaultValue = "1") int pageNumber,
-                                          @RequestParam(defaultValue = "name") String sortBy,
-                                          @RequestParam(defaultValue = "asc") String sortDirection,
-                                          Model model) {
-
-        Pageable pageable = utilityService.createPagable(pageSize, pageNumber, sortBy, sortDirection);
-        Page<Restaurant> restaurantsByStreetNamePaged = restaurantService.findRestaurantsByStreetNamePaged(street, pageable);
-        Page<RestaurantDTO> restaurantPage = restaurantsByStreetNamePaged
-                .map(restaurantMapper::map);
-
-        List<Integer> pageNumbers = utilityService.generatePageNumbers(pageNumber, restaurantPage.getTotalPages());
-
-        List<Address> addresses = restaurantsByStreetNamePaged.map(Restaurant::getAddress).stream().toList();
-
-
-        model.addAttribute("restaurants", restaurantPage.getContent());
-        model.addAttribute("addresses", addresses);
-        model.addAttribute("street", street);
-        model.addAttribute("totalPages", restaurantPage.getTotalPages());
-        model.addAttribute("currentPage", pageNumber);
-        model.addAttribute("pageSize", pageSize);
-        model.addAttribute("sortBy", sortBy);
-        model.addAttribute("sortDirection", sortDirection);
-        model.addAttribute("pageNumbers", pageNumbers);
-
-        return "customer-restaurants-by-street";
-    }
-
-    @GetMapping(RESTAURANT_BY_NAME)
-    public String showRestaurantMenu(@PathVariable String restaurantName,
-                                     @RequestParam(defaultValue = "10") int pageSize,
-                                     @RequestParam(defaultValue = "1") int pageNumber,
-                                     @RequestParam(defaultValue = "name") String sortBy,
-                                     @RequestParam(defaultValue = "asc") String sortDirection,
-                                     Model model) {
-
-        var restaurant = restaurantService.findByName(restaurantName);
-        RestaurantDTO restaurantDTO = restaurantMapper.map(restaurant);
-
-        Pageable pageable = utilityService.createPagable(pageSize, pageNumber, sortBy, sortDirection);
-        Page<MenuItemDTO> menuItemsPage = menuItemService.getAvailableMenuItemsByRestaurant(restaurant, pageable)
-                .map(menuItemMapper::map);
-        List<Integer> pageNumbers = utilityService.generatePageNumbers(pageNumber, menuItemsPage.getTotalPages());
-
-        MenuItemOrdersDTO menuItemOrdersDTO = new MenuItemOrdersDTO(menuItemsPage.stream()
-                .map(a -> new MenuItemOrderDTO(0, a))
-                .toList());
-
-        String mapUrl = addressService.createMapUrlPoint(restaurant.getAddress());
-
-        model.addAttribute("restaurant", restaurantDTO);
-        model.addAttribute("menuItems", menuItemsPage.getContent());
-        model.addAttribute("menuItemOrdersDTO", menuItemOrdersDTO);
-        model.addAttribute("totalPages", menuItemsPage.getTotalPages());
-        model.addAttribute("currentPage", pageNumber);
-        model.addAttribute("pageSize", pageSize);
-        model.addAttribute("sortBy", sortBy);
-        model.addAttribute("sortDirection", sortDirection);
-        model.addAttribute("pageNumbers", pageNumbers);
-        model.addAttribute("mapUrl", mapUrl);
-
-        return "customer-restaurant-menu";
-    }
-
-
     @PostMapping(RESTAURANT_ADD_ITEMS)
     public String addMenuItems(@PathVariable String restaurantName,
                                @ModelAttribute MenuItemOrdersDTO menuItemOrdersDTO,
@@ -150,7 +76,6 @@ public class CustomerOrderCreationController {
     ) {
 
         List<MenuItemOrderDTO> menuItemOrderDTOList = menuItemOrdersDTO.getOrders();
-
 
         Set<MenuItemOrder> menuItemOrdersToOrder = getMenuItemOrders(menuItemOrderDTOList);
 
@@ -218,7 +143,6 @@ public class CustomerOrderCreationController {
     public String orderPlaced(@PathVariable String orderNumber,
                               Model model) {
 
-
         Order order = orderService.findByOrderNumber(orderNumber);
         OrderDTO orderDTO = orderMapper.mapToDTO(order);
         Address restaurantAddress = order.getAddress();
@@ -237,11 +161,5 @@ public class CustomerOrderCreationController {
 
         return "customer-thank-you";
     }
-
-    private Restaurant getRestaurant(String restaurantName) {
-        return restaurantService
-                .findByName(restaurantName);
-    }
-
 
 }

@@ -7,6 +7,7 @@ import org.hibernate.annotations.FetchMode;
 
 import java.util.Set;
 
+@With
 @Getter
 @Setter
 @EqualsAndHashCode(of = "streetId")

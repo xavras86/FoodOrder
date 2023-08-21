@@ -142,7 +142,6 @@ public class CustomerOrdersController {
         return orderDetails(orderNumber, model);
     }
 
-
     @PatchMapping(ORDERS_CANCEL)
     public String cancelOrder(@PathVariable String orderNumber) {
         Order orderToCancel = orderService.findByOrderNumber(orderNumber);

@@ -2,6 +2,7 @@ package pl.xavras.FoodOrder.infrastructure.database.repository;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -17,6 +18,7 @@ import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.RestaurantE
 
 import java.util.List;
 
+@Slf4j
 @Repository
 @AllArgsConstructor
 public class MenuItemRepository implements MenuItemDAO {
@@ -43,6 +45,7 @@ public class MenuItemRepository implements MenuItemDAO {
                         .formatted(restaurant.getName())));
         toSave.setRestaurant(restaurantToSet);
         MenuItemEntity saved = menuItemJpaRepository.save(toSave);
+        log.info("Created new Menu Item Entity: "+ saved.getName());
         return menuItemMapper.mapFromEntity(saved);
     }
 

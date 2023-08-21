@@ -2,13 +2,14 @@ package pl.xavras.FoodOrder.api.dto.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import pl.xavras.FoodOrder.api.dto.*;
-import pl.xavras.FoodOrder.domain.Address;
+import pl.xavras.FoodOrder.api.dto.AddressDTO;
+import pl.xavras.FoodOrder.api.dto.CustomerDTO;
+import pl.xavras.FoodOrder.api.dto.OrderDTO;
+import pl.xavras.FoodOrder.api.dto.RestaurantDTO;
 import pl.xavras.FoodOrder.domain.Order;
 
 @Mapper(componentModel = "spring")
 public interface OrderMapper extends OffsetDateTimeMapper {
-
 
 
     @Mapping(source = "receivedDateTime", target = "receivedDateTime", qualifiedByName = "mapOffsetDateTimeToString")
@@ -28,8 +29,8 @@ public interface OrderMapper extends OffsetDateTimeMapper {
                         .build())
                 .customer(CustomerDTO.builder()
                         .name(order.getCustomer().getName())
-                        .surname(order.getCustomer().getName())
-                        .email(order.getCustomer().getName())
+                        .surname(order.getCustomer().getSurname())
+                        .email(order.getCustomer().getEmail())
                         .phone(order.getCustomer().getPhone())
                         .build())
                 .orderNumber(order.getOrderNumber())
@@ -40,7 +41,6 @@ public interface OrderMapper extends OffsetDateTimeMapper {
                 .completedDateTime(mapOffsetDateTimeToString(order.getCompletedDateTime()))
                 .menuItemOrders(order.getMenuItemOrders())
                 .build();
-
     }
 
 }

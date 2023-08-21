@@ -2,9 +2,7 @@ package pl.xavras.FoodOrder.api.controller;
 
 
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindException;
@@ -39,17 +37,6 @@ public class GlobalExceptionHandler {
         return modelView;
     }
 
-
-    @ExceptionHandler(SecurityException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ModelAndView handleException(SecurityException ex) {
-        String message = String.format("Securtiy exception occured: [%s]", ex.getMessage());
-        log.error(message, ex);
-        ModelAndView modelView = new ModelAndView("error");
-        modelView.addObject("errorMessage", message);
-        return modelView;
-    }
-
     @ExceptionHandler(UsernameNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ModelAndView userNameNotFoundException(UsernameNotFoundException ex) {
@@ -60,15 +47,6 @@ public class GlobalExceptionHandler {
         modelView.addObject("errorMessage", message);
         return modelView;
     }
-
-
-//    @ExceptionHandler(PSQLException.class)
-//    public ModelAndView handlePSQLException(PSQLException ex) {
-//        ModelAndView modelAndView = new ModelAndView();
-//        modelAndView.addObject("errorMessage", "Wystąpił błąd PostgreSQL: " + ex.getMessage());
-//        modelAndView.setViewName("errorPage"); // Nazwa widoku obsługującego błąd
-//        return modelAndView;
-//    }
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)

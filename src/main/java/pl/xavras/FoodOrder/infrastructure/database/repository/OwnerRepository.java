@@ -1,6 +1,7 @@
 package pl.xavras.FoodOrder.infrastructure.database.repository;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 import pl.xavras.FoodOrder.business.dao.OwnerDAO;
@@ -12,6 +13,7 @@ import pl.xavras.FoodOrder.infrastructure.security.UserJpaRepository;
 
 import java.util.Optional;
 
+@Slf4j
 @Repository
 @AllArgsConstructor
 public class OwnerRepository implements OwnerDAO {
@@ -43,6 +45,7 @@ public class OwnerRepository implements OwnerDAO {
     public Owner saveOwner(Owner owner) {
         OwnerEntity toSave = ownerEntityMapper.mapToEntity(owner);
         OwnerEntity saved = ownerJpaRepository.save(toSave);
+        log.info("Created new Owner Entity: "+ saved.getEmail());
         return ownerEntityMapper.mapFromEntity(saved);
     }
 }

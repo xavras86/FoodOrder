@@ -14,9 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.xavras.FoodOrder.api.dto.MenuItemDTO;
 import pl.xavras.FoodOrder.api.dto.RestaurantDTO;
-import pl.xavras.FoodOrder.api.dto.mapper.AddressMapper;
 import pl.xavras.FoodOrder.api.dto.mapper.MenuItemMapper;
-import pl.xavras.FoodOrder.api.dto.mapper.OwnerMapper;
 import pl.xavras.FoodOrder.api.dto.mapper.RestaurantMapper;
 import pl.xavras.FoodOrder.business.*;
 import pl.xavras.FoodOrder.domain.MenuItem;
@@ -135,7 +133,7 @@ public class OwnerRestaurantsController {
     }
 
     @PostMapping(RESTAURANT_OWNER_ADD)
-    public String editMenuItem(
+    public String addMenuItem(
             @ModelAttribute("newMenuItem") MenuItemDTO menuItemDTO,
             @RequestParam("restaurantName") String restaurantName,
             @RequestParam("imageFile") MultipartFile imageFile,

@@ -76,6 +76,7 @@ public class RestaurantRepository implements RestaurantDAO {
         } else {
             restaurantEntity.setAddress(addressEntityMapper.mapToEntity(address));
         }
+        log.info("Created new Restaurant Entity: "+ restaurantEntity.getName());
         return restaurantEntityMapper.mapFromEntity(restaurantJpaRepository.save(restaurantEntity));
     }
 

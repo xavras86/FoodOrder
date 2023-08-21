@@ -86,7 +86,7 @@ public class OrderRestController {
                 .map(orderMapper::mapToDTO).toList());
     }
 
-    @Operation(summary = "Fetching a map of fulfilled order numbers and their values for a specific restaurant based on the name within a specified time range (number of days ago).")
+    @Operation(summary = "Fetching a map of completed order numbers and their values for a specific restaurant based on the name within a specified time range (number of days ago).")
     @GetMapping(value = ORDERS_RESTAURANT_COMPLETED_ORDERS_VALUES_OVER_PERIOD, produces = MediaType.APPLICATION_JSON_VALUE)
     public OrdersValueDTO completedOrderAndValues(
             @Parameter(description = "Name of the restaurant.")

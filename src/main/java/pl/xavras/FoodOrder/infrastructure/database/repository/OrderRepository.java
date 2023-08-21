@@ -114,6 +114,7 @@ public class OrderRepository implements OrderDAO {
         menuItemOrderEntities.forEach(a -> a.setOrder(toSave));
         toSave.setMenuItemOrders(menuItemOrderEntities);
         OrderEntity save = orderJpaRepository.save(toSave);
+        log.info("Created new Order Entity: "+ save.getOrderNumber());
         return orderEntityMapper.mapFromEntity(save);
     }
 

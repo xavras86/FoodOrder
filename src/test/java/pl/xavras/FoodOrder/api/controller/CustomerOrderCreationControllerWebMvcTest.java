@@ -43,8 +43,7 @@ class CustomerOrderCreationControllerWebMvcTest {
     private final RestaurantMapper restaurantMapper;
     @MockBean
     private final AddressMapper addressMapper;
-    @MockBean
-    private final OwnerMapper ownerMapper;
+
     @MockBean
     private final MenuItemOrderMapper menuItemOrderMapper;
     @MockBean

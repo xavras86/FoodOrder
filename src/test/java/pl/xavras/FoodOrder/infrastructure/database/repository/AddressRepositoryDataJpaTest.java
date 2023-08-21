@@ -26,16 +26,14 @@ class AddressRepositoryDataJpaTest extends AbstractIT {
 
     @Test
     void thatAddressCanBeSavedCorrectly() {
+
         //given
         var addresses = List.of(someAddress1(), someAddress2());
         int sizeBefore = addressJpaRepository.findAll().size();
-        log.info("sizeBefore :" + sizeBefore);
         addresses.forEach(a -> addressRepository.saveAddress(a));
-
 
         //when
         int sizeAfter = addressJpaRepository.findAll().size();
-        log.info("sizeAfter :" + sizeAfter);
 
         //then
         assertThat(sizeBefore).isEqualTo(sizeAfter - 2);

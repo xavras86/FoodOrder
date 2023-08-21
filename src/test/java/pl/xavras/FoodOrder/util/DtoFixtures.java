@@ -2,6 +2,7 @@ package pl.xavras.FoodOrder.util;
 
 import lombok.experimental.UtilityClass;
 import pl.xavras.FoodOrder.api.dto.*;
+import pl.xavras.FoodOrder.domain.MenuItem;
 import pl.xavras.FoodOrder.domain.Order;
 
 import java.util.List;
@@ -69,14 +70,14 @@ public class DtoFixtures {
     }
 
 
-    public static OwnerDTO someOwnerDTO1() {
-        return OwnerDTO.builder()
-                .name("Jan")
-                .surname("Kowalski")
-                .email("jan@kowalski.pl")
-                .phone("+48 111 222 333")
-                .build();
-    }
+//    public static OwnerDTO someOwnerDTO1() {
+//        return OwnerDTO.builder()
+//                .name("Jan")
+//                .surname("Kowalski")
+//                .email("jan@kowalski.pl")
+//                .phone("+48 111 222 333")
+//                .build();
+//    }
 
     public static StreetDTO someStreetDTO1() {
         return StreetDTO.builder()
@@ -103,5 +104,9 @@ public class DtoFixtures {
     }
     public static OrderDTO someOrderDTO() {
         return OrderDTO.builder().build();
+    }
+
+    public static MenuItemDTO someMenuItemDTO() {
+        return MenuItemDTO.builder().build();
     }
 }

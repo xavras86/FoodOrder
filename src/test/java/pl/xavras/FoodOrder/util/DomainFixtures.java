@@ -49,6 +49,7 @@ public class DomainFixtures {
                 .restaurantId(3)
                 .name("someName3")
                 .phone("+48 123 123 321")
+                .phone("+48 123 123 321")
                 .email("restautant3@test.pl")
                 .address(someAddress3())
                 .owner(someOwner1())

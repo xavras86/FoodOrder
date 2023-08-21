@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public interface RestaurantStreetEntityMapper {
 
 
-//    @Mapping(target = "restaurant", ignore = true) //?
+
     RestaurantStreet mapFromEntity(RestaurantStreetEntity entity);
 
     RestaurantStreetEntity mapToEntity(RestaurantStreet restaurantStreet);

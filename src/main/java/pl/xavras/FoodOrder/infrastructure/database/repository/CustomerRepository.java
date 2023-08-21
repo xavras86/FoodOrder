@@ -1,6 +1,7 @@
 package pl.xavras.FoodOrder.infrastructure.database.repository;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 import pl.xavras.FoodOrder.business.dao.CustomerDAO;
@@ -13,6 +14,7 @@ import pl.xavras.FoodOrder.infrastructure.security.UserJpaRepository;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Repository
 @AllArgsConstructor
 public class CustomerRepository implements CustomerDAO {
@@ -36,6 +38,7 @@ public class CustomerRepository implements CustomerDAO {
     public Customer saveCustomer(Customer customer) {
         CustomerEntity toSave = customerEntityMapper.mapToEntity(customer);
         CustomerEntity saved = customerJpaRepository.save(toSave);
+        log.info("Created new customer Entity: "+ saved.getEmail());
         return customerEntityMapper.mapFromEntity(saved);
     }
 

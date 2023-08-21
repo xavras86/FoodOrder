@@ -1,6 +1,7 @@
 package pl.xavras.FoodOrder.infrastructure.database.repository;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import pl.xavras.FoodOrder.business.dao.AddressDAO;
 import pl.xavras.FoodOrder.domain.Address;
@@ -11,6 +12,8 @@ import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.AddressEnti
 import java.util.Optional;
 
 
+
+@Slf4j
 @Repository
 @AllArgsConstructor
 public class AddressRepository implements AddressDAO {
@@ -33,6 +36,7 @@ public class AddressRepository implements AddressDAO {
     public Address saveAddress(Address address) {
         AddressEntity toSave = addressEntityMapper.mapToEntity(address);
         AddressEntity saved = addressJpaRepository.saveAndFlush(toSave);
+        log.info("Created new AddressEntity: "+ saved.getCity() + " "+saved.getStreet() +" "+ saved.getBuildingNumber());
         return addressEntityMapper.mapFromEntity(saved);
     }
 }

@@ -1,13 +1,11 @@
 package pl.xavras.FoodOrder.api.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import pl.xavras.FoodOrder.infrastructure.database.entity.MealCategory;
 
 import java.math.BigDecimal;
 
+@With
 @Data
 @Builder
 @NoArgsConstructor

@@ -96,7 +96,10 @@ class RestaurantRestControllerMockitoTest {
         StreetsDTO result = restaurantRestController.deliveryStreets(restaurantName);
 
         //then
-        assertThat(result).isEqualTo(DtoFixtures.someStreetsDTO());
+        assertThat(result.getStreetDTOList()).containsExactlyInAnyOrder(
+                DtoFixtures.someStreetDTO1(),
+                DtoFixtures.someStreetDTO2(),
+                DtoFixtures.someStreetDTO3());
     }
 
 

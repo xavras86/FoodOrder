@@ -3,6 +3,7 @@ package pl.xavras.FoodOrder.infrastructure.database.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+@With
 @Getter
 @Setter
 @EqualsAndHashCode(of = {"street", "restaurant"})

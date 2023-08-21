@@ -2,34 +2,45 @@ package pl.xavras.FoodOrder.api.controller;
 
 import lombok.AllArgsConstructor;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.LinkedMultiValueMap;
+import pl.xavras.FoodOrder.api.dto.MenuItemDTO;
 import pl.xavras.FoodOrder.api.dto.RestaurantDTO;
 import pl.xavras.FoodOrder.api.dto.mapper.MenuItemMapper;
 import pl.xavras.FoodOrder.api.dto.mapper.RestaurantMapper;
 import pl.xavras.FoodOrder.business.*;
+import pl.xavras.FoodOrder.domain.MenuItem;
+import pl.xavras.FoodOrder.domain.Restaurant;
+import pl.xavras.FoodOrder.util.DomainFixtures;
+import pl.xavras.FoodOrder.util.DtoFixtures;
 
+import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static pl.xavras.FoodOrder.api.controller.OwnerRestaurantsController.*;
+import static pl.xavras.FoodOrder.api.controller.OwnerRestaurantsController.RESTAURANT_OWNER_ADD_RESTAURANT;
 
 
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(controllers = OwnerRestaurantsController.class)
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-class OwnerRestaurantsControllerTest {
+class OwnerRestaurantsControllerWebMvcTest {
 
     private MockMvc mockMvc;
     @MockBean
@@ -96,8 +107,5 @@ class OwnerRestaurantsControllerTest {
                     .andExpect(view().name("error"));
         }
     }
-
-
-
 
 }
