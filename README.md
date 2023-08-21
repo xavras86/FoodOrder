@@ -47,8 +47,8 @@ http://localhost:8190/foodorder/
 http://localhost:8190/foodorder/swagger-ui/index.html
 ```
 5. Przy uruchomieniu aplikacja jest napełniana danymi rozruchowymi. Tworzone są również przykładowe konta dla właściciela i klienta
-```Właściciel - login: owner password: test
-Kliet - login: customer password: test```
+```Właściciel - login: owner password: test```
+```Kliet - login: customer password: test```
 
  ## Wykorzystane technologie
 
