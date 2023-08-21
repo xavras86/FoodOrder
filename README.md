@@ -53,11 +53,11 @@ Kliet - login: customer password: test```
  ## Wykorzystane technologie
 
 1.Aplikacja została przygotowana z wykorzystaniem Spring Boot i bazy danych PostgreSQL. Schemat przedstawia tabele wraz z konfiguracją relacji.
-![schemat_bazy](https://github.com/xavras86/FoodOrder/assets/99759304/52604869-814a-4cb4-9766-007c06db3791)
+![schemat_bazy](https://github.com/xavras86/FoodOrder/assets/99759304/f12ac45d-05ce-48f2-ba95-0a57d2fa485a)
 
 2. Struktura samej aplikacji po stronie Java opiera się o model warstwowy z wyszczególnioną warstwą repozytoriów, serwisó i kontrollerów wraz z odpowiadającymi im warstwami obiektów
 tj. encji, obiektów domenowych i DTO, mapowania między poszczególnymi warstwami zostały zrealizowane z wykorzystaniem Mapstruct.
-![image](https://github.com/xavras86/FoodOrder/assets/99759304/67b956af-6501-4112-a0c1-47b64b857c27)
+![image](https://github.com/xavras86/FoodOrder/assets/99759304/2b93f9fb-186c-4301-8ec0-62341c4deaaa)
 
 3. Dane rozruchowe są ładowane do aplikacji przy uruchopmieniu z wykorzystaniem skryptów migracyjnych Flyway.
 
