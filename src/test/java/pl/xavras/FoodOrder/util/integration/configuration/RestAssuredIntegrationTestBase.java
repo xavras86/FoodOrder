@@ -35,10 +35,10 @@ public abstract class RestAssuredIntegrationTestBase
         return objectMapper;
     }
 
-//    @Test
-//    void contextLoaded() {
-//        assertThat(true).isTrue();
-//    }
+    @Test
+    void contextLoaded() {
+        assertThat(true).isTrue();
+    }
 
     @BeforeAll
     static void beforeAll() {
@@ -60,7 +60,7 @@ public abstract class RestAssuredIntegrationTestBase
         jSessionIdValue = login("owner", "test")
             .and()
             .cookie("JSESSIONID")
-            .header(HttpHeaders.LOCATION, "http://localhost:%s%s/".formatted(port, basePath))
+            .header(HttpHeaders.LOCATION, "http://localhost:%s%s/home".formatted(port, basePath))
             .extract()
             .cookie("JSESSIONID");
     }
