@@ -44,16 +44,16 @@ dependencies {
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocOpenApiVersion}"
 //
 //    //powygenerowaniu klienta trzeba będzie dodać poniższe zależności żeby kod się kompilował
-//    implementation "org.openapitools:jackson-databind-nullable:${jacksonDatabindNullableVersion}"
-//    implementation "javax.annotation:javax.annotation-api:${javaxAnnotationApiVersion}"
-//    implementation "io.swagger:swagger-annotations:${swaggerAnnotationsVersion}"
+    implementation "org.openapitools:jackson-databind-nullable:${jacksonDatabindNullableVersion}"
+    implementation "javax.annotation:javax.annotation-api:${javaxAnnotationApiVersion}"
+    implementation "io.swagger:swagger-annotations:${swaggerAnnotationsVersion}"
 
 //	warning: unknown enum constant When.MAYBE
 //	reason: class file for javax.annotation.meta.When not found
     implementation "com.google.code.findbugs:jsr305:${jsr305Version}"
 
 	// test
-    testRuntimeOnly 'com.h2database:h2'
+//    testRuntimeOnly 'com.h2database:h2'
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.security:spring-security-test'
@@ -76,8 +76,6 @@ dependencyManagement {
 		mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
 	}
 }
-
-
 
 test {
 	useJUnitPlatform()

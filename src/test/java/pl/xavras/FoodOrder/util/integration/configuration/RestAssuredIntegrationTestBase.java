@@ -10,6 +10,8 @@ import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
 import pl.xavras.FoodOrder.util.integration.support.AuthenticationTestSupport;
 import pl.xavras.FoodOrder.util.integration.support.ControllerTestSupport;
@@ -19,8 +21,14 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class RestAssuredIntegrationTestBase
-    extends AbstractIT
+    extends AbstractIntegrationTest
     implements ControllerTestSupport, AuthenticationTestSupport {
+
+    @LocalServerPort
+    protected int port;
+
+    @Value("${server.servlet.context-path}")
+    protected String basePath;
 
     protected static WireMockServer wireMockServer;
 
@@ -28,7 +36,7 @@ public abstract class RestAssuredIntegrationTestBase
 
     @Autowired
     @SuppressWarnings("unused")
-    private ObjectMapper objectMapper;
+    protected ObjectMapper objectMapper;
 
     @Override
     public ObjectMapper getObjectMapper() {

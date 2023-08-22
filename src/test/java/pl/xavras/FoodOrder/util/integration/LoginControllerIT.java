@@ -5,11 +5,11 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import pl.xavras.FoodOrder.util.integration.configuration.AbstractIT;
+import pl.xavras.FoodOrder.util.integration.configuration.AbstractIntegrationTest;
 
 
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class LoginControllerIT extends AbstractIT {
+public class LoginControllerIT extends AbstractIntegrationTest {
 
     private final TestRestTemplate testRestTemplate;
 

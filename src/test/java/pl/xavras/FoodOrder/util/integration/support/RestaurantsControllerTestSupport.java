@@ -3,10 +3,12 @@ package pl.xavras.FoodOrder.util.integration.support;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import pl.xavras.FoodOrder.api.controller.rest.RestaurantRestController;
 import pl.xavras.FoodOrder.api.dto.RestaurantDTO;
 import pl.xavras.FoodOrder.api.dto.RestaurantsDTO;
+
 
 public interface RestaurantsControllerTestSupport {
     RequestSpecification requestSpecification();

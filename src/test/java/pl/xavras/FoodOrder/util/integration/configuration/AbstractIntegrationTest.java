@@ -11,13 +11,13 @@ import pl.xavras.FoodOrder.FoodOrderApplication;
 
 
 @ActiveProfiles("test")
-@TestPropertySource(locations = "classpath:application-test.yaml")
+//@TestPropertySource(locations = "classpath:application-test.yaml")
 @Import(PersistenceContainerTestConfiguration.class)
 @SpringBootTest(
-    classes = FoodOrderApplication.class,
+    classes = {FoodOrderApplication.class},
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
-public abstract class AbstractIT {
+public abstract class AbstractIntegrationTest {
 
     @LocalServerPort
     protected int port;

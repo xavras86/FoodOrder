@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import pl.xavras.FoodOrder.domain.Address;
 import pl.xavras.FoodOrder.infrastructure.database.entity.AddressEntity;
 import pl.xavras.FoodOrder.infrastructure.database.repository.jpa.AddressJpaRepository;
-import pl.xavras.FoodOrder.util.integration.configuration.AbstractIT;
+import pl.xavras.FoodOrder.util.integration.configuration.AbstractIntegrationTest;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +19,7 @@ import static pl.xavras.FoodOrder.util.DomainFixtures.*;
 
 @Slf4j
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-class AddressRepositoryDataJpaTest extends AbstractIT {
+class AddressRepositoryDataJpaTest extends AbstractIntegrationTest {
 
     private AddressJpaRepository addressJpaRepository;
     private AddressRepository addressRepository;
