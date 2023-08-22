@@ -23,7 +23,7 @@ To aplikacja Spring Boot + JPA + Spring MVC + Thymeleaf umożliwiająca użytkow
 
 ## Funkcjonalności REST-API:
 - Cześcią aplikacji jest REST-API, przeznaczone do wykorzystania biznesowo przez właściela (konta z przypisaną rolą właściciela mają dostęp do API).
-- Składają sie na nie dwa kontrolery obługujące żądania związane z restauracjami i zamówieniami.
+- Składają sie na nie dwa kontrolery umożliwiające wywołanie endpointów GET, POST, PUT i DELETE związane z restauracjami i zamówieniami.
 - Szczegóły funkcjonalności API zostały opisane w ramach dokumentacji Swagger UI.
 
 ## Instalacja
