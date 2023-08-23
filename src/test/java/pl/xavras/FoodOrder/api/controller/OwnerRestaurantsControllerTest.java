@@ -13,7 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.xavras.FoodOrder.api.dto.MenuItemDTO;
-import pl.xavras.FoodOrder.api.dto.RestaurantDTO;
 import pl.xavras.FoodOrder.api.dto.mapper.MenuItemMapper;
 import pl.xavras.FoodOrder.api.dto.mapper.RestaurantMapper;
 import pl.xavras.FoodOrder.business.*;
