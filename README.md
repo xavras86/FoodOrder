@@ -38,7 +38,7 @@ docker compose up -d
 
 3. Aplikacja jest dostępna z poziomu przeglądarki pod adresem:
 ```
-http://localhost:8190/foodorder/
+http://localhost:8190/foodorder/login
 ```
 
 4. API wraz z dokumentacją SwaggerUI jest dostępne z poziomu przeglądarki pod adresem (konieczne zalogowanie poświadczeniami z rolą właściciel)
