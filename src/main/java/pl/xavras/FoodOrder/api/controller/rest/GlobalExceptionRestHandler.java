@@ -17,7 +17,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import pl.xavras.FoodOrder.api.dto.ExceptionMessage;
 import pl.xavras.FoodOrder.domain.exception.NotFoundException;
 
-
 import java.util.Map;
 import java.util.UUID;
 

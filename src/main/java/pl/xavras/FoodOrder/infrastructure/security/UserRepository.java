@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
-import pl.xavras.FoodOrder.api.dto.mapper.UserMapper;
 import pl.xavras.FoodOrder.business.dao.UserDAO;
 import pl.xavras.FoodOrder.domain.User;
 import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.UserEntityMapper;
@@ -37,6 +36,3 @@ public class UserRepository implements UserDAO {
         return userEntityMapper.mapFromEntity(save);
     }
 }
-
-
-

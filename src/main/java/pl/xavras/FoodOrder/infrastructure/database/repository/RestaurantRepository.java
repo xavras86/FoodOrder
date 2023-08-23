@@ -8,7 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import pl.xavras.FoodOrder.business.dao.RestaurantDAO;
 import pl.xavras.FoodOrder.domain.*;
-import pl.xavras.FoodOrder.infrastructure.database.entity.*;
+import pl.xavras.FoodOrder.infrastructure.database.entity.AddressEntity;
+import pl.xavras.FoodOrder.infrastructure.database.entity.OwnerEntity;
+import pl.xavras.FoodOrder.infrastructure.database.entity.RestaurantEntity;
+import pl.xavras.FoodOrder.infrastructure.database.entity.RestaurantStreetEntity;
 import pl.xavras.FoodOrder.infrastructure.database.repository.jpa.RestaurantJpaRepository;
 import pl.xavras.FoodOrder.infrastructure.database.repository.mapper.*;
 

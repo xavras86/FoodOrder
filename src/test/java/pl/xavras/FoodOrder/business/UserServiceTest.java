@@ -31,6 +31,7 @@ public class UserServiceTest {
 
     @Test
     public void thatRegisterNewUserOwner() {
+        //given
         User user = DomainFixtures.someUser1().withRole("OWNER");
 
 
@@ -42,15 +43,16 @@ public class UserServiceTest {
                 .build();
 
         when(userDAO.registerNewUser(any(User.class))).thenReturn(user);
-
+        //when
         userService.registerNewUser(user);
-
+        //then
         verify(ownerService).saveOwner(owner);
         verify(customerService, never()).saveCustomer(any(Customer.class));
     }
 
     @Test
     public void testRegisterNewUserCustomer() {
+        //given
         User user = DomainFixtures.someUser1().withRole("CUSTOMER");
 
         Customer customer = Customer.builder()
@@ -61,21 +63,22 @@ public class UserServiceTest {
                 .build();
 
         when(userDAO.registerNewUser(any(User.class))).thenReturn(user);
-
+        //when
         userService.registerNewUser(user);
-
+        //then
         verify(customerService).saveCustomer(customer);
         verify(ownerService, never()).saveOwner(any(Owner.class));
     }
 
     @Test
     public void testRegisterNewUserForOtherRole() {
+        //given
         User user = DomainFixtures.someUser1().withRole("SOME_OTHER_ROLE");
 
         when(userDAO.registerNewUser(any(User.class))).thenReturn(user);
-
+        //when
         userService.registerNewUser(user);
-
+        //then
         verify(ownerService, never()).saveOwner(any(Owner.class));
         verify(customerService, never()).saveCustomer(any(Customer.class));
     }

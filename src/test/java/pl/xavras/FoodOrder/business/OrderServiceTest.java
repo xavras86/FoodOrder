@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.xavras.FoodOrder.business.dao.OrderDAO;
+import pl.xavras.FoodOrder.domain.Address;
 import pl.xavras.FoodOrder.domain.MenuItemOrder;
 import pl.xavras.FoodOrder.domain.Order;
 import pl.xavras.FoodOrder.domain.exception.NotFoundException;
@@ -38,7 +39,7 @@ class OrderServiceTest {
 
     @Test
     void testCalculateTotalOrderValue() {
-        // Given
+        // given
         MenuItemOrder menuItemOrder1 = someMenuItemOrder().withMenuItem(someMenuItem().withPrice(BigDecimal.TEN)).withQuantity(5);
         MenuItemOrder menuItemOrder2 = someMenuItemOrder().withMenuItem(someMenuItem().withPrice(BigDecimal.ONE)).withQuantity(5);
 
@@ -46,23 +47,44 @@ class OrderServiceTest {
         menuItemOrders.add(menuItemOrder1);
         menuItemOrders.add(menuItemOrder2);
 
-        // When
+        // when
         BigDecimal totalValue = orderService.calculateTotalOrderValue(menuItemOrders);
 
-        // Then
+        // then
         BigDecimal expectedTotal = new BigDecimal("55");
         assertEquals(expectedTotal, totalValue);
     }
 
     @Test
+    public void testBuildOrder() {
+        //given
+        Address address = someAddress1();
+        Set<MenuItemOrder> menuItemOrders = new HashSet<>();
+        when(customerService.activeCustomer()).thenReturn(someCustomer());
+
+        //when
+        Order order = orderService.buildOrder(address, menuItemOrders);
+
+        //then
+        assertNotNull(order);
+        assertNotNull(order.getOrderNumber());
+        assertNotNull(order.getReceivedDateTime());
+        assertEquals(address, order.getAddress());
+        assertFalse(order.getCancelled());
+        assertFalse(order.getCompleted());
+        assertNotNull(order.getCustomer());
+        assertEquals(menuItemOrders, order.getMenuItemOrders());
+    }
+
+    @Test
     void testGenerateOrderNumber() {
-        // Given
+        // given
         OffsetDateTime when = OffsetDateTime.parse("2023-08-18T15:30:45Z");
 
-        // When
+        // when
         String orderNumber = orderService.generateOrderNumber(when);
 
-        // Then
+        // then
         String expectedOrderNumberPattern = "\\d{4}\\.\\d{1,2}\\.\\d{1,2}-\\d{1,2}\\.\\d{1,2}\\.\\d{1,2}\\.\\d{2}";
         assertTrue(orderNumber.matches(expectedOrderNumberPattern));
     }
@@ -70,88 +92,88 @@ class OrderServiceTest {
 
     @Test
     void testIsCancellableWithinTimeFrame() {
-        // Given
+        // given
         OffsetDateTime timeFromOrderMoment = OffsetDateTime.now().minus(10, ChronoUnit.MINUTES);
-        Order order = DomainFixtures.someOrder().withReceivedDateTime(timeFromOrderMoment);
+        Order order = someOrder().withReceivedDateTime(timeFromOrderMoment);
 
-        // When
+        // when
         boolean isCancellable = orderService.isCancellable(order);
 
-        // Then
+        // then
         assertTrue(isCancellable);
     }
 
     @Test
     void testIsCancellableOutsideTimeFrame() {
-        // Given
+        // given
         OffsetDateTime timeFromOrderMoment = OffsetDateTime.now().minus(21, ChronoUnit.MINUTES);
-        Order order = DomainFixtures.someOrder().withReceivedDateTime(timeFromOrderMoment);
+        Order order = someOrder().withReceivedDateTime(timeFromOrderMoment);
 
-        // When
+        // when
         boolean isCancellable = orderService.isCancellable(order);
 
-        // Then
+        // then
         assertFalse(isCancellable);
     }
     @Test
     void testOrderStatusCompleted() {
-        // Given
+        // given
         Order order = someOrder().withCompleted(true).withCancelled(false);
 
-        // When
+        // when
         String status = orderService.orderStatus(order);
 
-        // Then
+        // then
         assertEquals("Completed", status);
     }
 
     @Test
     void testOrderStatusCancelled() {
-        // Given
+        // given
         Order order = someOrder().withCancelled(true).withCompleted(false);
 
-        // When
+        // when
         String status = orderService.orderStatus(order);
 
-        // Then
+        // then
         assertEquals("Cancelled", status);
     }
 
     @Test
     void testOrderStatusWaiting() {
-        // Given
+        // given
         Order order = someOrder().withCancelled(false).withCompleted(false);
 
-        // When
+        // when
         String status = orderService.orderStatus(order);
 
-        // Then
+        // then
         assertEquals("Waiting", status);
     }
 
 
     @Test
     void testFindByOrderNumberNonExistingOrder() {
-        // Given
+        // given
         String orderNumber = "67890";
         when(orderDAO.findByOrderNumber(orderNumber)).thenReturn(Optional.empty());
 
-        // When, Then
+        // when, then
         Throwable exception = assertThrows(NotFoundException.class, () -> orderService.findByOrderNumber(orderNumber));
         Assertions.assertEquals(String.format("Could not find order with orderNumber: [%s]", orderNumber), exception.getMessage());
     }
 
     @Test
     public void testFindByOrderNumberOrderExists() {
-        // Given
+        // given
         String orderNumber = "123456";
-        Order order = DomainFixtures.someOrder().withOrderNumber(orderNumber);
+        Order order = someOrder().withOrderNumber(orderNumber);
         when(orderDAO.findByOrderNumber(orderNumber)).thenReturn(Optional.of(order));
 
-        // When
+        // when
         Order result = orderService.findByOrderNumber(orderNumber);
 
-        // Then
+        // then
         assertNotNull(result);
         assertEquals(orderNumber, (result.getOrderNumber()));
     }

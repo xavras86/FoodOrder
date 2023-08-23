@@ -1,11 +1,9 @@
 package pl.xavras.FoodOrder.domain;
 
-import lombok.*;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import lombok.Builder;
+import lombok.ToString;
+import lombok.Value;
+import lombok.With;
 
 @With
 @Value

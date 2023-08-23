@@ -105,8 +105,8 @@ public class OrderService {
     }
 
 
-    private Order buildOrder(Address address,
-                             Set<MenuItemOrder> menuItemOrders
+    Order buildOrder(Address address,
+                     Set<MenuItemOrder> menuItemOrders
     ) {
 
         OffsetDateTime whenCreated = OffsetDateTime.now();

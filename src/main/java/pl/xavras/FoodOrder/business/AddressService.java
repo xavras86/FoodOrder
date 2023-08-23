@@ -1,13 +1,10 @@
 package pl.xavras.FoodOrder.business;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.xavras.FoodOrder.api.dto.AddressDTO;
 import pl.xavras.FoodOrder.business.dao.AddressDAO;
 import pl.xavras.FoodOrder.domain.Address;
 

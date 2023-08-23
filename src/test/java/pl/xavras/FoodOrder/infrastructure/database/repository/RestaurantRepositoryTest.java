@@ -83,16 +83,6 @@ class RestaurantRepositoryTest {
 
     }
 
-//    @Test
-//    void findRestaurantsByStreetName_shouldThrowExceptionForInvalidStreetName() {
-//        // given
-//        String streetName = "Invalid Street";
-//        when(streetRepository.findByStreetName(streetName)).thenReturn(Optional.empty());
-//
-//        // when, then
-//        Throwable exception = assertThrows(EntityNotFoundException.class, () -> restaurantRepository.findRestaurantsByStreetName(streetName));
-//        Assertions.assertEquals(String.format("Unfortunately, the given street name [%s] is incorrect, please try again", streetName), exception.getMessage());
-//    }
 
     @Test
     void findRestaurantsByOwner_shouldReturnSetOfRestaurants() {

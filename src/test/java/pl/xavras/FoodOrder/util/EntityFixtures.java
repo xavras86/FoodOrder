@@ -1,7 +1,6 @@
 package pl.xavras.FoodOrder.util;
 
 import lombok.experimental.UtilityClass;
-import pl.xavras.FoodOrder.domain.User;
 import pl.xavras.FoodOrder.infrastructure.database.entity.*;
 import pl.xavras.FoodOrder.infrastructure.security.UserEntity;
 
@@ -45,7 +44,6 @@ public class EntityFixtures {
                 .email("testowy@owner.pl")
                 .build();
     }
-
 
 
     public static RestaurantEntity someRestaurantEntity2() {
@@ -171,6 +169,7 @@ public class EntityFixtures {
                 .build();
 
     }
+
 
 
 

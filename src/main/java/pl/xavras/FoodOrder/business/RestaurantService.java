@@ -8,13 +8,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.xavras.FoodOrder.business.dao.RestaurantDAO;
-import pl.xavras.FoodOrder.domain.*;
-import pl.xavras.FoodOrder.infrastructure.database.entity.RestaurantEntity;
-import pl.xavras.FoodOrder.infrastructure.database.entity.RestaurantStreetEntity;
+import pl.xavras.FoodOrder.domain.Owner;
+import pl.xavras.FoodOrder.domain.Restaurant;
+import pl.xavras.FoodOrder.domain.Street;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor

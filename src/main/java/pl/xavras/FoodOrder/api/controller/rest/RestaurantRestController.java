@@ -14,12 +14,10 @@ import pl.xavras.FoodOrder.api.dto.StreetsDTO;
 import pl.xavras.FoodOrder.api.dto.mapper.RestaurantMapper;
 import pl.xavras.FoodOrder.api.dto.mapper.StreetMapper;
 import pl.xavras.FoodOrder.business.RestaurantService;
-import pl.xavras.FoodOrder.business.StreetService;
 import pl.xavras.FoodOrder.domain.Restaurant;
 import pl.xavras.FoodOrder.domain.Street;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -79,7 +77,7 @@ public class RestaurantRestController {
 
     @Operation(summary = "Editing the name, phone number, and email address for a restaurant based on its current name.")
     @PatchMapping(value = RESTAURANT_EDIT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public  RestaurantDTO editRestaurantData(
+    public RestaurantDTO editRestaurantData(
             @Parameter(description = "Current name of the restaurant.")
             @PathVariable String restaurantName,
             @Parameter(description = "New name of the restaurant.")

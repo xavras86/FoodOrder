@@ -7,7 +7,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import pl.xavras.FoodOrder.business.dao.OrderDAO;
-import pl.xavras.FoodOrder.domain.*;
+import pl.xavras.FoodOrder.domain.Customer;
+import pl.xavras.FoodOrder.domain.MenuItemOrder;
+import pl.xavras.FoodOrder.domain.Order;
+import pl.xavras.FoodOrder.domain.Owner;
 import pl.xavras.FoodOrder.infrastructure.database.entity.*;
 import pl.xavras.FoodOrder.infrastructure.database.repository.jpa.OrderJpaRepository;
 import pl.xavras.FoodOrder.infrastructure.database.repository.jpa.RestaurantJpaRepository;
@@ -18,7 +21,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Slf4j
 @Repository
@@ -148,7 +150,7 @@ public class OrderRepository implements OrderDAO {
     }
 
 
-    private OrderEntity getOrderEntityByOrder(Order order) {
+    OrderEntity getOrderEntityByOrder(Order order) {
         return orderJpaRepository.findByOrderNumber(order.getOrderNumber())
                 .orElseThrow(() -> new EntityNotFoundException("Could not find order with orderNumber: [%s]"
                         .formatted(order.getOrderNumber())));

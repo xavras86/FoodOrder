@@ -1,10 +1,9 @@
 package pl.xavras.FoodOrder.api.dto;
 
 import lombok.*;
-import pl.xavras.FoodOrder.domain.*;
+import pl.xavras.FoodOrder.domain.MenuItemOrder;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
 import java.util.Set;
 
 @With

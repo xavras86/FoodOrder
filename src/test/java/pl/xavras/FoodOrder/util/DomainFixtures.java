@@ -94,6 +94,7 @@ public class DomainFixtures {
         return User.builder()
                 .name("Paweł")
                 .surname("Nowak")
+                .password("1234")
                 .email("pawel@nowak.pl")
                 .phone("+48 123 252 333")
                 .build();

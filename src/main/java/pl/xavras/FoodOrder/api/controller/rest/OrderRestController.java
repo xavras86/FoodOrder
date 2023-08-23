@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import pl.xavras.FoodOrder.api.dto.OrderDTO;
 import pl.xavras.FoodOrder.api.dto.OrdersDTO;
 import pl.xavras.FoodOrder.api.dto.OrdersValueDTO;
-import pl.xavras.FoodOrder.api.dto.RestaurantDTO;
 import pl.xavras.FoodOrder.api.dto.mapper.OrderMapper;
 import pl.xavras.FoodOrder.business.OrderService;
 import pl.xavras.FoodOrder.domain.Order;

@@ -18,8 +18,6 @@ import pl.xavras.FoodOrder.api.dto.UserDTO;
 import pl.xavras.FoodOrder.api.dto.mapper.UserMapper;
 import pl.xavras.FoodOrder.business.UserService;
 import pl.xavras.FoodOrder.domain.User;
-import pl.xavras.FoodOrder.infrastructure.security.FoodOrderingUserDetailsService;
-import pl.xavras.FoodOrder.infrastructure.security.UserRepository;
 
 import java.util.Objects;
 

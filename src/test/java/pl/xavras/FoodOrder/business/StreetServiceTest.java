@@ -1,5 +1,6 @@
 package pl.xavras.FoodOrder.business;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,21 +10,22 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import pl.xavras.FoodOrder.business.dao.StreetDAO;
+import pl.xavras.FoodOrder.domain.Address;
 import pl.xavras.FoodOrder.domain.Restaurant;
 import pl.xavras.FoodOrder.domain.RestaurantStreet;
 import pl.xavras.FoodOrder.domain.Street;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static pl.xavras.FoodOrder.util.DomainFixtures.*;
 import org.hamcrest.Matchers;
+import pl.xavras.FoodOrder.util.DomainFixtures;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @ExtendWith(MockitoExtension.class)
@@ -70,4 +72,27 @@ class StreetServiceTest {
     }
 
 
+    @Test
+    public void testFindByIdNotFound() {
+        Integer streetId = 1;
+        when(streetDAO.findByStreetId(streetId)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> streetService.findById(streetId));
+    }
+
+    @Test
+    public void testCheckStreetCoverageForRestaurant() {
+        String restaurantName = "Restaurant1";
+        Street street = DomainFixtures.someStreet1();
+        Set<Street> streets = new HashSet<>();
+        streets.add(street);
+
+        when(restaurantService.findStreetsByRestaurantName(restaurantName)).thenReturn(streets);
+
+        boolean result = streetService.checkStreetCoverageForRestaurant(restaurantName, street);
+
+        assertTrue(result);
+    }
+
 }
+

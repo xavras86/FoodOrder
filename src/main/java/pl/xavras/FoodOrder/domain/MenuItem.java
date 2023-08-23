@@ -4,7 +4,6 @@ import lombok.*;
 import pl.xavras.FoodOrder.infrastructure.database.entity.MealCategory;
 
 import java.math.BigDecimal;
-import java.util.Set;
 
 @With
 @Value
