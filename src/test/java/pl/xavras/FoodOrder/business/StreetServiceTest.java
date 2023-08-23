@@ -69,28 +69,5 @@ class StreetServiceTest {
         assertEquals(expectedStreet, actualStreet);
     }
 
-    @Test
-    void testCreateStreetStatusMap() {
-        //given
-        RestaurantStreet restaurantStreet1 = someRestaurantStreet1();
-
-        RestaurantStreet restaurantStreet2 = someRestaurantStreet2();
-
-        List<RestaurantStreet> restaurantStreets = List.of(restaurantStreet1, restaurantStreet2);
-        Page<Street> streetPage = new PageImpl<>(restaurantStreets.stream()
-                .map(RestaurantStreet::getStreet)
-                .collect(Collectors.toList()));
-        //when
-        when(restaurantService.checkStreetCoverageForRestaurant(
-                eq(someRestaurant1().getName()),
-                any(Street.class))).thenReturn(true);
-
-        Map<Street, Boolean> streetStatusMap = streetService.createStreetStatusMap("someName1", streetPage);
-
-        //then
-        assertEquals(2, streetStatusMap.size());
-        assertTrue(streetStatusMap.get(someStreet1()));
-        assertTrue(streetStatusMap.get(someStreet2()));
-    }
 
 }

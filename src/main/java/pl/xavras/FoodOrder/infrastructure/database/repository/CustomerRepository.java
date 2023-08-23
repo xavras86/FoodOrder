@@ -25,9 +25,6 @@ public class CustomerRepository implements CustomerDAO {
 
     private final UserJpaRepository userRepository;
 
-
-
-
     @Override
     public List<Customer> findAll(){
         return customerJpaRepository.findAll().stream()
@@ -53,7 +50,8 @@ public class CustomerRepository implements CustomerDAO {
         var loggedEmail = userRepository.findByUserName(username).getEmail();
         return customerJpaRepository.findByEmail(loggedEmail)
                 .map(customerEntityMapper::mapFromEntity)
-                .orElseThrow(() -> new SecurityException("Something went terribly wrong with security :( no customer related to current username [%s] "
+                .orElseThrow(() -> new SecurityException(
+                        "Something went terribly wrong with security :( no customer related to current username [%s] "
                         .formatted(username)));
     }
 

@@ -25,10 +25,9 @@ public class DomainFixtures {
                 .restaurantId(1)
                 .name("someName1")
                 .phone("+48 123 123 123")
-                .email("restautant1@test.pl")
+                .email("jakUmamy@test.pl")
                 .address(someAddress1())
                 .owner(someOwner1())
-                .restaurantStreets(new HashSet<>())
                 .build();
     }
 
@@ -40,7 +39,6 @@ public class DomainFixtures {
                 .email("restautant2@test.pl")
                 .address(someAddress2())
                 .owner(someOwner1())
-                .restaurantStreets(new HashSet<>())
                 .build();
     }
 
@@ -53,7 +51,6 @@ public class DomainFixtures {
                 .email("restautant3@test.pl")
                 .address(someAddress3())
                 .owner(someOwner1())
-                .restaurantStreets(new HashSet<>())
                 .build();
     }
 

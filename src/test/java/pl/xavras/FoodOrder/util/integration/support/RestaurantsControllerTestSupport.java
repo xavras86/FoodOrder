@@ -1,9 +1,9 @@
 package pl.xavras.FoodOrder.util.integration.support;
 
+import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import pl.xavras.FoodOrder.api.controller.rest.RestaurantRestController;
 import pl.xavras.FoodOrder.api.dto.RestaurantDTO;
@@ -37,12 +37,38 @@ public interface RestaurantsControllerTestSupport {
 
     default RestaurantDTO getRestaurantByName(final String restaurantName) {
         return requestSpecification()
-                .get("/api/restaurant/", restaurantName)
+                .given()
+                .pathParam("restaurantName", restaurantName)
+                .when()
+                .get("/api/restaurant/{restaurantName}")
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .and()
                 .extract()
                 .as(RestaurantDTO.class);
+    }
+
+    default RestaurantDTO updateRestaurantByName(final String restaurantName,
+                                                 final String restaurantNewName,
+                                                 final String restaurantNewPhone,
+                                                 final String restaurantNewEmail
+                                                 ) {
+        return requestSpecification()
+                .given()
+                .pathParam("restaurantName", restaurantName)
+                .queryParam("newName", restaurantNewName)
+                .queryParam("newPhone", restaurantNewPhone)
+                .queryParam("newEmail", restaurantNewEmail)
+                .contentType(ContentType.JSON)
+                .when()
+                .patch("/api/restaurant/edit/{restaurantName}")
+                .then()
+                .statusCode(200)
+                .and()
+                .extract()
+                .as(RestaurantDTO.class);
+
+
     }
 
     default ExtractableResponse<Response> saveRestaurant(final RestaurantDTO restaurantDTO) {

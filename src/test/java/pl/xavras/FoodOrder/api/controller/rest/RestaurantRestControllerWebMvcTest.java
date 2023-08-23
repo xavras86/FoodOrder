@@ -112,13 +112,13 @@ public class RestaurantRestControllerWebMvcTest {
         Set<Street> streets = Set.of(someStreet1().withStreetName("someStreet1"), someStreet2().withStreetName("someStreet2"));
 
 
-        when(streetService.findStreetsByRestaurantName(restaurantName)).thenReturn(streets);
+        when(restaurantService.findStreetsByRestaurantName(restaurantName)).thenReturn(streets);
 
         mockMvc.perform(get("/api/restaurant/streets/{restaurantName}", restaurantName))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.streetDTOList", hasSize(2)));
 
-        verify(streetService, times(1)).findStreetsByRestaurantName("Some Restaurant1");
+        verify(restaurantService, times(1)).findStreetsByRestaurantName("Some Restaurant1");
     }
 
 

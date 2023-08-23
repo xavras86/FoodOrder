@@ -28,9 +28,10 @@ public class RestaurantRepository implements RestaurantDAO {
     private final OwnerEntityMapper ownerEntityMapper;
     private final RestaurantStreetEntityMapper restaurantStreetEntityMapper;
     private final OwnerRepository ownerRepository;
-    private final StreetRepository streetRepository;
     private final AddressRepository addressRepository;
     private final RestaurantStreetRepository restaurantStreetRepository;
+
+    private final StreetEntityMapper streetEntityMapper;
 
 
     @Override
@@ -43,16 +44,6 @@ public class RestaurantRepository implements RestaurantDAO {
     public List<Restaurant> findAll() {
         return restaurantJpaRepository.findAll().stream()
                 .map(restaurantEntityMapper::mapFromEntity).toList();
-    }
-
-    @Override
-    public Set<Restaurant> findRestaurantsByStreetName(String streetName) {
-        var street = streetRepository.findByStreetName(streetName)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Unfortunately, the given street name [%s] is incorrect, please try again"
-                                .formatted(streetName)));
-        return street.getRestaurantStreets().stream().map(RestaurantStreet::getRestaurant)
-                .collect(Collectors.toSet());
     }
 
     @Override
@@ -82,8 +73,7 @@ public class RestaurantRepository implements RestaurantDAO {
 
     public void alternateCoverageStateForStreet(String restaurantName, Street street) {
 
-        RestaurantEntity restaurantEntity = restaurantJpaRepository.findByName(restaurantName)
-                .orElseThrow(() -> new EntityNotFoundException("No restaurant with name [%s]".formatted(restaurantName)));
+        RestaurantEntity restaurantEntity = findEntityByName(restaurantName);
         Set<RestaurantStreetEntity> restaurantStreetEntities = restaurantEntity.getRestaurantStreets();
 
         RestaurantStreet restaurantStreet = RestaurantStreet.builder()
@@ -94,7 +84,9 @@ public class RestaurantRepository implements RestaurantDAO {
         RestaurantStreetEntity restaurantStreetEntity = restaurantStreetEntityMapper.mapToEntity(restaurantStreet);
 
         if (restaurantStreetEntities.contains(restaurantStreetEntity)) {
-            RestaurantStreetEntity first = restaurantStreetEntities.stream().filter(restaurantStreetEntity::equals).findFirst().get();
+            RestaurantStreetEntity first = restaurantStreetEntities.stream()
+                    .filter(restaurantStreetEntity::equals)
+                    .findFirst().get();
             restaurantStreetEntities.remove(restaurantStreetEntity);
             restaurantStreetRepository.delete(first);
         } else {
@@ -130,9 +122,7 @@ public class RestaurantRepository implements RestaurantDAO {
 
     @Override
     public Restaurant editRestaurant(String currentName, String name, String phone, String email) {
-        RestaurantEntity restaurantEntity = restaurantJpaRepository.findByName(currentName)
-                .orElseThrow(() -> new EntityNotFoundException("Could not find restaurant with name: [%s]"
-                        .formatted(currentName)));
+        RestaurantEntity restaurantEntity = findEntityByName(currentName);
         restaurantEntity.setName(name);
         restaurantEntity.setPhone(phone);
         restaurantEntity.setEmail(email);
@@ -141,6 +131,20 @@ public class RestaurantRepository implements RestaurantDAO {
         return restaurantEntityMapper.mapFromEntity(save);
     }
 
+    @Override
+    public Set<Street> findStreetsByRestaurantName(String restaurantName) {
+        RestaurantEntity restaurantEntity = findEntityByName(restaurantName);
+        return restaurantEntity.getRestaurantStreets().stream()
+                .map(RestaurantStreetEntity::getStreet)
+                .map(streetEntityMapper::mapFromEntity)
+                .collect(Collectors.toSet());
+    }
+
+    private RestaurantEntity findEntityByName(String restaurantName) {
+        return restaurantJpaRepository.findByName(restaurantName)
+                .orElseThrow(() -> new EntityNotFoundException("Could not find restaurant with name: [%s]"
+                        .formatted(restaurantName)));
+    }
 
 }
 

@@ -56,8 +56,11 @@ class OrderRepositoryDataJpaTest {
     @Test
     public void testThatDeleteByOrderNumber() {
         // Given
-        String orderNumber = "234";
-        OrderEntity orderEntity = EntityFixtures.someOrderEntity().withOrderNumber(orderNumber).withCancelled(true);
+        String orderNumber = "54656";
+        OrderEntity orderEntity = EntityFixtures.someOrderEntity()
+                .withOrderNumber(orderNumber)
+                .withAddress(EntityFixtures.someAddressEntity1())
+                .withCancelled(true);
 
 
         orderJpaRepository.save(orderEntity);

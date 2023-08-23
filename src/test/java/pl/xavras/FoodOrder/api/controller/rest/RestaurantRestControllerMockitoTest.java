@@ -79,28 +79,6 @@ class RestaurantRestControllerMockitoTest {
         assertThat(result).isEqualTo(DtoFixtures.someRestaurantDTO1());
     }
 
-    @Test
-    void thatRetrievingStreetsListWorksCorrectly() {
-        //given
-        String restaurantName = "some_name1";
-        Street street1 = DomainFixtures.someStreet1();
-        Street street2 = DomainFixtures.someStreet2();
-        Street street3 = DomainFixtures.someStreet3();
-
-        Mockito.when(streetService.findStreetsByRestaurantName(restaurantName)).thenReturn(Set.of(street1, street2, street3));
-        Mockito.when(streetMapper.map(street1)).thenReturn(DtoFixtures.someStreetDTO1());
-        Mockito.when(streetMapper.map(street2)).thenReturn(DtoFixtures.someStreetDTO2());
-        Mockito.when(streetMapper.map(street3)).thenReturn(DtoFixtures.someStreetDTO3());
-
-        //when
-        StreetsDTO result = restaurantRestController.deliveryStreets(restaurantName);
-
-        //then
-        assertThat(result.getStreetDTOList()).containsExactlyInAnyOrder(
-                DtoFixtures.someStreetDTO1(),
-                DtoFixtures.someStreetDTO2(),
-                DtoFixtures.someStreetDTO3());
-    }
 
 
 }

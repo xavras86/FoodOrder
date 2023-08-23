@@ -24,7 +24,7 @@ public class OrderEntity {
     @Column(name = "orders_id")
     private Integer orderId;
 
-    @Column(name = "orders_number", unique = true) //todo dodać walidację
+    @Column(name = "orders_number", unique = true)
     private String orderNumber;
 
     @Column(name = "received_date_time")

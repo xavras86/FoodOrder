@@ -15,10 +15,9 @@ public interface MenuItemOrderEntityMapper {
      @Mapping(target = "order", ignore = true)
      MenuItemOrder mapFromEntity(MenuItemOrderEntity entity);
 
-     @Mapping(target = "order", ignore = true)
      MenuItemOrderEntity mapToEntity(MenuItemOrder menuItemOrder);
 
-     @Mapping(target = "order", ignore = true)
+
      Set<MenuItemOrderEntity> mapToEntity(Set <MenuItemOrder> menuItemOrder);
 
 

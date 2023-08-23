@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.xavras.FoodOrder.business.dao.RestaurantDAO;
 import pl.xavras.FoodOrder.domain.*;
+import pl.xavras.FoodOrder.infrastructure.database.entity.RestaurantEntity;
+import pl.xavras.FoodOrder.infrastructure.database.entity.RestaurantStreetEntity;
 
 import java.util.List;
 import java.util.Set;
@@ -45,10 +47,7 @@ public class RestaurantService {
         restaurantDAO.alternateCoverageStateForStreet(restaurantName, street);
     }
 
-    public Boolean checkStreetCoverageForRestaurant(String restaurantName, Street street) {
-        Set<RestaurantStreet> restaurantStreets = findByName(restaurantName).getRestaurantStreets();
-        return restaurantStreets.stream().anyMatch(a -> street.equals(a.getStreet()));
-    }
+
 
     public Page<Restaurant> findAll(Pageable pageable) {
         return restaurantDAO.findAll(pageable);
@@ -62,6 +61,10 @@ public class RestaurantService {
     public Restaurant editRestaurant(String currentName, String name, String phone, String email) {
         return restaurantDAO.editRestaurant(currentName, name, phone, email);
 
+    }
+
+    public Set<Street> findStreetsByRestaurantName(String restaurantName) {
+        return restaurantDAO.findStreetsByRestaurantName(restaurantName);
     }
 }
 

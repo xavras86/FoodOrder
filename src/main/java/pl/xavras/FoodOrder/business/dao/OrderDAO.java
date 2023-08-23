@@ -33,4 +33,7 @@ public interface OrderDAO {
     Set<Order> findByRestaurantName(String restaurantName);
 
     void deleteByOrderNumber(String orderNumber);
+
+    Set<MenuItemOrder> findMenuItemOrdersByOrder(Order order);
+
 }

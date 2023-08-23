@@ -38,11 +38,13 @@ public class OrderService {
     }
 
 
-    public Page<Order> findByCustomerAndCancelledAndCompletedPaged(Pageable pageable, Customer activeCustomer, Boolean cancelled, Boolean completed) {
+    public Page<Order> findByCustomerAndCancelledAndCompletedPaged(
+            Pageable pageable, Customer activeCustomer, Boolean cancelled, Boolean completed) {
         return orderDAO.findByCustomerAndCancelledAndCompletedPaged(pageable, activeCustomer, cancelled, completed);
     }
 
-    public Page<Order> findByOwnerAndCancelledAndCompletedPaged(Pageable pageable, Owner activeOwner, Boolean cancelled, Boolean completed) {
+    public Page<Order> findByOwnerAndCancelledAndCompletedPaged(
+            Pageable pageable, Owner activeOwner, Boolean cancelled, Boolean completed) {
         return orderDAO.findByOwnerAndCancelledAndCompletedPaged(pageable, activeOwner, cancelled, completed);
     }
 
@@ -59,7 +61,7 @@ public class OrderService {
         return orderDAO.findByOrderNumber(orderNumber);
     }
 
-
+    @Transactional
     public void completeOrder(Order orderToComplete) {
         if ((orderToComplete.getCompleted() && Objects.nonNull(orderToComplete.getCompletedDateTime()))
                 || orderToComplete.getCancelled()) {
@@ -106,6 +108,7 @@ public class OrderService {
     private Order buildOrder(Address address,
                              Set<MenuItemOrder> menuItemOrders
     ) {
+
         OffsetDateTime whenCreated = OffsetDateTime.now();
         return Order.builder()
                 .orderNumber(generateOrderNumber(whenCreated))
@@ -144,8 +147,6 @@ public class OrderService {
     }
 
 
-
-
     public Set<Order> findByRestaurantName(String restaurantName) {
         return orderDAO.findByRestaurantName(restaurantName);
     }
@@ -153,5 +154,9 @@ public class OrderService {
     @Transactional
     public void deleteByOrderNumber(String orderNumber) {
         orderDAO.deleteByOrderNumber(orderNumber);
+    }
+
+    public Set<MenuItemOrder> findMenuItemOrdersByOrder(Order order) {
+        return orderDAO.findMenuItemOrdersByOrder(order);
     }
 }

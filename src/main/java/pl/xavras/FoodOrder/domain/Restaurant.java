@@ -19,10 +19,5 @@ public class Restaurant {
     String email;
     Address address;
     Owner owner;
-    Set<RestaurantStreet> restaurantStreets;
-    Set<MenuItem> menuItems;
-
-
-
 
 }

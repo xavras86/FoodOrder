@@ -3,8 +3,6 @@ package pl.xavras.FoodOrder.api.controller;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -147,13 +145,14 @@ public class CustomerOrderCreationController {
         OrderDTO orderDTO = orderMapper.mapToDTO(order);
         Address restaurantAddress = order.getAddress();
         Address deliveryAddress = order.getRestaurant().getAddress();
-        Set<MenuItemOrder> menuItemOrders = order.getMenuItemOrders();
+        Set<MenuItemOrder> menuItemOrders = orderService.findMenuItemOrdersByOrder(order);
+
         String status = orderService.orderStatus(order);
         String mapUrl = addressService.createMapUrl(restaurantAddress, deliveryAddress);
 
 
         model.addAttribute("order", orderDTO);
-        model.addAttribute("deliveryAddress", addressMapper.map(restaurantAddress));
+        model.addAttribute("deliveryAddress",  addressMapper.map(restaurantAddress));
         model.addAttribute("restaurantAddress", addressMapper.map(deliveryAddress));
         model.addAttribute("menuItemOrders", menuItemOrders);
         model.addAttribute("status", status);

@@ -37,7 +37,8 @@ public class OwnerRepository implements OwnerDAO {
         var loggedEmail = userRepository.findByUserName(username).getEmail();
         return ownerJpaRepository.findByEmail(loggedEmail)
                 .map(ownerEntityMapper::mapFromEntity)
-                .orElseThrow(() -> new SecurityException("Something went terribly wrong with security :( no customer related to current username [%s]"
+                .orElseThrow(() -> new SecurityException(
+                        "Something went terribly wrong with security :( no customer related to current username [%s]"
                         .formatted(username)));
     }
 

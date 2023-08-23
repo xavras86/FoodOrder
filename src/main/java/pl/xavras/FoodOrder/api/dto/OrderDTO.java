@@ -23,6 +23,5 @@ public class OrderDTO {
     CustomerDTO customer;
     AddressDTO address;
     RestaurantDTO restaurant;
-    Set<MenuItemOrder> menuItemOrders; //todo to jest jest no-yes
-
+    Set<MenuItemOrder> menuItemOrders;
 }

@@ -33,7 +33,6 @@ public class RestaurantRestController {
     public static final String RESTAURANT_EDIT = "/api/restaurant/edit/{restaurantName}";
     public static final String RESTAURANT_STREETS = "/api/restaurant/streets/{restaurantName}";
     private final RestaurantService restaurantService;
-    private final StreetService streetService;
     private final StreetMapper streetMapper;
     private final RestaurantMapper restaurantMapper;
 
@@ -59,7 +58,7 @@ public class RestaurantRestController {
             @Parameter(description = "Name of the restaurant.")
             @PathVariable String restaurantName) {
 
-        Set<Street> streetsByRestaurantName = streetService.findStreetsByRestaurantName(restaurantName);
+        Set<Street> streetsByRestaurantName = restaurantService.findStreetsByRestaurantName(restaurantName);
         return StreetsDTO.of(streetsByRestaurantName.stream()
                 .map(streetMapper::map)
                 .toList());
@@ -80,7 +79,7 @@ public class RestaurantRestController {
 
     @Operation(summary = "Editing the name, phone number, and email address for a restaurant based on its current name.")
     @PatchMapping(value = RESTAURANT_EDIT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> editRestaurantData(
+    public  RestaurantDTO editRestaurantData(
             @Parameter(description = "Current name of the restaurant.")
             @PathVariable String restaurantName,
             @Parameter(description = "New name of the restaurant.")
@@ -90,7 +89,7 @@ public class RestaurantRestController {
             @Parameter(description = "New email address of the restaurant.")
             @Valid @RequestParam(required = true) String newEmail
     ) {
-        restaurantService.editRestaurant(restaurantName, newName, newPhone, newEmail);
-        return ResponseEntity.ok().build();
+        Restaurant restaurant = restaurantService.editRestaurant(restaurantName, newName, newPhone, newEmail);
+        return restaurantMapper.map(restaurant);
     }
 }

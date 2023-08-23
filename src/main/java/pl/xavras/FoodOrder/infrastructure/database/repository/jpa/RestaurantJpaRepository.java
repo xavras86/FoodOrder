@@ -20,11 +20,6 @@ import java.util.stream.IntStream;
 public interface RestaurantJpaRepository extends JpaRepository<RestaurantEntity, Integer> {
     Optional<RestaurantEntity> findByName(String name);
 
-//    @Query("""
-//            SELECT res FROM RestaurantEntity res
-//            WHERE res.address.street = :streetName
-//            """)
-//    Set<RestaurantEntity> findRestaurantByRestaurantStreetName(final @Param("streetName") String street);
 
     @Query("""
         SELECT res FROM RestaurantEntity res

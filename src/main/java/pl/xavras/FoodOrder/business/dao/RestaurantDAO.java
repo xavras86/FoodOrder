@@ -16,7 +16,7 @@ public interface RestaurantDAO {
 
     List<Restaurant> findAll();
 
-    Set<Restaurant> findRestaurantsByStreetName(String streetName);
+//    Set<Restaurant> findRestaurantsByStreetName(String streetName);
 
 
     Set<Restaurant> findRestaurantsByOwner(String ownerEmail);
@@ -34,4 +34,6 @@ public interface RestaurantDAO {
 
 
     Restaurant editRestaurant(String currentName, String name, String phone, String email);
+
+    Set<Street> findStreetsByRestaurantName(String restaurantName);
 }

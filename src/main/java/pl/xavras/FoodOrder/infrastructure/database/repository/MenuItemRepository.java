@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import pl.xavras.FoodOrder.business.RestaurantService;
 import pl.xavras.FoodOrder.business.dao.MenuItemDAO;
 import pl.xavras.FoodOrder.domain.MenuItem;
 import pl.xavras.FoodOrder.domain.Restaurant;
@@ -40,9 +41,7 @@ public class MenuItemRepository implements MenuItemDAO {
     @Override
     public MenuItem addMenuItem(MenuItem menuItem, Restaurant restaurant) {
         MenuItemEntity toSave = menuItemMapper.mapToEntity(menuItem);
-        RestaurantEntity restaurantToSet = restaurantJpaRepository.findByName(restaurant.getName())
-                .orElseThrow(() -> new EntityNotFoundException("Could not find restaurant with name: [%s]"
-                        .formatted(restaurant.getName())));
+        RestaurantEntity restaurantToSet = getRestaurantEntityByName(restaurant);
         toSave.setRestaurant(restaurantToSet);
         MenuItemEntity saved = menuItemJpaRepository.save(toSave);
         log.info("Created new Menu Item Entity: "+ saved.getName());
@@ -51,18 +50,14 @@ public class MenuItemRepository implements MenuItemDAO {
 
     @Override
     public void changeAvailability(MenuItem menuItem) {
-        MenuItemEntity menuItemEntity = menuItemJpaRepository.findById(menuItem.getMenuItemId())
-                .orElseThrow(() -> new EntityNotFoundException("Could not find MenuItem with id: [%s]"
-                        .formatted(menuItem.getMenuItemId())));
-       menuItemEntity.setAvailable(!menuItem.getAvailable());
+        MenuItemEntity menuItemEntity = getMenuItemEntityById(menuItem.getMenuItemId());
+        menuItemEntity.setAvailable(!menuItem.getAvailable());
        menuItemJpaRepository.save(menuItemEntity);
     }
 
     @Override
     public MenuItem findById(Integer menuItemId) {
-        return menuItemMapper.mapFromEntity(menuItemJpaRepository.findById(menuItemId)
-                .orElseThrow(() -> new EntityNotFoundException("Could not find MenuItem with id: [%s]"
-                        .formatted(menuItemId))));
+        return menuItemMapper.mapFromEntity(getMenuItemEntityById(menuItemId));
     }
 
     @Override
@@ -87,4 +82,16 @@ public class MenuItemRepository implements MenuItemDAO {
                         .formatted(name))));
     }
 
+
+    private MenuItemEntity getMenuItemEntityById(Integer menuItemId) {
+        return menuItemJpaRepository.findById(menuItemId)
+                .orElseThrow(() -> new EntityNotFoundException("Could not find MenuItem with id: [%s]"
+                        .formatted(menuItemId)));
+    }
+
+    private RestaurantEntity getRestaurantEntityByName(Restaurant restaurant) {
+        return restaurantJpaRepository.findByName(restaurant.getName())
+                .orElseThrow(() -> new EntityNotFoundException("Could not find restaurant with name: [%s]"
+                        .formatted(restaurant.getName())));
+    }
 }

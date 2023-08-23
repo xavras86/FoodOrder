@@ -61,7 +61,7 @@ public class OwnerRestaurantsController {
                 pageSize,
                 Sort.by(Sort.Direction.fromString(sortDirection), sortBy));
         Owner activeOwner = ownerService.activeOwner();
-        Page<RestaurantDTO> restaurantPage = restaurantService.findByOwner(pageable, activeOwner).map(restaurantMapper::map);
+        Page<RestaurantDTO> restaurantPage = restaurantService.findByOwner(pageable, activeOwner).map(restaurant -> restaurantMapper.map(restaurant));
         List<Integer> pageNumbers = utilityService.generatePageNumbers(pageNumber, restaurantPage.getTotalPages());
 
 
@@ -195,7 +195,7 @@ public class OwnerRestaurantsController {
 
 
     @PatchMapping(RESTAURANT_OWNER_RANGE_EDIT)
-    public String editMenuItem(@PathVariable String restaurantName,
+    public String editDeliveryRange(@PathVariable String restaurantName,
                                @PathVariable Integer streetId
 
     ) {

@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Repository
@@ -57,17 +58,21 @@ public class OrderRepository implements OrderDAO {
         return byActiveCustomer.map(orderEntityMapper::mapFromEntity);
     }
     @Override
-    public Page<Order> findByCustomerAndCancelledAndCompletedPaged(Pageable pageable, Customer customer, boolean cancelled, boolean completed) {
+    public Page<Order> findByCustomerAndCancelledAndCompletedPaged(
+            Pageable pageable, Customer customer, boolean cancelled, boolean completed) {
         CustomerEntity customerEntity = customerEntityMapper.mapToEntity(customer);
-        Page<OrderEntity> byActiveCustomerAndFlags =  orderJpaRepository.findByCustomerAndCancelledAndCompleted(pageable, customerEntity,cancelled, completed);
+        Page<OrderEntity> byActiveCustomerAndFlags =  orderJpaRepository.findByCustomerAndCancelledAndCompleted(
+                pageable, customerEntity,cancelled, completed);
         return byActiveCustomerAndFlags.map(orderEntityMapper::mapFromEntity);
     }
 
 
     @Override
-    public Page<Order> findByOwnerAndCancelledAndCompletedPaged(Pageable pageable, Owner owner, Boolean cancelled, Boolean completed) {
+    public Page<Order> findByOwnerAndCancelledAndCompletedPaged(
+            Pageable pageable, Owner owner, Boolean cancelled, Boolean completed) {
         OwnerEntity ownerEntity = ownerEntityMapper.mapToEntity(owner);
-        Page<OrderEntity> byActiveOwnerAndFlags =  orderJpaRepository.findByRestaurantOwnerAndCancelledAndCompleted(pageable, ownerEntity, cancelled,completed);
+        Page<OrderEntity> byActiveOwnerAndFlags =  orderJpaRepository.findByRestaurantOwnerAndCancelledAndCompleted(
+                pageable, ownerEntity, cancelled,completed);
         return byActiveOwnerAndFlags.map(orderEntityMapper::mapFromEntity);
     }
 
@@ -80,6 +85,13 @@ public class OrderRepository implements OrderDAO {
     @Override
     public void deleteByOrderNumber(String orderNumber) {
         orderJpaRepository.deleteByOrderNumber(orderNumber);
+    }
+
+    @Override
+    public Set<MenuItemOrder> findMenuItemOrdersByOrder(Order order) {
+        OrderEntity orderEntity = getOrderEntityByOrder(order);
+        return orderEntity.getMenuItemOrders().stream().map(menuItemOrderEntityMapper::mapFromEntity)
+                .collect(Collectors.toSet());
     }
 
     @Override
@@ -110,7 +122,9 @@ public class OrderRepository implements OrderDAO {
 
         toSave.setAddress(address);
         toSave.setRestaurant(restaurant);
-        Set<MenuItemOrderEntity> menuItemOrderEntities = menuItemOrderEntityMapper.mapToEntity(menuItemOrders);
+        Set<MenuItemOrderEntity> menuItemOrderEntities = menuItemOrders.stream()
+                .map(menuItemOrderEntityMapper::mapToEntity)
+                .collect(Collectors.toSet());
         menuItemOrderEntities.forEach(a -> a.setOrder(toSave));
         toSave.setMenuItemOrders(menuItemOrderEntities);
         OrderEntity save = orderJpaRepository.save(toSave);
@@ -120,22 +134,24 @@ public class OrderRepository implements OrderDAO {
 
     @Override
     public void cancelOrder(Order order) {
-        OrderEntity orderEntity = orderJpaRepository.findByOrderNumber(order.getOrderNumber())
-                .orElseThrow(() -> new EntityNotFoundException("Could not find order with orderNumber: [%s]"
-                .formatted(order.getOrderNumber())));
+        OrderEntity orderEntity = getOrderEntityByOrder(order);
         orderEntity.setCancelled(true);
         orderJpaRepository.save(orderEntity);
     }
 
     @Override
     public void completeOrder(Order order) {
-        OrderEntity orderEntity = orderJpaRepository.findByOrderNumber(order.getOrderNumber())
-                .orElseThrow(() -> new EntityNotFoundException("Could not find order with orderNumber: [%s]"
-                        .formatted(order.getOrderNumber())));
+        OrderEntity orderEntity = getOrderEntityByOrder(order);
         orderEntity.setCompleted(true);
         orderEntity.setCompletedDateTime(OffsetDateTime.now());
         orderJpaRepository.save(orderEntity);
     }
 
+
+    private OrderEntity getOrderEntityByOrder(Order order) {
+        return orderJpaRepository.findByOrderNumber(order.getOrderNumber())
+                .orElseThrow(() -> new EntityNotFoundException("Could not find order with orderNumber: [%s]"
+                        .formatted(order.getOrderNumber())));
+    }
 
 }

@@ -21,5 +21,5 @@ public class MenuItem {
     Boolean available;
     Restaurant restaurant;
     byte[] image;
-    Set<MenuItemOrder> menuItemOrders;
+
 }

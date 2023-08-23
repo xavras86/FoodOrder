@@ -14,7 +14,5 @@ public class Street {
     Integer streetId;
     String city;
     String streetName;
-    Set<RestaurantStreet> restaurantStreets;
-
 
 }

@@ -16,21 +16,10 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface StreetEntityMapper {
 
-    @Mapping(source = "restaurantStreets", target = "restaurantStreets", qualifiedByName = "mapRestaurantsStreets")
+
     Street mapFromEntity(StreetEntity entity);
+    StreetEntity mapToEntity(Street street);
 
-
-    @Named("mapRestaurantsStreets")
-    @SuppressWarnings("unused")
-    default Set<RestaurantStreet> mapRestaurantsStreets(Set<RestaurantStreetEntity> entities) {
-        return entities.stream().map(this::mapFromEntity).collect(Collectors.toSet());
-    }
-
-
-    @Mapping(target = "street", ignore = true)
-    @Mapping(target = "restaurant.restaurantStreets", ignore = true)
-    @Mapping(target = "restaurant.menuItems", ignore = true)
-    RestaurantStreet mapFromEntity(RestaurantStreetEntity entity);
 
 
 
