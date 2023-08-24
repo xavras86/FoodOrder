@@ -1,74 +1,71 @@
 # FoodOrder!
 
-To aplikacja Spring Boot + JPA + Spring MVC + Thymeleaf umożliwiająca użytkownikom zamawianie jedzenie z dowozem. Podstawowe funkjonalności realizowane w aplikacji to:
+This is a Spring Boot + JPA + Spring MVC + Thymeleaf application that allows users to order food with delivery. The basic functionalities implemented in the application include:
 
-## Funkcjonalności właściciela:
-- Właściciel lokalu gastronomicznego może założyć konto w portalu do zamawiania jedzenia, żeby móc oferować swoje usługi.
-- Właściciel może mieć wiele różnych lokali
-- Właściciel lokalu gastronomicznego może zdefiniować swoje menu, czyli określić kategorię jedzenia (przystawki, zupy, drugie dania, desery) i wprowadzić opis pozycji razem z ceną.
-- Każda pozycja w menu możne zostać z niego wycofana lub przywrócona w zależności od dostępności produktu.
-- Do każdej z podanych pozycji, właściciel lokalu gastronomicznego może wgrać do aplikacji zdjęcie, żeby ułatwić klientowi wybór.
-- Właściciel lokalu gastronomicznego może podać listę ulic, na które dowozi jedzenie, ulice mogą być dodawane lub usuwane do zasięgu świadoczonych usług przez każdą restaurację.
-- Właściciel lokalu gastronomicznego może zobaczyć złożone u niego zamówienia, z podziałem na oczekujące, zrealizowane i anulowane.
-  -Właściciel lokalu może zmieniać status zamówień z aktywnych na zrealizowane.
+## Owner functionalities:
+- The owner of a restaurant can create an account on the food ordering portal to offer their services.
+- An owner can have multiple different restaurants.
+- The owner of a restaurant can define their menu, meaning they can specify food categories (appetizers, soups, main courses, desserts) and input descriptions along with prices.
+- Each menu item can be withdrawn or reinstated based on product availability.
+- For each of the listed items, the owner of a restaurant can upload photos through the application to make it easier for the customer to choose.
+- The owner of a restaurant can provide a list of streets to which they provide food delivery. Streets can be added or removed from the range of services offered by each restaurant.
+- The owner of a restaurant can view orders placed at their establishment, categorized as pending, fulfilled, and cancelled.
+- The establishment owner can change the status of orders from active to fulfilled.
 
-## Funkcjonalności klienta:
-- Klient może założyć konto.
-- Klient może podać adres, żeby na tej podstawie aplikacja wyświetliła mu listę lokali oferujących możliwość zamówienia jedzenia z dowozem (na podstawie puli ulic ustalonej przez właściciela lokalu).
-- Klient może wybrać lokal i zobaczyć jego szczegóły wraz menu oraz mapą Google Maps ze wskazanym adresem lokalu.
-- Klient może złożyć zamówienie, zaznaczając ile i jakich pozycji chce zamówić.
-- Klient może zobaczyć potwierdzenie złożonego zamówienia na podstawie wygenerowanego numeru zamówienia, wraz mapą Google Maps z zaznaczoną trasą między lokalem a adresem zamówienia.
-- Klient może anulować zamówienie, jeżeli minęło mniej niż 20 minut od jego złożenia.
-- Klient może sprawdzić swoje zamówienia z podziałem na zrealizowane, oczekujące i anulowane, wraz z odnośnikiem do karty ze szczegółami zamówienia.
+## Customer Functionalities:
+Customers can create an account.
+Customers can provide their address, so that the application can display a list of establishments offering food delivery based on a set of streets defined by the establishment owners.
+Customers can select an establishment and view its details, including the menu and a Google Maps map displaying the establishment's address.
+Customers can place an order, specifying the quantity and type of items they wish to order.
+Customers can view a confirmation of their placed order, complete with a generated order number, as well as a Google Maps map showing the route between the establishment and the delivery address.
+Customers can cancel an order if it's within 20 minutes of placing it.
+Customers can check their orders, categorized as fulfilled, pending, and cancelled, along with a link to a page displaying order details.
+REST-API Functionalities:
+An integral part of the application is the REST-API, designed for business use by owners (accounts with the owner role have access to the API).
+The API consists of two controllers that allow calling GET, POST, PUT, and DELETE endpoints related to establishments and orders.
+The detailed functionality of the API is described in the Swagger UI documentation.
 
-## Funkcjonalności REST-API:
-- Cześcią aplikacji jest REST-API, przeznaczone do wykorzystania biznesowo przez właściela (konta z przypisaną rolą właściciela mają dostęp do API).
-- Składają sie na nie dwa kontrolery umożliwiające wywołanie endpointów GET, POST, PUT i DELETE związane z restauracjami i zamówieniami.
-- Szczegóły funkcjonalności API zostały opisane w ramach dokumentacji Swagger UI.
-
-## Instalacja
-
-1. Sklonuj to repozytorium na swój lokalny komputer.
-2. Aplikacja jest przygotowana do uruchomienia w kontenerze przez Docker Compose, po uruchomieniu aplikacji i dockera uruchom kontener:
+## Installation
+1. Clone this repository to your local computer.
+2. The application is set up to run in a container using Docker Compose. After starting the application and Docker, run the container:
 
 ```
 ./gradlew clean build -x test
 docker compose up -d
 ```
 
-3. Aplikacja jest dostępna z poziomu przeglądarki pod adresem:
+3. The application is accessible from your web browser at the following address:
 ```
 http://localhost:8190/foodorder/login
 ```
 
-4. API wraz z dokumentacją SwaggerUI jest dostępne z poziomu przeglądarki pod adresem (konieczne zalogowanie poświadczeniami z rolą właściciel)
+4. The API along with SwaggerUI documentation is accessible from your web browser at the following address (login with owner credentials is required):
 ```
 http://localhost:8190/foodorder/swagger-ui/index.html
 ```
-5. Przy uruchomieniu aplikacja jest napełniana danymi rozruchowymi. Tworzone są również przykładowe konta dla właściciela i klienta
+5. Upon startup, the application is populated with startup data. Sample accounts for both owners and customers are also created.
 ```
-Właściciel - login: owner password: test
-```
-
-```
-Kliet - login: customer password: test
+Owner - login: owner password: test
 ```
 
-## Wykorzystane technologie
+```
+Customer - login: customer password: test
+```
 
-1.Aplikacja została przygotowana z wykorzystaniem Spring Boot i bazy danych PostgreSQL. Schemat przedstawia tabele bazy wraz z konfiguracją relacji.
+
+##Utilized Technologies
+1. The application has been developed using Spring Boot and PostgreSQL database. The Entity-Relationship Diagram (ERD) showcases the database tables along with the configuration of relationships.
 
 ![](https://github.com/xavras86/FoodOrder/assets/99759304/f12ac45d-05ce-48f2-ba95-0a57d2fa485a)
 
-2. Struktura samej aplikacji po stronie Java opiera się o model warstwowy z wyszczególnioną warstwą repozytoriów, serwisó i kontrollerów wraz z odpowiadającymi im warstwami obiektów
-   tj. encji, obiektów domenowych i DTO, mapowania między poszczególnymi warstwami zostały zrealizowane z wykorzystaniem Mapstruct.
+2. The structure of the application on the Java side follows a layered architecture, with distinct layers for repositories, services, and controllers, each with corresponding object layers such as entities, domain objects, and DTOs. The mapping between these layers has been implemented using Mapstruct.
 
 ![](https://github.com/xavras86/FoodOrder/assets/99759304/2b93f9fb-186c-4301-8ec0-62341c4deaaa)
 
-3. Dane rozruchowe są ładowane do aplikacji przy uruchopmieniu z wykorzystaniem skryptów migracyjnych Flyway.
+3. Startup data is loaded into the application upon launch using Flyway migration scripts.
 
-4. Warstwa WEB została przygotowana z wykorzystaniem silnika szablonów Thymeleaf.
+4. The WEB layer has been prepared using the Thymeleaf template engine.
 
 
-## Autor
+## Author
 Marcin Sikora
