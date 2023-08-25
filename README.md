@@ -53,7 +53,7 @@ Customer - login: customer password: test
 ```
 
 
-##Utilized Technologies
+## Utilized Technologies
 1. The application has been developed using Spring Boot and PostgreSQL database. The Entity-Relationship Diagram (ERD) showcases the database tables along with the configuration of relationships.
 
 ![](https://github.com/xavras86/FoodOrder/assets/99759304/f12ac45d-05ce-48f2-ba95-0a57d2fa485a)
